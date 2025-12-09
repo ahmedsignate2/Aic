@@ -1,31 +1,31 @@
 stages:
   - build
 
-# -----------------------------------------------------------------------------
-# JOB ANDROID (Génère l'APK)
-# -----------------------------------------------------------------------------
-build_android:
+# JOB ANDROID RELEASE (Signé) - MANUEL
+build_android_release:
   stage: build
+  when: manual
   image: reactnativecommunity/react-native-android:latest
   tags:
     - saas-linux-medium-amd64
   before_script:
     - npm install --legacy-peer-deps
+    - apt-get update && apt-get install -y xxd
+    - echo "$KEYSTORE_FILE_HEX" | xxd -r -p > android/app/release.keystore
   script:
-    - echo "🤖 Compilation Android en cours..."
+    - echo "🔐 Génération de l'APK Signé (Release)..."
     - cd android
     - chmod +x gradlew
-    - ./gradlew assembleDebug
+    - ./gradlew assembleRelease
   artifacts:
     paths:
-      - android/app/build/outputs/apk/debug/app-debug.apk
+      - android/app/build/outputs/apk/release/app-release.apk
     expire_in: 1 week
 
-# -----------------------------------------------------------------------------
-# JOB iOS (Compile sur Mac M1 - Correctif Image)
-# -----------------------------------------------------------------------------
-build_ios:
+# JOB iOS (Vérification) - MANUEL
+build_ios_check:
   stage: build
+  when: manual
   tags:
     - saas-macos-medium-m1
   image: macos-14-xcode-15
@@ -34,9 +34,5 @@ build_ios:
     - cd ios
     - pod install
   script:
-    - echo "🍏 Compilation iOS en cours (Mode Simulateur)..."
+    - echo "🍏 Vérification du code iOS..."
     - xcodebuild -workspace MalinWallet.xcworkspace -scheme MalinWallet -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15' build CODE_SIGNING_ALLOWED=NO
-  artifacts:
-    paths:
-      - ios/build/
-    expire_in: 1 week
