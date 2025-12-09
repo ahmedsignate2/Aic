@@ -6,22 +6,17 @@ def node_require(script)
       {paths: [process.argv[1]]},
     )", __dir__]).strip
 end
+
 ENV['RCT_NEW_ARCH_ENABLED'] = '0'
 min_ios_version_supported = '15.1'
 node_require('react-native/scripts/react_native_pods.rb')
 node_require('react-native-permissions/scripts/setup.rb')
 
-# Resolve react_native_pods.rb with node to allow for hoisting
-require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
-
-workspace 'BlueWallet'
+workspace 'MalinWallet'
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 setup_permissions(['Camera', 'Notifications'])
+
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
@@ -33,34 +28,31 @@ def configure_target()
   config = use_native_modules!
 
   use_react_native!(
-    # Specify the path directly if use_native_modules! does not provide it
     :path => config[:reactNativePath],
     :app_path => "#{Pod::Config.instance.installation_root}/.."
-
   )
-  pod 'react-native-bw-file-access', :path => '../blue_modules/react-native-bw-file-access'
+  
+  # Correction du chemin vers malin_modules
+  pod 'react-native-bw-file-access', :path => '../malin_modules/react-native-bw-file-access'
 end
 
-
-target .MalinWallet. do
+target 'MalinWallet' do
   configure_target()
 end
 
 post_install do |installer|
   react_native_post_install(
     installer,
-    :mac_catalyst_enabled => true,
-    # :ccache_enabled => true
+    :mac_catalyst_enabled => true
   )
+  
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.1'
       
-      if ['React-Core-AccessibilityResources'].include? target.name 
-        config.build_settings['CODE_SIGN_STYLE'] = "Manual"
-        config.build_settings['CODE_SIGN_IDENTITY'] = "Apple Distribution: Bluewallet Services, S. R. L. (A7W54YZ4WU)"
-        config.build_settings['DEVELOPMENT_TEAM'] = "A7W54YZ4WU"
-      end
+      # Suppression des signatures manuelles BlueWallet qui bloquaient le build
+      config.build_settings['CODE_SIGN_STYLE'] = "Automatic"
+      config.build_settings['DEVELOPMENT_TEAM'] = ""
     end
   end
 end
