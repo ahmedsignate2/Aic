@@ -1,7 +1,7 @@
 # MalinWallet - The Ultimate Multi-chain Wallet
 
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
-![](https://img.shields.io/github/license/BlueWallet/BlueWallet.svg)
+![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 **MalinWallet** is a powerful, secure, and feature-rich wallet designed for the modern crypto user.
 Built with React Native, it combines the best features of top-tier wallets into a single, unified experience.
@@ -23,15 +23,15 @@ Please refer to the engines field in package.json file for the minimum required 
 
 To view the version of Node and npm in your environment, run the following in your console:
 
-```
+```bash
 node --version && npm --version
 ```
 
 * In your console:
 
-```
-git clone <your-repo-url>
-cd MalinWallet
+```bash
+git clone https://gitlab.com/amsss900-group/amsss900-project.git
+cd amsss900-project
 npm install
 ```
 
@@ -39,19 +39,19 @@ npm install
 
 1. Connect an Android device or start an emulator.
 2. Run:
-```
+```bash
 npx react-native run-android
 ```
 
 * To run on iOS:
 
-```
+```bash
 npx pod-install
 npm start
 ```
 
 In another terminal window within the folder:
-```
+```bash
 npx react-native run-ios
 ```
 
