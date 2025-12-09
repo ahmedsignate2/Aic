@@ -1,5 +1,5 @@
 //
-//  BlueWallet-Bridging-Header.h
+//  MalinWallet-Bridging-Header.h
 //  BlueWallet
 //
 //  Created by Marcos Rodriguez on 4/4/25.

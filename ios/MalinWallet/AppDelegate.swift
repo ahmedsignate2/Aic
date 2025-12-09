@@ -462,7 +462,7 @@ class AppDelegate: RCTAppDelegate, UNUserNotificationCenterDelegate {
     }
     
     @objc func showHelp(_ sender: Any) {
-        if let url = URL(string: "https://bluewallet.io/docs") {
+        if let url = URL(string: "https://gitlab.com/amsss900-group/amsss900-project/-/blob/main/README.md") {
             UIApplication.shared.open(url, options: [:], completionHandler: nil)
         }
     }
