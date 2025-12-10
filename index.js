@@ -8,7 +8,7 @@ import React, { useEffect } from 'react';
 import { AppRegistry, LogBox } from 'react-native';
 
 import App from './App';
-import { restoreSavedPreferredFiatCurrencyAndExchangeFromStorage } from './blue_modules/currency';
+import { restoreSavedPreferredFiatCurrencyAndExchangeFromStorage } from './malin_modules/currency';
 
 if (!Error.captureStackTrace) {
   // captureStackTrace is only available when debugging
