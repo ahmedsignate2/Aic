@@ -39,6 +39,12 @@ android {
                 storePassword System.getenv("KEYSTORE_PASSWORD")
                 keyAlias System.getenv("KEY_ALIAS")
                 keyPassword System.getenv("KEY_PASSWORD")
+            } else {
+                // Fallback to local keystore if environment variables are not set
+                storeFile file('malinwallet-release-key.keystore')
+                storePassword 'Ahmed.78130'
+                keyAlias 'malinwallet-key-alias'
+                keyPassword 'Ahmed.78130'
             }
         }
     }
