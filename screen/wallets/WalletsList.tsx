@@ -1,12 +1,38 @@
-import React, { useCallback, useEffect, useReducer, useRef, useMemo } from 'react';
-import { useFocusEffect, useIsFocused, useRoute, RouteProp } from '@react-navigation/native';
-import { Alert, findNodeHandle, Image, StyleSheet, Text, useWindowDimensions, View, Linking } from 'react-native';
+import React, {
+  useCallback,
+  useEffect,
+  useReducer,
+  useRef,
+  useMemo
+} from 'react';
+import {
+  useFocusEffect,
+  useIsFocused,
+  useRoute,
+  RouteProp
+} from '@react-navigation/native';
+import {
+  Alert,
+  findNodeHandle,
+  Image,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View,
+  Linking
+} from 'react-native';
 import { getClipboardContent } from '../../malin_modules/clipboard';
 import { isDesktop } from '../../malin_modules/environment';
 import * as fs from '../../malin_modules/fs';
-import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
+import triggerHapticFeedback, {
+  HapticFeedbackTypes
+} from '../../malin_modules/hapticFeedback';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
-import { ExtendedTransaction, Transaction, TWallet } from '../../class/wallets/types';
+import {
+  ExtendedTransaction,
+  Transaction,
+  TWallet
+} from '../../class/wallets/types';
 import presentAlert from '../../components/Alert';
 import { FButton, FContainer } from '../../components/FloatButtons';
 import { useTheme } from '../../components/themes';
@@ -24,9 +50,11 @@ import { useSettings } from '../../hooks/context/useSettings';
 import useMenuElements from '../../hooks/useMenuElements';
 import SafeAreaSectionList from '../../components/SafeAreaSectionList';
 import { scanQrHelper } from '../../helpers/scan-qr';
-import { Linking } from 'react-native';
 
-const WalletsListSections = { CAROUSEL: 'CAROUSEL', TRANSACTIONS: 'TRANSACTIONS' };
+const WalletsListSections = {
+  CAROUSEL: 'CAROUSEL',
+  TRANSACTIONS: 'TRANSACTIONS',
+}
 
 type SectionData = {
   key: string;
@@ -60,7 +88,11 @@ interface SetRefreshFunctionAction {
   payload: () => void;
 }
 
-type WalletListAction = SetLoadingAction | SetWalletsAction | SetCurrentIndexAction | SetRefreshFunctionAction;
+type WalletListAction =
+  | SetLoadingAction
+  | SetWalletsAction
+  | SetCurrentIndexAction
+  | SetRefreshFunctionAction;
 
 interface WalletListState {
   isLoading: boolean;
@@ -74,7 +106,7 @@ const initialState = {
   wallets: [],
   currentWalletIndex: 0,
   refreshFunction: () => {},
-};
+}
 
 function reducer(state: WalletListState, action: WalletListAction) {
   switch (action.type) {
@@ -91,17 +123,24 @@ function reducer(state: WalletListState, action: WalletListAction) {
   }
 }
 
-type NavigationProps = NativeStackNavigationProp<DetailViewStackParamList, 'WalletsList'>;
+type NavigationProps = NativeStackNavigationProp<
+  DetailViewStackParamList,
+  'WalletsList'
+>;
 type RouteProps = RouteProp<DetailViewStackParamList, 'WalletsList'>;
 
 const WalletsList: React.FC = () => {
-  const [state, dispatch] = useReducer<React.Reducer<WalletListState, WalletListAction>>(reducer, initialState);
+  const [state, dispatch] = useReducer<
+    React.Reducer<WalletListState, WalletListAction>
+  >(reducer, initialState);
   const { isLoading } = state;
   const { sizeClass, isLarge } = useSizeClass();
   const walletsCarousel = useRef<any>();
   const currentWalletIndex = useRef<number>(0);
-  const { registerTransactionsHandler, unregisterTransactionsHandler } = useMenuElements();
-  const { wallets, getTransactions, refreshAllWalletTransactions } = useStorage();
+  const { registerTransactionsHandler, unregisterTransactionsHandler } =
+    useMenuElements();
+  const { wallets, getTransactions, refreshAllWalletTransactions } =
+    useStorage();
   const { isTotalBalanceEnabled, isElectrumDisabled } = useSettings();
   const { width } = useWindowDimensions();
   const { colors, scanImage } = useTheme();
@@ -123,13 +162,20 @@ const WalletsList: React.FC = () => {
     listHeaderText: {
       color: colors.foregroundColor,
       flexShrink: 1,
-    },
+    }
   });
 
   const refreshWallets = useCallback(
-    async (index: number | undefined, showLoadingIndicator = true, showUpdateStatusIndicator = false) => {
+    async (
+      index: number | undefined,
+      showLoadingIndicator = true,
+      showUpdateStatusIndicator = false
+    ) => {
       if (isElectrumDisabled) return;
-      dispatch({ type: ActionTypes.SET_LOADING, payload: showLoadingIndicator });
+      dispatch({
+        type: ActionTypes.SET_LOADING,
+        payload: showLoadingIndicator
+      });
       try {
         await refreshAllWalletTransactions(index, showUpdateStatusIndicator);
       } catch (error) {
@@ -139,7 +185,7 @@ const WalletsList: React.FC = () => {
       }
     },
     [isElectrumDisabled, refreshAllWalletTransactions],
-  );
+  )
 
   const refreshTransactions = useCallback(() => {
     refreshWallets(undefined, true, true);
@@ -168,7 +214,7 @@ const WalletsList: React.FC = () => {
     registerTransactionsHandler(onRefresh, screenKey);
     return () => {
       unregisterTransactionsHandler(screenKey);
-    };
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onRefresh, registerTransactionsHandler, unregisterTransactionsHandler]);
 
@@ -177,10 +223,10 @@ const WalletsList: React.FC = () => {
       const screenKey = route.name;
       return () => {
         unregisterTransactionsHandler(screenKey);
-      };
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unregisterTransactionsHandler]),
-  );
+  )
 
   useEffect(() => {
     if (!isLarge) {
@@ -192,17 +238,20 @@ const WalletsList: React.FC = () => {
     (value: any) => {
       if (!value) return;
       try {
-        DeeplinkSchemaMatch.navigationRouteFor({ url: value }, completionValue => {
-          triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
-          // @ts-ignore: for now
-          navigation.navigate(...completionValue);
-        });
+        DeeplinkSchemaMatch.navigationRouteFor(
+          { url: value },
+          (completionValue) => {
+            triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
+            // @ts-ignore: for now
+            navigation.navigate(...completionValue)
+          }
+        )
       } catch (e: any) {
         Alert.alert(loc.send.details_scan_error, e.message);
       }
     },
     [navigation],
-  );
+  )
 
   const navigateToBrowser = useCallback(() => {
     navigation.navigate('Browser');
@@ -216,10 +265,10 @@ const WalletsList: React.FC = () => {
     // 2. Sécuriser l'adresse (fallback vide si pas d'adresse)
     let address = '';
     if (currentWallet && typeof currentWallet.getAddress === 'function') {
-        const addr = currentWallet.getAddress();
-        if (typeof addr === 'string') {
-            address = addr;
-        }
+      const addr = currentWallet.getAddress();
+      if (typeof addr === 'string') {
+        address = addr;
+      }
     }
 
     // 3. ID Affiliation (NE PAS MODIFIER)
@@ -229,7 +278,9 @@ const WalletsList: React.FC = () => {
     const url = `https://changenow.io/exchange?from=eur&to=eth&amount=50&recipient=${address}&link_id=${affiliateID}`;
 
     // 5. Ouverture Navigateur
-    Linking.openURL(url).catch(err => console.error("Erreur ouverture lien achat", err));
+    Linking.openURL(url).catch((err) =>
+      console.error('Erreur ouverture lien achat', err)
+    );
   }, [wallets]);
 
   const navigateToSwap = useCallback(() => {
@@ -243,13 +294,13 @@ const WalletsList: React.FC = () => {
         navigation.navigate('WalletTransactions', {
           walletID,
           walletType: item.type,
-        });
+        })
       } else {
         navigation.navigate('AddWalletRoot');
       }
     },
     [navigation],
-  );
+  )
 
   const onSnapToItem = useCallback(
     (e: { nativeEvent: { contentOffset: any } }) => {
@@ -259,15 +310,22 @@ const WalletsList: React.FC = () => {
       const index = Math.ceil(contentOffset.x / width);
 
       if (currentWalletIndex.current !== index) {
-        console.debug('onSnapToItem', wallets.length === index ? 'NewWallet/Importing card' : index);
-        if (wallets[index] && (wallets[index].timeToRefreshBalance() || wallets[index].timeToRefreshTransaction())) {
+        console.debug(
+          'onSnapToItem',
+          wallets.length === index ? 'NewWallet/Importing card' : index
+        );
+        if (
+          wallets[index] &&
+          (wallets[index].timeToRefreshBalance() ||
+            wallets[index].timeToRefreshTransaction())
+        ) {
           refreshWallets(index, false, false);
         }
         currentWalletIndex.current = index;
       }
     },
     [isFocused, refreshWallets, wallets, width],
-  );
+  )
 
   const renderListHeaderComponent = useCallback(() => {
     return (
@@ -276,7 +334,7 @@ const WalletsList: React.FC = () => {
           textBreakStrategy="simple"
           style={[styles.listHeaderText, stylesHook.listHeaderText]}
           numberOfLines={2}
-          adjustsFontSizeToFit={true}
+          adjustsFontSizeToFit
         >
           {`${loc.transactions.list_title}${'  '}`}
         </Text>
@@ -290,10 +348,15 @@ const WalletsList: React.FC = () => {
 
   const renderTransactionListsRow = useCallback(
     (item: ExtendedTransaction) => (
-      <TransactionListItem key={item.hash} item={item} itemPriceUnit={item.walletPreferredBalanceUnit} walletID={item.walletID} />
+      <TransactionListItem
+        key={item.hash}
+        item={item}
+        itemPriceUnit={item.walletPreferredBalanceUnit}
+        walletID={item.walletID}
+      />
     ),
     [],
-  );
+  )
 
   const renderWalletsCarousel = useCallback(() => {
     return (
@@ -309,7 +372,7 @@ const WalletsList: React.FC = () => {
           testID="WalletsList"
           horizontal
           scrollEnabled={isFocused}
-          animateChanges={true}
+          animateChanges
         />
       </>
     );
@@ -327,7 +390,7 @@ const WalletsList: React.FC = () => {
       }
     },
     [sizeClass, renderTransactionListsRow, renderWalletsCarousel],
-  );
+  )
 
   const renderSectionHeader = useCallback(
     (section: { section: { key: any } }) => {
@@ -340,16 +403,21 @@ const WalletsList: React.FC = () => {
           return renderListHeaderComponent();
         case WalletsListSections.CAROUSEL: {
           return isTotalBalanceEnabled ? (
-            <View style={stylesHook.walletsListWrapper}>
+  <View style={stylesHook.walletsListWrapper}>
               <TotalWalletsBalance />
             </View>
-          ) : null;
+              ) : null;
         }
         default:
           return null;
       }
     },
-    [sizeClass, isTotalBalanceEnabled, renderListHeaderComponent, stylesHook.walletsListWrapper],
+    [
+      sizeClass,
+      isTotalBalanceEnabled,
+      renderListHeaderComponent,
+      stylesHook.walletsListWrapper
+    ],
   );
 
   const renderSectionFooter = useCallback(
@@ -359,8 +427,12 @@ const WalletsList: React.FC = () => {
           if (dataSource.length === 0 && !isLoading) {
             return (
               <View style={styles.footerRoot} testID="NoTransactionsMessage">
-                <Text style={styles.footerEmpty}>{loc.wallets.list_empty_txs1}</Text>
-                <Text style={styles.footerStart}>{loc.wallets.list_empty_txs2}</Text>
+                <Text style={styles.footerEmpty}>
+                  {loc.wallets.list_empty_txs1}
+                </Text>
+                <Text style={styles.footerStart}>
+                  {loc.wallets.list_empty_txs2}
+                </Text>
               </View>
             );
           } else {
@@ -371,7 +443,7 @@ const WalletsList: React.FC = () => {
       }
     },
     [dataSource.length, isLoading],
-  );
+  )
 
   const renderScanButton = useCallback(() => {
     if (wallets.length > 0) {
@@ -380,7 +452,14 @@ const WalletsList: React.FC = () => {
           <FButton
             onPress={navigateToBrowser}
             onLongPress={navigateToBrowser}
-            icon={<View style={{ transform: [{ rotate: '45deg' }] }}><Image resizeMode="stretch" source={require('../../img/close.png')} /></View>}
+            icon={
+              <View style={{ transform: [{ rotate: '45deg' }] }}>
+                <Image
+                  resizeMode='stretch'
+                  source={require('../../img/close.png')}
+                />
+              </View>
+            }
             text="DApps"
             testID="DAppsButton"
           />
@@ -389,14 +468,28 @@ const WalletsList: React.FC = () => {
             onPress={openBuyCrypto}
             onLongPress={openBuyCrypto}
             // Utiliser une icône existante (ex: close.png ou buy.png si ajouté aux assets)
-            icon={<View style={{ transform: [{ rotate: '0deg' }] }}><Image resizeMode="stretch" source={require('../../img/close.png')} /></View>}
+            icon={
+              <View style={{ transform: [{ rotate: '0deg' }] }}>
+                <Image
+                  resizeMode='stretch'
+                  source={require('../../img/close.png')}
+                />
+              </View>
+            }
             text="Acheter"
             testID="BuyButton"
           />
           <FButton
             onPress={navigateToSwap}
             onLongPress={navigateToSwap}
-            icon={<View style={{ transform: [{ rotate: '45deg' }] }}><Image resizeMode="stretch" source={require('../../img/close.png')} /></View>}
+            icon={
+              <View style={{ transform: [{ rotate: '45deg' }] }}>
+                <Image
+                  resizeMode='stretch'
+                  source={require('../../img/close.png')}
+                />
+              </View>
+            }
             text="Swap"
             testID="SwapButton"
           />
@@ -430,7 +523,11 @@ const WalletsList: React.FC = () => {
   const sendButtonLongPress = useCallback(async () => {
     const isClipboardEmpty = (await getClipboardContent())?.trim().length === 0;
 
-    const options = [loc._.cancel, loc.wallets.list_long_choose, loc.wallets.list_long_scan];
+    const options = [
+      loc._.cancel,
+      loc.wallets.list_long_choose,
+      loc.wallets.list_long_scan
+    ];
     if (!isClipboardEmpty) {
       options.push(loc.wallets.paste_from_clipboard);
     }
@@ -443,21 +540,21 @@ const WalletsList: React.FC = () => {
       options.push(String(anchor));
     }
 
-    ActionSheet.showActionSheetWithOptions(props, buttonIndex => {
+    ActionSheet.showActionSheetWithOptions(props, (buttonIndex) => {
       switch (buttonIndex) {
         case 0:
           break;
         case 1:
           fs.showImagePickerAndReadImage()
             .then(onBarScanned)
-            .catch(error => {
+            .catch((error) => {
               triggerHapticFeedback(HapticFeedbackTypes.NotificationError);
               presentAlert({ title: loc.errors.error, message: error.message });
-            });
-          break;
+            })
+          break
         case 2:
           scanQrHelper().then(onBarScanned);
-          break;
+          break
         case 3:
           if (!isClipboardEmpty) {
             pasteFromClipboard();
@@ -467,16 +564,20 @@ const WalletsList: React.FC = () => {
     });
   }, [onBarScanned, pasteFromClipboard]);
 
-  const refreshProps = isDesktop || isElectrumDisabled ? {} : { refreshing: isLoading, onRefresh };
+  const refreshProps =
+    isDesktop || isElectrumDisabled ? {} : { refreshing: isLoading, onRefresh };
 
   const sections: SectionData[] = useMemo(() => {
     if (sizeClass === SizeClass.Large) {
       return [{ key: WalletsListSections.TRANSACTIONS, data: dataSource }];
     }
     return [
-      { key: WalletsListSections.CAROUSEL, data: [WalletsListSections.CAROUSEL] },
+      {
+        key: WalletsListSections.CAROUSEL,
+        data: [WalletsListSections.CAROUSEL]
+      },
       { key: WalletsListSections.TRANSACTIONS, data: dataSource },
-    ];
+    ]
   }, [sizeClass, dataSource]);
 
   const TRANSACTION_ITEM_HEIGHT = 80;
@@ -485,7 +586,10 @@ const WalletsList: React.FC = () => {
   const LARGE_TITLE_EXTRA_HEIGHT = 20;
 
   const getSectionHeaderHeight = useCallback(() => {
-    return SECTION_HEADER_HEIGHT + (sizeClass === SizeClass.Large ? LARGE_TITLE_EXTRA_HEIGHT : 0);
+    return (
+      SECTION_HEADER_HEIGHT +
+      (sizeClass === SizeClass.Large ? LARGE_TITLE_EXTRA_HEIGHT : 0)
+    )
   }, [sizeClass]);
 
   const getItemLayout = useCallback(
@@ -497,25 +601,28 @@ const WalletsList: React.FC = () => {
           length: TRANSACTION_ITEM_HEIGHT,
           offset: TRANSACTION_ITEM_HEIGHT * index,
           index,
-        };
+        }
       } else {
         if (index === 0) {
           return {
             length: CAROUSEL_HEIGHT,
             offset: 0,
             index,
-          };
+          }
         }
         const transactionIndex = index - 1;
         return {
           length: TRANSACTION_ITEM_HEIGHT,
-          offset: CAROUSEL_HEIGHT + headerHeight + TRANSACTION_ITEM_HEIGHT * transactionIndex,
+          offset:
+            CAROUSEL_HEIGHT +
+            headerHeight +
+            TRANSACTION_ITEM_HEIGHT * transactionIndex,
           index,
-        };
+        }
       }
     },
     [sizeClass, getSectionHeaderHeight],
-  );
+  )
 
   return (
     <>
@@ -530,13 +637,13 @@ const WalletsList: React.FC = () => {
         maxToRenderPerBatch={10}
         updateCellsBatchingPeriod={50}
         getItemLayout={getItemLayout}
-        ignoreTopInset={true}
+        ignoreTopInset
         {...refreshProps}
       />
       {renderScanButton()}
     </>
   );
-};
+}
 
 export default WalletsList;
 
@@ -570,6 +677,4 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
-});
-
-
+})

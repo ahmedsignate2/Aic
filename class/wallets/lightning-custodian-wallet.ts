@@ -1,132 +1,148 @@
-import bolt11 from 'bolt11';
-import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
-import { fetch } from '../../util/fetch';
-import { LegacyWallet } from './legacy-wallet';
-import { DecodedInvoice, LightningTransaction, Transaction } from './types';
+import bolt11 from "bolt11";
+import { BitcoinUnit, Chain } from "../../models/bitcoinUnits";
+import { fetch } from "../../util/fetch";
+import { LegacyWallet } from "./legacy-wallet";
+import { DecodedInvoice, LightningTransaction, Transaction } from "./types";
 
-const _staticDecodedInvoiceCache: Record<string, DecodedInvoice> = {};
+const _staticDecodedInvoiceCache: Record<string, DecodedInvoice> = {}
 
 export class LightningCustodianWallet extends LegacyWallet {
-  static readonly type = 'lightningCustodianWallet';
-  static readonly typeReadable = 'Lightning';
-  static readonly subtitleReadable = 'LNDhub';
+  static readonly type = "lightningCustodianWallet";
+  static readonly typeReadable = "Lightning";
+  static readonly subtitleReadable = "LNDhub";
   // @ts-ignore: override
-  public readonly type = LightningCustodianWallet.type;
+  public readonly type = LightningCustodianWallet.type
   // @ts-ignore: override
-  public readonly typeReadable = LightningCustodianWallet.typeReadable;
+  public readonly typeReadable = LightningCustodianWallet.typeReadable
 
-  baseURI?: string;
-  refresh_token: string = '';
-  access_token: string = '';
-  _refresh_token_created_ts: number = 0;
-  _access_token_created_ts: number = 0;
-  refill_addressess: string[] = [];
-  pending_transactions_raw: any[] = [];
-  transactions_raw: any[] = [];
-  user_invoices_raw: any[] = [];
-  preferredBalanceUnit = BitcoinUnit.SATS;
-  chain = Chain.OFFCHAIN;
-  last_paid_invoice_result?: any;
+  baseURI?: string
+  refresh_token: string = "";
+  access_token: string = "";
+  _refresh_token_created_ts: number = 0
+  _access_token_created_ts: number = 0
+  refill_addressess: string[] = []
+  pending_transactions_raw: any[] = []
+  transactions_raw: any[] = []
+  user_invoices_raw: any[] = []
+  preferredBalanceUnit = BitcoinUnit.SATS
+  chain = Chain.OFFCHAIN
+  last_paid_invoice_result?: any
 
   /**
    * requires calling init() after setting
    *
    * @param URI
    */
-  setBaseURI(URI: string | undefined) {
-    this.baseURI = URI?.endsWith('/') ? URI.slice(0, -1) : URI;
+  setBaseURI (URI: string | undefined) {
+    this.baseURI = URI?.endsWith("/") ? URI.slice(0, -1) : URI
   }
 
-  getBaseURI() {
-    return this.baseURI;
+  getBaseURI () {
+    return this.baseURI
   }
 
-  allowSend() {
-    return true;
+  allowSend () {
+    return true
   }
 
-  getAddress(): string | false {
+  getAddress (): string | false {
     if (this.refill_addressess.length > 0) {
-      return this.refill_addressess[0];
+      return this.refill_addressess[0]
     } else {
-      return false;
+      return false
     }
   }
 
-  getSecret() {
-    return this.secret + '@' + this.baseURI;
+  getSecret () {
+    return this.secret + "@" + this.baseURI
   }
 
-  timeToRefreshBalance() {
-    return (+new Date() - this._lastBalanceFetch) / 1000 > 300; // 5 min
+  timeToRefreshBalance () {
+    return (+new Date() - this._lastBalanceFetch) / 1000 > 300 // 5 min
   }
 
-  timeToRefreshTransaction() {
-    return (+new Date() - this._lastTxFetch) / 1000 > 300; // 5 min
+  timeToRefreshTransaction () {
+    return (+new Date() - this._lastTxFetch) / 1000 > 300 // 5 min
   }
 
-  async init() {
+  async init () {
     // un-cache refill onchain addresses on cold start. should help for cases when certain lndhub
     // is turned off permanently, so users cant pull refill address from cache and send money to a black hole
-    this.refill_addressess = [];
+    this.refill_addressess = []
   }
 
-  accessTokenExpired() {
-    return (+new Date() - this._access_token_created_ts) / 1000 >= 3600 * 2; // 2h
+  accessTokenExpired () {
+    return (+new Date() - this._access_token_created_ts) / 1000 >= 3600 * 2 // 2h
   }
 
-  refreshTokenExpired() {
-    return (+new Date() - this._refresh_token_created_ts) / 1000 >= 3600 * 24 * 7; // 7d
+  refreshTokenExpired () {
+    return (
+      (+new Date() - this._refresh_token_created_ts) / 1000 >= 3600 * 24 * 7
+    ); // 7d
   }
 
-  generate(): Promise<void> {
+  generate (): Promise<void> {
     // nop
-    return Promise.resolve();
+    return Promise.resolve()
   }
 
-  async createAccount(isTest: boolean = false) {
-    const response = await fetch(this.baseURI + '/create', {
-      method: 'POST',
-      body: JSON.stringify({ partnerid: 'bluewallet', accounttype: (isTest && 'test') || 'common' }),
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+  async createAccount (isTest: boolean = false) {
+    const response = await fetch(this.baseURI + "/create", {
+      method: "POST",
+      body: JSON.stringify({
+        partnerid: "malinwallet",
+        accounttype: (isTest && "test") || "common",
+      }),
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      }
     });
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + (json.message ? json.message : json.error) + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " +
+          (json.message ? json.message : json.error) +
+          " (code " +
+          json.code +
+          ")",
+      );
     }
 
     if (!json.login || !json.password) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    this.secret = 'lndhub://' + json.login + ':' + json.password;
+    this.secret = "lndhub://" + json.login + ":" + json.password
   }
 
-  async payInvoice(invoice: string, freeAmount: number = 0) {
-    const response = await fetch(this.baseURI + '/payinvoice', {
-      method: 'POST',
+  async payInvoice (invoice: string, freeAmount: number = 0) {
+    const response = await fetch(this.baseURI + "/payinvoice", {
+      method: "POST",
       body: JSON.stringify({ invoice, amount: freeAmount }),
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
-    this.last_paid_invoice_result = json;
+    this.last_paid_invoice_result = json
   }
 
   /**
@@ -134,24 +150,30 @@ export class LightningCustodianWallet extends LegacyWallet {
    *
    * @return {Promise.<Array>}
    */
-  async getUserInvoices(limit: number | false = false) {
-    let limitString = '';
-    if (limit) limitString = '?limit=' + parseInt(limit as unknown as string, 10);
-    const response = await fetch(this.baseURI + '/getuserinvoices' + limitString, {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
+  async getUserInvoices (limit: number | false = false) {
+    let limitString = "";
+    if (limit) {
+    { limitString = '?limit=' + parseInt(limit as unknown as string, 10) }
+    const response = await fetch(
+      this.baseURI + "/getuserinvoices" + limitString,
+      {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + " " + this.access_token
+        },
       },
-    });
-    const json = await response.json();
+    )
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (limit) {
@@ -160,24 +182,28 @@ export class LightningCustodianWallet extends LegacyWallet {
 
       for (const oldInvoice of this.user_invoices_raw) {
         // iterate all OLD invoices
-        let found = false;
+        let found = false
         for (const newInvoice of json) {
           // iterate all NEW invoices
-          if (newInvoice.payment_request === oldInvoice.payment_request) found = true;
+          if (newInvoice.payment_request === oldInvoice.payment_request) {
+          { found = true }
         }
 
         if (!found) {
           // if old invoice is not found in NEW array, we simply add it:
-          json.push(oldInvoice);
+          json.push(oldInvoice)
         }
       }
     }
 
-    this.user_invoices_raw = json.sort(function (a: { timestamp: number }, b: { timestamp: number }) {
-      return a.timestamp - b.timestamp;
+    this.user_invoices_raw = json.sort(function (
+      a: { timestamp: number },
+      b: { timestamp: number },
+    ) {
+      return a.timestamp - b.timestamp
     });
 
-    return this.user_invoices_raw;
+    return this.user_invoices_raw
   }
 
   /**
@@ -186,42 +212,48 @@ export class LightningCustodianWallet extends LegacyWallet {
    *
    * @returns {Promise<void>}
    */
-  async fetchUserInvoices() {
-    await this.getUserInvoices();
+  async fetchUserInvoices () {
+    await this.getUserInvoices()
   }
 
-  isInvoiceGeneratedByWallet(paymentRequest: string) {
-    return this.user_invoices_raw.some(invoice => invoice.payment_request === paymentRequest);
+  isInvoiceGeneratedByWallet (paymentRequest: string) {
+    return this.user_invoices_raw.some(
+      (invoice) => invoice.payment_request === paymentRequest,
+    )
   }
 
-  weOwnAddress(address: string) {
-    return this.refill_addressess.some(refillAddress => address === refillAddress);
+  weOwnAddress (address: string) {
+    return this.refill_addressess.some(
+      (refillAddress) => address === refillAddress,
+    )
   }
 
-  async addInvoice(amt: number, memo: string) {
-    const response = await fetch(this.baseURI + '/addinvoice', {
-      method: 'POST',
-      body: JSON.stringify({ amt: amt + '', memo }),
+  async addInvoice (amt: number, memo: string) {
+    const response = await fetch(this.baseURI + "/addinvoice", {
+      method: "POST",
+      body: JSON.stringify({ amt: amt + "", memo }),
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
-    const json = await response.json();
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (!json.r_hash || !json.pay_req) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    return json.pay_req;
+    return json.pay_req
   }
 
   /**
@@ -230,261 +262,286 @@ export class LightningCustodianWallet extends LegacyWallet {
    *
    * @return {Promise.<void>}
    */
-  async authorize() {
-    let login, password;
-    if (this.secret.indexOf('blitzhub://') !== -1) {
-      login = this.secret.replace('blitzhub://', '').split(':')[0];
-      password = this.secret.replace('blitzhub://', '').split(':')[1];
+  async authorize () {
+    let login, password
+    if (this.secret.indexOf("blitzhub://") !== -1) {
+      login = this.secret.replace("blitzhub://", "").split(":")[0]
+      password = this.secret.replace("blitzhub://", "").split(":")[1]
     } else {
-      login = this.secret.replace('lndhub://', '').split(':')[0];
-      password = this.secret.replace('lndhub://', '').split(':')[1];
+      login = this.secret.replace("lndhub://", "").split(":")[0]
+      password = this.secret.replace("lndhub://", "").split(":")[1]
     }
-    const response = await fetch(this.baseURI + '/auth?type=auth', {
-      method: 'POST',
+    const response = await fetch(this.baseURI + "/auth?type=auth", {
+      method: "POST",
       body: JSON.stringify({ login, password }),
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      }
     });
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (!json.access_token || !json.refresh_token) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    this.refresh_token = json.refresh_token;
-    this.access_token = json.access_token;
-    this._refresh_token_created_ts = +new Date();
-    this._access_token_created_ts = +new Date();
+    this.refresh_token = json.refresh_token
+    this.access_token = json.access_token
+    this._refresh_token_created_ts = +new Date()
+    this._access_token_created_ts = +new Date()
   }
 
-  async checkLogin() {
+  async checkLogin () {
     if (this.accessTokenExpired() && this.refreshTokenExpired()) {
       // all tokens expired, only option is to login with login and password
-      return this.authorize();
+      return this.authorize()
     }
 
     if (this.accessTokenExpired()) {
       // only access token expired, so only refreshing it
-      let refreshedOk = true;
+      let refreshedOk = true
       try {
-        await this.refreshAcessToken();
+        await this.refreshAcessToken()
       } catch (Err) {
-        refreshedOk = false;
+        refreshedOk = false
       }
 
       if (!refreshedOk) {
         // something went wrong, lets try to login regularly
-        return this.authorize();
+        return this.authorize()
       }
     }
   }
 
-  async refreshAcessToken() {
-    const response = await fetch(this.baseURI + '/auth?type=refresh_token', {
-      method: 'POST',
+  async refreshAcessToken () {
+    const response = await fetch(this.baseURI + "/auth?type=refresh_token", {
+      method: "POST",
       body: JSON.stringify({ refresh_token: this.refresh_token }),
-      headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      }
     });
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (!json.access_token || !json.refresh_token) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    this.refresh_token = json.refresh_token;
-    this.access_token = json.access_token;
-    this._refresh_token_created_ts = +new Date();
-    this._access_token_created_ts = +new Date();
+    this.refresh_token = json.refresh_token
+    this.access_token = json.access_token
+    this._refresh_token_created_ts = +new Date()
+    this._access_token_created_ts = +new Date()
   }
 
-  async fetchBtcAddress() {
-    const response = await fetch(this.baseURI + '/getbtc', {
-      method: 'GET',
+  async fetchBtcAddress () {
+    const response = await fetch(this.baseURI + "/getbtc", {
+      method: "GET",
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
-    this.refill_addressess = [];
+    this.refill_addressess = []
 
     for (const arr of json) {
-      this.refill_addressess.push(arr.address);
+      this.refill_addressess.push(arr.address)
     }
   }
 
-  async getAddressAsync() {
-    await this.fetchBtcAddress();
-    return this.getAddress();
+  async getAddressAsync () {
+    await this.fetchBtcAddress()
+    return this.getAddress()
   }
 
-  async allowOnchainAddress() {
+  async allowOnchainAddress () {
     if (this.getAddress() !== undefined && this.getAddress() !== null) {
-      return true;
+      return true
     } else {
-      await this.fetchBtcAddress();
-      return this.getAddress() !== undefined && this.getAddress() !== null;
+      await this.fetchBtcAddress()
+      return this.getAddress() !== undefined && this.getAddress() !== null
     }
   }
 
-  getTransactions(): (Transaction & LightningTransaction)[] {
-    let txs: any = [];
-    txs = txs.concat(this.pending_transactions_raw.slice(), this.transactions_raw.slice().reverse(), this.user_invoices_raw.slice()); // slice so array is cloned
+  getTransactions (): (Transaction & LightningTransaction)[] {
+    let txs: any = []
+    txs = txs.concat(
+      this.pending_transactions_raw.slice(),
+      this.transactions_raw.slice().reverse(),
+      this.user_invoices_raw.slice(),
+    ) // slice so array is cloned
 
     for (const tx of txs) {
-      tx.walletID = this.getID();
+      tx.walletID = this.getID()
       if (tx.amount) {
         // pending tx
-        tx.amt = tx.amount * -100000000;
-        tx.fee = 0;
-        tx.memo = 'On-chain transaction';
+        tx.amt = tx.amount * -100000000
+        tx.fee = 0
+        tx.memo = "On-chain transaction";
       }
 
-      if (typeof tx.amt !== 'undefined' && typeof tx.fee !== 'undefined') {
+      if (typeof tx.amt !== "undefined" && typeof tx.fee !== "undefined") {
         // lnd tx outgoing
-        tx.value = (tx.amt * 1 + tx.fee * 1) * -1;
+        tx.value = (tx.amt * 1 + tx.fee * 1) * -1
       }
 
-      if (tx.type === 'paid_invoice') {
-        tx.memo = tx.memo || 'Lightning payment';
-        if (tx.value > 0) tx.value = tx.value * -1; // value already includes fee in it (see lndhub)
+      if (tx.type === "paid_invoice") {
+        tx.memo = tx.memo || "Lightning payment";
+        if (tx.value > 0) tx.value = tx.value * -1 // value already includes fee in it (see lndhub)
         // outer code expects spending transactions to of negative value
       }
 
-      if (tx.type === 'bitcoind_tx') {
-        tx.memo = 'On-chain transaction';
+      if (tx.type === "bitcoind_tx") {
+        tx.memo = "On-chain transaction";
       }
 
-      if (tx.type === 'user_invoice') {
+      if (tx.type === "user_invoice") {
         // incoming ln tx
-        tx.value = parseInt(tx.amt, 10);
-        tx.fee = 0;
-        tx.memo = tx.description || 'Lightning invoice';
+        tx.value = parseInt(tx.amt, 10)
+        tx.fee = 0
+        tx.memo = tx.description || "Lightning invoice";
       }
 
-      tx.timestamp = tx.timestamp || tx.time;
+      tx.timestamp = tx.timestamp || tx.time
     }
-    return txs.sort(function (a: { timestamp: number }, b: { timestamp: number }) {
-      return b.timestamp - a.timestamp;
+    return txs.sort(function (
+      a: { timestamp: number },
+      b: { timestamp: number },
+    ) {
+      return b.timestamp - a.timestamp
     });
   }
 
-  async fetchPendingTransactions() {
-    const response = await fetch(this.baseURI + '/getpending', {
-      method: 'GET',
+  async fetchPendingTransactions () {
+    const response = await fetch(this.baseURI + "/getpending", {
+      method: "GET",
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
-    this.pending_transactions_raw = json;
+    this.pending_transactions_raw = json
   }
 
-  async fetchTransactions() {
+  async fetchTransactions () {
     // TODO: iterate over all available pages
-    const limit = 10;
-    let queryRes = '';
-    const offset = 0;
-    queryRes += '?limit=' + limit;
-    queryRes += '&offset=' + offset;
+    const limit = 10
+    let queryRes = "";
+    const offset = 0
+    queryRes += "?limit=" + limit
+    queryRes += "&offset=" + offset
 
-    const response = await fetch(this.baseURI + '/gettxs' + queryRes, {
-      method: 'GET',
+    const response = await fetch(this.baseURI + "/gettxs" + queryRes, {
+      method: "GET",
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (!Array.isArray(json)) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    this._lastTxFetch = +new Date();
-    this.transactions_raw = json;
+    this._lastTxFetch = +new Date()
+    this.transactions_raw = json
   }
 
-  getBalance() {
-    return this.balance;
+  getBalance () {
+    return this.balance
   }
 
-  async fetchBalance(noRetry?: boolean): Promise<void> {
-    await this.checkLogin();
+  async fetchBalance (noRetry?: boolean): Promise<void> {
+    await this.checkLogin()
 
-    const response = await fetch(this.baseURI + '/balance', {
-      method: 'GET',
+    const response = await fetch(this.baseURI + "/balance", {
+      method: "GET",
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
-      },
-    });
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer" + " " + this.access_token
+      }
+    })
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
       if (json.code * 1 === 1 && !noRetry) {
-        await this.authorize();
-        return this.fetchBalance(true);
+        await this.authorize()
+        return this.fetchBalance(true)
       }
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
-    if (!json.BTC || typeof json.BTC.AvailableBalance === 'undefined') {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+    if (!json.BTC || typeof json.BTC.AvailableBalance === "undefined") {
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    this.balance = json.BTC.AvailableBalance;
-    this._lastBalanceFetch = +new Date();
+    this.balance = json.BTC.AvailableBalance
+    this._lastBalanceFetch = +new Date()
   }
 
   /**
@@ -503,86 +560,93 @@ export class LightningCustodianWallet extends LegacyWallet {
    * @param invoice BOLT invoice string
    * @return {DecodedInvoice}
    */
-  decodeInvoice(invoice: string): DecodedInvoice {
-    if (_staticDecodedInvoiceCache[invoice]) return _staticDecodedInvoiceCache[invoice]; // cache hit
+  decodeInvoice (invoice: string): DecodedInvoice {
+    if (_staticDecodedInvoiceCache[invoice]) {
+    { return _staticDecodedInvoiceCache[invoice] } // cache hit
 
-    const { payeeNodeKey, tags, satoshis, millisatoshis, timestamp } = bolt11.decode(invoice);
+    const { payeeNodeKey, tags, satoshis, millisatoshis, timestamp } =
+      bolt11.decode(invoice)
 
     const decoded: DecodedInvoice = {
-      destination: payeeNodeKey ?? '',
+      destination: payeeNodeKey ?? "",
       num_satoshis: satoshis ? +satoshis : 0,
       num_millisatoshis: millisatoshis ? +millisatoshis : 0,
       timestamp: timestamp ?? 0,
-      fallback_addr: '',
+      fallback_addr: "",
       route_hints: [],
-      payment_hash: '',
+      payment_hash: "",
       expiry: 3600, // default
-      description: '',
-      description_hash: '',
-      cltv_expiry: '',
-    };
+      description: "",
+      description_hash: "",
+      cltv_expiry: "",
+    }
 
     for (let i = 0; i < tags.length; i++) {
-      const { tagName, data } = tags[i];
+      const { tagName, data } = tags[i]
       switch (tagName) {
-        case 'payment_hash':
-          decoded.payment_hash = String(data);
-          break;
-        case 'purpose_commit_hash':
-          decoded.description_hash = String(data);
-          break;
-        case 'min_final_cltv_expiry':
-          decoded.cltv_expiry = data.toString();
-          break;
-        case 'expire_time':
-          decoded.expiry = +data;
-          break;
-        case 'description':
-          decoded.description = String(data);
-          break;
+        case "payment_hash":
+          decoded.payment_hash = String(data)
+          break
+        case "purpose_commit_hash":
+          decoded.description_hash = String(data)
+          break
+        case "min_final_cltv_expiry":
+          decoded.cltv_expiry = data.toString()
+          break
+        case "expire_time":
+          decoded.expiry = +data
+          break
+        case "description":
+          decoded.description = String(data)
+          break
       }
     }
 
-    if (!decoded.expiry) decoded.expiry = 3600; // default
+    if (!decoded.expiry) decoded.expiry = 3600 // default
 
     if (decoded.num_satoshis === 0 && decoded.num_millisatoshis > 0) {
-      decoded.num_satoshis = Math.floor(decoded.num_millisatoshis / 1000);
+      decoded.num_satoshis = Math.floor(decoded.num_millisatoshis / 1000)
     }
 
-    _staticDecodedInvoiceCache[invoice] = decoded;
+    _staticDecodedInvoiceCache[invoice] = decoded
 
-    return decoded;
+    return decoded
   }
 
-  static async isValidNodeAddress(address: string): Promise<boolean> {
-    const normalizedAddress = new URL('/getinfo', address.replace(/([^:]\/)\/+/g, '$1'));
+  static async isValidNodeAddress (address: string): Promise<boolean> {
+    const normalizedAddress = new URL(
+      "/getinfo",
+      address.replace(/([^:]\/)\/+/g, "$1"),
+    );
 
     const response = await fetch(normalizedAddress.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": "application/json",
+      }
     });
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.code && json.code !== 1) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
-    return true;
+    return true
   }
 
-  allowReceive() {
-    return true;
+  allowReceive () {
+    return true
   }
 
-  allowSignVerifyMessage() {
-    return false;
+  allowSignVerifyMessage () {
+    return false
   }
 
   /**
@@ -601,64 +665,72 @@ export class LightningCustodianWallet extends LegacyWallet {
    * @param invoice BOLT invoice string
    * @return {Promise.<Object>}
    */
-  async decodeInvoiceRemote(invoice: string) {
-    await this.checkLogin();
+  async decodeInvoiceRemote (invoice: string) {
+    await this.checkLogin()
 
-    const response = await fetch(this.baseURI + '/decodeinvoice?invoice=' + invoice, {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer' + ' ' + this.access_token,
+    const response = await fetch(
+      this.baseURI + "/decodeinvoice?invoice=" + invoice,
+      {
+        method: "GET",
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+          Authorization: "Bearer" + " " + this.access_token
+        },
       },
-    });
+    )
 
-    const json = await response.json();
+    const json = await response.json()
     if (!json) {
-      throw new Error('API failure: ' + response.statusText);
+      throw new Error("API failure: " + response.statusText)
     }
 
     if (json.error) {
-      throw new Error('API error: ' + json.message + ' (code ' + json.code + ')');
+      throw new Error(
+        "API error: " + json.message + " (code " + json.code + ")",
+      );
     }
 
     if (!json.payment_hash) {
-      throw new Error('API unexpected response: ' + JSON.stringify(json));
+      throw new Error("API unexpected response: " + JSON.stringify(json))
     }
 
-    return json;
+    return json
   }
 
-  weOwnTransaction(txid: string) {
+  weOwnTransaction (txid: string) {
     for (const tx of this.getTransactions()) {
-      if (tx && tx.payment_hash && tx.payment_hash === txid) return true;
+      if (tx && tx.payment_hash && tx.payment_hash === txid) return true
     }
 
-    return false;
+    return false
   }
 
-  authenticate(lnurl: any) {
-    return lnurl.authenticate(this.secret);
+  authenticate (lnurl: any) {
+    return lnurl.authenticate(this.secret)
   }
 
-  getLatestTransactionTime(): string | 0 {
-    const transactions = this.getTransactions();
+  getLatestTransactionTime (): string | 0 {
+    const transactions = this.getTransactions()
     if (transactions.length === 0) {
-      return 0;
+      return 0
     }
-    return new Date(transactions.reduce((max: number, tx: any) => Math.max(max, tx.timestamp), 0) * 1000).toString();
+    return new Date(
+      transactions.reduce(
+        (max: number, tx: any) => Math.max(max, tx.timestamp),
+        0,
+      ) * 1000,
+    ).toString()
   }
 
-  isInvoiceExpired(invoice: string, currentTimestamp?: number): boolean {
-    currentTimestamp = currentTimestamp || Date.now() / 1000; // current ts in seconds
-    const decoded = this.decodeInvoice(invoice);
-    return decoded.timestamp + decoded.expiry < currentTimestamp;
+  isInvoiceExpired (invoice: string, currentTimestamp?: number): boolean {
+    currentTimestamp = currentTimestamp || Date.now() / 1000 // current ts in seconds
+    const decoded = this.decodeInvoice(invoice)
+    return decoded.timestamp + decoded.expiry < currentTimestamp
   }
 }
 
 /*
-
-
 
 pending tx:
 
@@ -674,7 +746,6 @@ pending tx:
         walletconflicts: [],
         time: 1535024434,
         timereceived: 1535024434 } ]
-
 
 tx:
 

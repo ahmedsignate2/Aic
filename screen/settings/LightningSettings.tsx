@@ -10,7 +10,9 @@ import presentAlert, { AlertType } from '../../components/Alert';
 import { Button } from '../../components/Button';
 import { useTheme } from '../../components/themes';
 import loc from '../../loc';
-import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
+import triggerHapticFeedback, {
+  HapticFeedbackTypes
+} from '../../malin_modules/hapticFeedback';
 import { GROUP_IO_MALINWALLET } from '../../malin_modules/currency';
 import { clearLNDHub, getLNDHub, setLNDHub } from '../../helpers/lndHub';
 import { DetailViewStackParamList } from '../../navigation/DetailViewStackParamList';
@@ -20,7 +22,10 @@ import SafeAreaScrollView from '../../components/SafeAreaScrollView';
 import { BlueSpacing40 } from '../../components/BlueSpacing';
 import { BlueLoading } from '../../components/BlueLoading';
 
-type LightingSettingsRouteProps = RouteProp<DetailViewStackParamList, 'LightningSettings'>;
+type LightingSettingsRouteProps = RouteProp<
+  DetailViewStackParamList,
+  'LightningSettings'
+>;
 
 const LightningSettings: React.FC = () => {
   const params = useRoute<LightingSettingsRouteProps>().params;
@@ -35,7 +40,7 @@ const LightningSettings: React.FC = () => {
       backgroundColor: 'transparent',
       flexDirection: direction === 'rtl' ? 'row-reverse' : 'row',
     },
-  });
+  })
 
   useEffect(() => {
     const fetchURI = async () => {
@@ -54,7 +59,9 @@ const LightningSettings: React.FC = () => {
         setIsLoading(false);
         if (params?.url) {
           Alert.alert(
-            loc.formatString(loc.settings.set_lndhub_as_default, { url: params.url }) as string,
+            loc.formatString(loc.settings.set_lndhub_as_default, {
+              url: params.url
+            }) as string,
             '',
             [
               {
@@ -67,20 +74,23 @@ const LightningSettings: React.FC = () => {
               { text: loc._.cancel, onPress: () => {}, style: 'cancel' },
             ],
             { cancelable: false },
-          );
+          )
         }
       });
-    };
+    }
 
     // Call the initialize function
     initialize();
   }, [params?.url]);
 
   const setLndhubURI = (value: string) => {
-    // in case user scans a QR with a deeplink like `bluewallet:setlndhuburl?url=https%3A%2F%2Flndhub.herokuapp.com`
-    const setLndHubUrl = DeeplinkSchemaMatch.getUrlFromSetLndhubUrlAction(value);
+    // in case user scans a QR with a deeplink like `malinwallet:setlndhuburl?url=https%3A%2F%2Flndhub.herokuapp.com`
+    const setLndHubUrl =
+      DeeplinkSchemaMatch.getUrlFromSetLndhubUrlAction(value);
 
-    setURI(typeof setLndHubUrl === 'string' ? setLndHubUrl.trim() : value.trim());
+    setURI(
+      typeof setLndHubUrl === 'string' ? setLndHubUrl.trim() : value.trim()
+    );
   };
   const save = useCallback(async () => {
     setIsLoading(true);
@@ -96,13 +106,18 @@ const LightningSettings: React.FC = () => {
         await clearLNDHub();
       }
 
-      presentAlert({ message: loc.settings.lightning_saved, type: AlertType.Toast });
+      presentAlert({
+        message: loc.settings.lightning_saved,
+        type: AlertType.Toast
+      });
       triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
     } catch (error) {
       triggerHapticFeedback(HapticFeedbackTypes.NotificationError);
       presentAlert({
-        message: normalizedURI?.endsWith('.onion') ? loc.settings.lightning_error_lndhub_uri_tor : loc.settings.lightning_error_lndhub_uri,
-      });
+        message: normalizedURI?.endsWith('.onion')
+          ? loc.settings.lightning_error_lndhub_uri_tor
+          : loc.settings.lightning_error_lndhub_uri,
+      })
       console.log(error);
     }
     setIsLoading(false);
@@ -117,7 +132,10 @@ const LightningSettings: React.FC = () => {
   }, [params?.onBarScanned, setParams]);
 
   return (
-    <SafeAreaScrollView automaticallyAdjustContentInsets contentInsetAdjustmentBehavior="automatic">
+    <SafeAreaScrollView
+      automaticallyAdjustContentInsets
+      contentInsetAdjustmentBehavior='automatic'
+    >
       <BlueCard>
         <BlueText>{loc.settings.lightning_settings_explain}</BlueText>
       </BlueCard>
@@ -140,16 +158,24 @@ const LightningSettings: React.FC = () => {
         <AddressInput
           isLoading={isLoading}
           address={URI}
-          placeholder={loc.formatString(loc.settings.lndhub_uri, { example: 'https://10.20.30.40:3000' })}
+          placeholder={loc.formatString(loc.settings.lndhub_uri, {
+            example: 'https://10.20.30.40:3000',
+          })}
           onChangeText={setLndhubURI}
           testID="URIInput"
           editable={!isLoading}
         />
         <BlueSpacing40 />
-        {isLoading ? <BlueLoading /> : <Button testID="Save" onPress={save} title={loc.settings.save} />}
+        {isLoading
+? (
+          <BlueLoading />
+        )
+: (
+              <Button testID='Save' onPress={save} title={loc.settings.save} />
+        )}
       </BlueCard>
     </SafeAreaScrollView>
   );
-};
+}
 
 export default LightningSettings;

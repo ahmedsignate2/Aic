@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
-import { ActivityIndicator, Keyboard, LayoutAnimation, Platform, ScrollView, StyleSheet, TextInput, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Keyboard,
+  LayoutAnimation,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  View
+} from 'react-native';
 import { Icon } from '@rneui/themed';
 import Share from 'react-native-share';
-import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
+import triggerHapticFeedback, {
+  HapticFeedbackTypes
+} from '../../malin_modules/hapticFeedback';
 import { BlueFormLabel } from '../../BlueComponents';
 import presentAlert from '../../components/Alert';
 import { FButton, FContainer } from '../../components/FloatButtons';
@@ -14,7 +25,11 @@ import {
   DoneAndDismissKeyboardInputAccessory,
   DoneAndDismissKeyboardInputAccessoryViewID,
 } from '../../components/DoneAndDismissKeyboardInputAccessory';
-import { BlueSpacing10, BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
+import {
+  BlueSpacing10,
+  BlueSpacing20,
+  BlueSpacing40
+} from '../../components/BlueSpacing';
 
 const SignVerify = () => {
   const { colors } = useTheme();
@@ -28,20 +43,23 @@ const SignVerify = () => {
   const [messageHasFocus, setMessageHasFocus] = useState(false);
   const [isShareVisible, setIsShareVisible] = useState(false);
 
-  const wallet = wallets.find(w => w.getID() === params.walletID);
-  const isToolbarVisibleForAndroid = Platform.OS === 'android' && messageHasFocus && isKeyboardVisible;
+  const wallet = wallets.find((w) => w.getID() === params.walletID);
+  const isToolbarVisibleForAndroid =
+    Platform.OS === 'android' && messageHasFocus && isKeyboardVisible;
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow', () =>
-      setIsKeyboardVisible(true),
-    );
-    const hideSubscription = Keyboard.addListener(Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide', () =>
-      setIsKeyboardVisible(false),
-    );
+    const showSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow',
+      () => setIsKeyboardVisible(true),
+    )
+    const hideSubscription = Keyboard.addListener(
+      Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide',
+      () => setIsKeyboardVisible(false),
+    )
     return () => {
       showSubscription.remove();
       hideSubscription.remove();
-    };
+    }
   }, []);
 
   const stylesHooks = StyleSheet.create({
@@ -53,14 +71,14 @@ const SignVerify = () => {
       borderBottomColor: colors.formBorder,
       backgroundColor: colors.inputBackgroundColor,
       color: colors.foregroundColor,
-    },
+    }
   });
 
   const handleShare = () => {
-    const baseUri = 'https://bluewallet.github.io/VerifySignature';
+    const baseUri = 'https://malinwallet.github.io/VerifySignature';
     const uri = `${baseUri}?a=${address}&m=${encodeURIComponent(message)}&s=${encodeURIComponent(signature)}`;
-    Share.open({ message: uri }).catch(error => console.log(error));
-  };
+    Share.open({ message: uri }).catch((error) => console.log(error));
+  }
 
   const handleSign = async () => {
     setLoading(true);
@@ -76,7 +94,7 @@ const SignVerify = () => {
     }
 
     setLoading(false);
-  };
+  }
 
   const handleVerify = async () => {
     setLoading(true);
@@ -85,8 +103,10 @@ const SignVerify = () => {
       const res = wallet.verifyMessage(message, address, signature);
       presentAlert({
         title: res ? loc._.success : loc.errors.error,
-        message: res ? loc.addresses.sign_signature_correct : loc.addresses.sign_signature_incorrect,
-      });
+        message: res
+          ? loc.addresses.sign_signature_correct
+          : loc.addresses.sign_signature_incorrect,
+      })
       if (res) {
         triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
       }
@@ -95,19 +115,20 @@ const SignVerify = () => {
       presentAlert({ title: loc.errors.error, message: e.message });
     }
     setLoading(false);
-  };
+  }
 
-  const handleFocus = value => {
+  const handleFocus = (value) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setMessageHasFocus(value);
-  };
+  }
 
-  if (loading)
-    return (
+  if (loading) {
+  { return (
       <View style={[stylesHooks.root, styles.loading]}>
         <ActivityIndicator />
       </View>
-    );
+  );
+  }
 
   return (
     <ScrollView
@@ -132,7 +153,7 @@ const SignVerify = () => {
         placeholder={loc.addresses.sign_placeholder_address}
         placeholderTextColor="#81868e"
         value={address}
-        onChangeText={t => setAddress(t.replace('\n', ''))}
+        onChangeText={(t) => setAddress(t.replace('\n', ''))}
         testID="Signature"
         style={[styles.text, stylesHooks.text]}
         autoCorrect={false}
@@ -149,7 +170,7 @@ const SignVerify = () => {
         placeholder={loc.addresses.sign_placeholder_signature}
         placeholderTextColor="#81868e"
         value={signature}
-        onChangeText={t => setSignature(t.replace('\n', ''))}
+        onChangeText={(t) => setSignature(t.replace('\n', ''))}
         testID="Signature"
         style={[styles.text, stylesHooks.text]}
         autoCorrect={false}
@@ -185,7 +206,12 @@ const SignVerify = () => {
               text={loc.multisig.share}
               icon={
                 <View style={styles.buttonsIcon}>
-                  <Icon name="external-link" size={16} type="font-awesome" color={colors.buttonAlternativeTextColor} />
+                  <Icon
+                    name='external-link'
+                    size={16}
+                    type='font-awesome'
+                    color={colors.buttonAlternativeTextColor}
+                  />
                 </View>
               }
             />
@@ -197,8 +223,16 @@ const SignVerify = () => {
       {!isKeyboardVisible && (
         <>
           <FContainer inline>
-            <FButton onPress={handleSign} text={loc.addresses.sign_sign} disabled={loading} />
-            <FButton onPress={handleVerify} text={loc.addresses.sign_verify} disabled={loading} />
+            <FButton
+              onPress={handleSign}
+              text={loc.addresses.sign_sign}
+              disabled={loading}
+            />
+            <FButton
+              onPress={handleVerify}
+              text={loc.addresses.sign_verify}
+              disabled={loading}
+            />
           </FContainer>
           <BlueSpacing10 />
         </>
@@ -208,7 +242,7 @@ const SignVerify = () => {
         ios: (
           <DoneAndDismissKeyboardInputAccessory
             onClearTapped={() => setMessage('')}
-            onPasteTapped={text => {
+            onPasteTapped={(text) => {
               setMessage(text);
               Keyboard.dismiss();
             }}
@@ -220,7 +254,7 @@ const SignVerify = () => {
               setMessage('');
               Keyboard.dismiss();
             }}
-            onPasteTapped={text => {
+            onPasteTapped={(text) => {
               setMessage(text);
               Keyboard.dismiss();
             }}
@@ -229,7 +263,7 @@ const SignVerify = () => {
       })}
     </ScrollView>
   );
-};
+}
 
 export default SignVerify;
 
@@ -262,4 +296,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+})

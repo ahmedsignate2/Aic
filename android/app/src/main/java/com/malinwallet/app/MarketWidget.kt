@@ -25,7 +25,7 @@ class MarketWidget : AppWidgetProvider() {
 
         private val hardcodedPeers = listOf(
             ElectrumServer("mainnet.foundationdevices.com", 50002, true),
-            ElectrumServer("electrum1.bluewallet.io", 443, true),
+            ElectrumServer("electrum1.malinwallet.io", 443, true),
             ElectrumServer("electrum.acinq.co", 50002, true),
             ElectrumServer("electrum.bitaroo.net", 50002, true)
         )

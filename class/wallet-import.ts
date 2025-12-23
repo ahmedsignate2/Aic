@@ -24,11 +24,12 @@ import {
   WatchOnlyWallet,
 } from '.';
 import bip39WalletFormatsElectrum from './bip39_wallet_formats.json'; // https://github.com/spesmilo/electrum/blob/master/electrum/bip39_wallet_formats.json
-import bip39WalletFormatsBlueWallet from './bip39_wallet_formats_bluewallet.json';
+import bip39WalletFormatsMalinWallet from './bip39_wallet_formats_malinwallet.json';
 import type { TWallet } from './wallets/types';
 
 // https://github.com/bitcoinjs/bip32/blob/master/ts-src/bip32.ts#L43
-export const validateBip32 = (path: string) => path.match(/^(m\/)?(\d+'?\/)*\d+'?$/) !== null;
+export const validateBip32 = (path: string) =>
+  path.match(/^(m\/)?(\d+'?\/)*\d+'?$/) !== null;
 
 // because original file bip39WalletFormatsElectrum is from Electrum X and doesn't contain p2tr wallets, we need to add it
 bip39WalletFormatsElectrum.push({
@@ -36,7 +37,7 @@ bip39WalletFormatsElectrum.push({
   derivation_path: "m/86'/0'/0'",
   script_type: 'p2tr',
   iterate_accounts: true,
-});
+})
 
 type TStatus = {
   cancelled: boolean;
@@ -77,32 +78,39 @@ const startImport = (
   const promise = new Promise<TStatus>((resolve, reject) => {
     promiseResolve = resolve;
     promiseReject = reject;
-  });
+  })
 
   // helpers
   // in offline mode all wallets are considered used
   const wasUsed = async (wallet: TWallet): Promise<boolean> => {
     if (offline) return true;
     return wallet.wasEverUsed();
-  };
-  const fetch = async (wallet: TWallet, balance: boolean = false, transactions: boolean = false) => {
+  }
+  const fetch = async (
+    wallet: TWallet,
+    balance: boolean = false,
+    transactions: boolean = false
+  ) => {
     if (offline) return;
     if (balance) await wallet.fetchBalance();
     if (transactions) await wallet.fetchTransactions();
-  };
+  }
 
   // actions
   const reportProgress = (name: string) => {
     onProgress(name);
-  };
-  const reportFinish = (cancelled: boolean = false, stopped: boolean = false) => {
+  }
+  const reportFinish = (
+    cancelled: boolean = false,
+    stopped: boolean = false
+  ) => {
     promiseResolve({ cancelled, stopped, wallets });
-  };
+  }
   const reportWallet = (wallet: TWallet) => {
-    if (wallets.some(w => w.getID() === wallet.getID())) return; // do not add duplicates
+    if (wallets.some((w) => w.getID() === wallet.getID())) return; // do not add duplicates
     wallets.push(wallet);
     onWallet(wallet);
-  };
+  }
   const stop = () => (running = false);
 
   async function* importGenerator() {
@@ -132,7 +140,10 @@ const startImport = (
     // BIP38 password required
     if (text.startsWith('6P')) {
       do {
-        password = await onPassword(loc.wallets.looks_like_bip38, loc.wallets.enter_bip38_password);
+        password = await onPassword(
+          loc.wallets.looks_like_bip38,
+          loc.wallets.enter_bip38_password
+        );
       } while (!password);
     }
 
@@ -140,7 +151,10 @@ const startImport = (
     const hd = new HDSegwitBech32Wallet();
     hd.setSecret(text);
     if (askPassphrase && hd.validateMnemonic()) {
-      password = await onPassword(loc.wallets.import_passphrase_title, loc.wallets.import_passphrase_message);
+      password = await onPassword(
+        loc.wallets.import_passphrase_title,
+        loc.wallets.import_passphrase_message
+      );
     }
 
     // AEZEED password needs to be correct
@@ -159,7 +173,10 @@ const startImport = (
       s1.setSecret(text);
 
       if (s1.validateMnemonic()) {
-        password = await onPassword(loc.wallets.import_passphrase_title, loc.wallets.import_passphrase_message);
+        password = await onPassword(
+          loc.wallets.import_passphrase_title,
+          loc.wallets.import_passphrase_message
+        );
       }
     }
 
@@ -167,14 +184,20 @@ const startImport = (
     const electrum1 = new HDSegwitElectrumSeedP2WPKHWallet();
     electrum1.setSecret(text);
     if (askPassphrase && electrum1.validateMnemonic()) {
-      password = await onPassword(loc.wallets.import_passphrase_title, loc.wallets.import_passphrase_message);
+      password = await onPassword(
+        loc.wallets.import_passphrase_title,
+        loc.wallets.import_passphrase_message
+      );
     }
 
     // ELECTRUM legacy wallet password is optinal
     const electrum2 = new HDLegacyElectrumSeedP2PKHWallet();
     electrum2.setSecret(text);
     if (askPassphrase && electrum2.validateMnemonic()) {
-      password = await onPassword(loc.wallets.import_passphrase_title, loc.wallets.import_passphrase_message);
+      password = await onPassword(
+        loc.wallets.import_passphrase_title,
+        loc.wallets.import_passphrase_message
+      );
     }
 
     // is it bip38 encrypted
@@ -182,7 +205,11 @@ const startImport = (
       const decryptedKey = await bip38.decryptAsync(text, password);
 
       if (decryptedKey) {
-        text = wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed);
+        text = wif.encode(
+          0x80,
+          decryptedKey.privateKey,
+          decryptedKey.compressed
+        );
       }
     }
 
@@ -238,14 +265,16 @@ const startImport = (
     if (hd2.validateMnemonic()) {
       let walletFound = false;
       // by default we don't try all the paths and options
-      const searchPaths = searchAccounts ? bip39WalletFormatsElectrum : bip39WalletFormatsBlueWallet;
+      const searchPaths = searchAccounts
+        ? bip39WalletFormatsElectrum
+        : bip39WalletFormatsMalinWallet;
       for (const i of searchPaths) {
         // we need to skip m/0' p2pkh from default scan list. It could be a BRD wallet and will be handled later
         if (i.derivation_path === "m/0'" && i.script_type === 'p2pkh') continue;
         let paths;
         if (i.iterate_accounts && searchAccounts) {
           const basicPath = i.derivation_path.slice(0, -2); // remove 0' from the end
-          paths = [...Array(10).keys()].map(j => basicPath + j + "'"); // add account number
+          paths = [...Array(10).keys()].map((j) => basicPath + j + "'"); // add account number
         } else {
           paths = [i.derivation_path];
         }
@@ -253,13 +282,13 @@ const startImport = (
         switch (i.script_type) {
           case 'p2pkh':
             WalletClass = HDLegacyP2PKHWallet;
-            break;
+            break
           case 'p2wpkh-p2sh':
             WalletClass = HDSegwitP2SHWallet;
-            break;
+            break
           case 'p2tr':
             WalletClass = HDTaprootWallet;
-            break;
+            break
           default:
             // p2wpkh
             WalletClass = HDSegwitBech32Wallet;
@@ -302,7 +331,9 @@ const startImport = (
           yield { progress: 'BRD' };
           await brd.fetchBalance();
           await brd.fetchTransactions();
-          if (brd.getTransactions().length > m0Legacy.getTransactions().length) {
+          if (
+            brd.getTransactions().length > m0Legacy.getTransactions().length
+          ) {
             yield { wallet: brd };
           } else {
             yield { wallet: m0Legacy };
@@ -487,7 +518,11 @@ const startImport = (
       const json = JSON.parse(text);
       if (Array.isArray(json)) {
         for (const account of json) {
-          if (account.ExtPubKey && account.MasterFingerprint && account.AccountKeyPath) {
+          if (
+            account.ExtPubKey &&
+            account.MasterFingerprint &&
+            account.AccountKeyPath
+          ) {
             const wallet = new WatchOnlyWallet();
             wallet.setSecret(JSON.stringify(account));
             wallet.init();
@@ -507,21 +542,21 @@ const startImport = (
       if (next.value?.progress) reportProgress(next.value.progress);
       if (next.value?.wallet) reportWallet(next.value.wallet);
       if (next.done) break; // break if generator has been finished
-      await new Promise(resolve => setTimeout(resolve, 1)); // try not to block the thread
+      await new Promise((resolve) => setTimeout(resolve, 1)); // try not to block the thread
     }
     reportFinish();
-  })().catch(e => {
+  })().catch((e) => {
     if (e.message === 'Cancel Pressed') {
       reportFinish(true);
-      return;
+      return
     } else if (e.message === 'Discovery stopped') {
       reportFinish(undefined, true);
-      return;
+      return
     }
     promiseReject(e);
-  });
+  })
 
   return { promise, stop };
-};
+}
 
 export default startImport;

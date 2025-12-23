@@ -1,18 +1,18 @@
-/* global jest */
-
-import mockClipboard from '@react-native-clipboard/clipboard/jest/clipboard-mock.js';
+import mockClipboard from "@react-native-clipboard/clipboard/jest/clipboard-mock.js";
 
 const consoleWarnOrig = console.warn;
 console.warn = (...args) => {
   if (
     typeof args[0] === 'string' &&
-    (args[0].startsWith('WARNING: Sending to a future segwit version address can lead to loss of funds') ||
+    (args[0].startsWith(
+      'WARNING: Sending to a future segwit version address can lead to loss of funds',
+    ) ||
       args[0].startsWith('only compressed public keys are good'))
   ) {
     return;
   }
   consoleWarnOrig.apply(consoleWarnOrig, args);
-};
+}
 
 const consoleLogOrig = console.log;
 console.debug = console.log = (...args) => {
@@ -27,7 +27,7 @@ console.debug = console.log = (...args) => {
     return;
   }
   consoleLogOrig.apply(consoleLogOrig, args);
-};
+}
 
 global.net = require('net'); // needed by Electrum client. For RN it is proviced in shim.js
 global.tls = require('tls'); // needed by Electrum client. For RN it is proviced in shim.js
@@ -40,18 +40,20 @@ jest.mock('react-native-watch-connectivity', () => {
     getIsWatchAppInstalled: jest.fn(() => Promise.resolve(false)),
     subscribeToMessages: jest.fn(),
     updateApplicationContext: jest.fn(),
-  };
+  }
 });
 
 jest.mock('react-native-secure-key-store', () => {
   return {};
-});
+})
 
 jest.mock('@react-native-community/push-notification-ios', () => {
   return {};
-});
+})
 
-jest.mock('react-native-permissions', () => require('react-native-permissions/mock'));
+jest.mock('react-native-permissions', () =>
+  require('react-native-permissions/mock'),
+)
 
 jest.mock('react-native-device-info', () => {
   return {
@@ -61,7 +63,7 @@ jest.mock('react-native-device-info', () => {
     hasGmsSync: jest.fn().mockReturnValue(true),
     hasHmsSync: jest.fn().mockReturnValue(false),
     isTablet: jest.fn().mockReturnValue(false),
-  };
+  }
 });
 
 jest.mock('react-native-quick-actions', () => {
@@ -69,22 +71,22 @@ jest.mock('react-native-quick-actions', () => {
     clearShortcutItems: jest.fn(),
     setQuickActions: jest.fn(),
     isSupported: jest.fn(),
-  };
+  }
 });
 
 jest.mock('react-native-default-preference', () => {
   let mockPreferences = {};
   let currentSuiteName = 'default';
 
-  const getSuite = name => {
+  const getSuite = (name) => {
     if (!mockPreferences[name]) {
       mockPreferences[name] = {};
     }
     return mockPreferences[name];
-  };
+  }
 
   return {
-    setName: jest.fn(name => {
+    setName: jest.fn((name) => {
       currentSuiteName = name;
       if (!mockPreferences[name]) {
         mockPreferences[name] = {};
@@ -96,9 +98,11 @@ jest.mock('react-native-default-preference', () => {
       return Promise.resolve(currentSuiteName);
     }),
 
-    get: jest.fn(key => {
+    get: jest.fn((key) => {
       const suite = getSuite(currentSuiteName);
-      return Promise.resolve(Object.prototype.hasOwnProperty.call(suite, key) ? suite[key] : null);
+      return Promise.resolve(
+        Object.prototype.hasOwnProperty.call(suite, key) ? suite[key] : null
+      );
     }),
 
     set: jest.fn((key, value) => {
@@ -107,29 +111,31 @@ jest.mock('react-native-default-preference', () => {
       return Promise.resolve();
     }),
 
-    clear: jest.fn(key => {
+    clear: jest.fn((key) => {
       const suite = getSuite(currentSuiteName);
       delete suite[key];
       return Promise.resolve();
     }),
 
-    getMultiple: jest.fn(keys => {
+    getMultiple: jest.fn((keys) => {
       const suite = getSuite(currentSuiteName);
-      const values = keys.map(key => (Object.prototype.hasOwnProperty.call(suite, key) ? suite[key] : null));
+      const values = keys.map((key) =>
+        Object.prototype.hasOwnProperty.call(suite, key) ? suite[key] : null
+      );
       return Promise.resolve(values);
     }),
 
-    setMultiple: jest.fn(keyValuePairs => {
+    setMultiple: jest.fn((keyValuePairs) => {
       const suite = getSuite(currentSuiteName);
       Object.entries(keyValuePairs).forEach(([key, value]) => {
         suite[key] = value;
-      });
+      })
       return Promise.resolve();
     }),
 
-    clearMultiple: jest.fn(keys => {
+    clearMultiple: jest.fn((keys) => {
       const suite = getSuite(currentSuiteName);
-      keys.forEach(key => delete suite[key]);
+      keys.forEach((key) => delete suite[key]);
       return Promise.resolve();
     }),
 
@@ -147,9 +153,9 @@ jest.mock('react-native-default-preference', () => {
       mockPreferences = {};
       currentSuiteName = 'default'; // Reset the current suite name
       return Promise.resolve();
-    }),
-  };
-});
+    })
+  }
+})
 
 jest.mock('react-native-fs', () => {
   return {
@@ -194,7 +200,7 @@ jest.mock('react-native-fs', () => {
     TemporaryDirectoryPath: jest.fn(),
     LibraryDirectoryPath: jest.fn(),
     PicturesDirectoryPath: jest.fn(),
-  };
+  }
 });
 
 jest.mock('@react-native-documents/picker', () => ({}));
@@ -218,43 +224,43 @@ const realmInstanceMock = {
     const wallets = {
       filtered: function () {
         return [];
-      },
-    };
+      }
+    }
     return wallets;
-  },
-};
+  }
+}
 jest.mock('realm', () => {
   return {
     UpdateMode: { Modified: 1 },
     open: jest.fn(() => realmInstanceMock),
-  };
+  }
 });
 
 jest.mock('rn-qr-generator', () => ({
-  detect: jest.fn(uri => {
+  detect: jest.fn((uri) => {
     if (uri === 'invalid-image') {
       return Promise.reject(new Error('Failed to decode QR code'));
     }
     return Promise.resolve({ values: ['mocked-qr-code'] });
-  }),
+  })
 }));
 
 jest.mock('react-native-haptic-feedback', () => {
   return {
     trigger: jest.fn(),
-  };
+  }
 });
 
-jest.mock('../blue_modules/analytics', () => {
+jest.mock('../malin_modules/analytics', () => {
   const ret = jest.fn();
   ret.ENUM = { CREATED_WALLET: '' };
   return ret;
-});
+})
 
 jest.mock('react-native-share', () => {
   return {
     open: jest.fn(),
-  };
+  }
 });
 
 const mockKeychain = {
@@ -264,9 +270,13 @@ const mockKeychain = {
   setGenericPassword: jest.fn().mockResolvedValue(),
   getGenericPassword: jest.fn().mockResolvedValue(),
   resetGenericPassword: jest.fn().mockResolvedValue(),
-};
+}
 jest.mock('react-native-keychain', () => mockKeychain);
 
 jest.mock('react-native-tcp-socket', () => mockKeychain);
 
 global.alert = () => {};
+
+jest.mock('@env', () => ({
+  NEXT_PUBLIC_INFURA_GAS_API_KEY: 'dummy_key',
+}));

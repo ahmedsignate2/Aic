@@ -1,5 +1,10 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { RouteProp, StackActions, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  StackActions,
+  useNavigation,
+  useRoute
+} from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { Icon } from '@rneui/themed';
 import BN from 'bignumber.js';
@@ -20,14 +25,20 @@ import { randomBytes } from '../../class/rng';
 import { FButton, FContainer } from '../../components/FloatButtons';
 import SafeArea from '../../components/SafeArea';
 import { Tabs } from '../../components/Tabs';
-import { BlueCurrentTheme, useTheme } from '../../components/themes';
+import { MalinCurrentTheme, useTheme } from '../../components/themes';
 import loc from '../../loc';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
 import { BlueSpacing20 } from '../../components/BlueSpacing';
-import { concatUint8Arrays, uint8ArrayToHex } from '../../malin_modules/uint8array-extras';
+import {
+  concatUint8Arrays,
+  uint8ArrayToHex
+} from '../../malin_modules/uint8array-extras';
 
 type RouteProps = RouteProp<AddWalletStackParamList, 'ProvideEntropy'>;
-type NavigationProp = NativeStackNavigationProp<AddWalletStackParamList, 'ProvideEntropy'>;
+type NavigationProp = NativeStackNavigationProp<
+  AddWalletStackParamList,
+  'ProvideEntropy'
+>;
 
 export enum EActionType {
   push = 'push',
@@ -51,12 +62,17 @@ const initialState: TState = {
   bits: 0,
   items: [],
   limit: 256,
-};
+}
 
-const shiftLeft = (value: BN, places: number) => value.multipliedBy(2 ** places);
-const shiftRight = (value: BN, places: number) => value.div(2 ** places).dp(0, BN.ROUND_DOWN);
+const shiftLeft = (value: BN, places: number) =>
+  value.multipliedBy(2 ** places);
+const shiftRight = (value: BN, places: number) =>
+  value.div(2 ** places).dp(0, BN.ROUND_DOWN);
 
-export const eReducer = (state: TState = initialState, action: TAction): TState => {
+export const eReducer = (
+  state: TState = initialState,
+  action: TAction
+): TState => {
   switch (action.type) {
     case EActionType.noop:
       return state;
@@ -82,7 +98,12 @@ export const eReducer = (state: TState = initialState, action: TAction): TState 
       if (state.bits === 0) return state;
       const bits = state.items.pop()!;
       const entropy = shiftRight(state.entropy, bits);
-      return { ...state, entropy, bits: state.bits - bits, items: [...state.items] };
+      return {
+        ...state,
+        entropy,
+        bits: state.bits - bits,
+        items: [...state.items]
+      }
     }
 
     case EActionType.limit: {
@@ -94,12 +115,18 @@ export const eReducer = (state: TState = initialState, action: TAction): TState 
   }
 };
 
-export const entropyToHex = ({ entropy, bits }: { entropy: BN; bits: number }): string => {
+export const entropyToHex = ({
+  entropy,
+  bits
+}: {
+  entropy: BN;
+  bits: number;
+}): string => {
   if (bits === 0) return '0x';
   const hex = entropy.toString(16);
   const hexSize = Math.floor((bits - 1) / 4) + 1;
   return '0x' + '0'.repeat(hexSize - hex.length) + hex;
-};
+}
 
 export const getEntropy = (number: number, base: number): TEntropy | null => {
   if (base === 1) return null;
@@ -114,7 +141,7 @@ export const getEntropy = (number: number, base: number): TEntropy | null => {
     const block = 2 ** bits;
     if (summ + block > base) {
       bits -= 1;
-      continue;
+      continue
     }
     if (number < summ + block) {
       return { value: number - summ, bits };
@@ -123,10 +150,16 @@ export const getEntropy = (number: number, base: number): TEntropy | null => {
     bits -= 1;
   }
   return null;
-};
+}
 
 // cut entropy to bytes, convert to Uint8Array
-export const convertToBuffer = ({ entropy, bits }: { entropy: BN; bits: number }): Uint8Array => {
+export const convertToBuffer = ({
+  entropy,
+  bits
+}: {
+  entropy: BN;
+  bits: number;
+}): Uint8Array => {
   if (bits < 8) return new Uint8Array([]);
   const bytes = Math.floor(bits / 8);
 
@@ -141,7 +174,7 @@ export const convertToBuffer = ({ entropy, bits }: { entropy: BN; bits: number }
     }
   });
 
-  let arr2 = arr.map(i => parseInt(i, 16));
+  let arr2 = arr.map((i) => parseInt(i, 16));
 
   if (arr.length > bytes) {
     arr2.shift();
@@ -150,14 +183,22 @@ export const convertToBuffer = ({ entropy, bits }: { entropy: BN; bits: number }
     arr2 = [...zeros, ...arr2];
   }
   return new Uint8Array(arr2);
-};
+}
 
 const Coin = ({ push }: { push: TPush }) => (
   <View style={styles.coinRoot}>
-    <TouchableOpacity accessibilityRole="button" onPress={() => push(getEntropy(0, 2))} style={styles.coinBody}>
+    <TouchableOpacity
+      accessibilityRole='button'
+      onPress={() => push(getEntropy(0, 2))}
+      style={styles.coinBody}
+    >
       <Image style={styles.coinImage} source={require('../../img/coin1.png')} />
     </TouchableOpacity>
-    <TouchableOpacity accessibilityRole="button" onPress={() => push(getEntropy(1, 2))} style={styles.coinBody}>
+    <TouchableOpacity
+      accessibilityRole='button'
+      onPress={() => push(getEntropy(1, 2))}
+      style={styles.coinBody}
+    >
       <Image style={styles.coinImage} source={require('../../img/coin2.png')} />
     </TouchableOpacity>
   </View>
@@ -193,41 +234,66 @@ const Dice = ({ push, sides }: { push: TPush; sides: number }) => {
     },
     diceContainer: {
       backgroundColor: colors.elevated,
-    },
+    }
   });
 
   return (
-    <ScrollView contentContainerStyle={[styles.diceContainer, stylesHook.diceContainer]}>
+    <ScrollView
+      contentContainerStyle={[styles.diceContainer, stylesHook.diceContainer]}
+    >
       {[...Array(sides)].map((_, i) => (
-        <TouchableOpacity accessibilityRole="button" key={i} onPress={() => push(getEntropy(i, sides))}>
+        <TouchableOpacity
+          accessibilityRole='button'
+          key={i}
+          onPress={() => push(getEntropy(i, sides))}
+        >
           <View style={[styles.diceRoot, { width: diceWidth }]}>
             {sides === 6 ? (
-              <Icon style={styles.diceIcon} name={diceIcon(i + 1)} size={70} color="grey" type="font-awesome-5" />
-            ) : (
+  <Icon
+                style={styles.diceIcon}
+                name={diceIcon(i + 1)}
+                size={70}
+                color='grey'
+                type='font-awesome-5'
+              />
+                ) : (
               <View style={[styles.dice, stylesHook.dice]}>
-                <Text style={stylesHook.diceText}>{i + 1}</Text>
-              </View>
-            )}
+                    <Text style={stylesHook.diceText}>{i + 1}</Text>
+                  </View>
+                )}
           </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
   );
-};
+}
 
 const buttonFontSize =
   PixelRatio.roundToNearestPixel(Dimensions.get('window').width / 26) > 22
     ? 22
     : PixelRatio.roundToNearestPixel(Dimensions.get('window').width / 26);
 
-const Buttons = ({ pop, save, colors }: { pop: TPop; save: () => void; colors: any }) => (
+const Buttons = ({
+  pop,
+  save,
+  colors
+}: {
+  pop: TPop;
+  save: () => void;
+  colors: any;
+}) => (
   <FContainer>
     <FButton
       onPress={pop}
       text={loc.entropy.undo}
       icon={
         <View style={styles.buttonsIcon}>
-          <Icon name="undo" size={buttonFontSize} type="font-awesome" color={colors.buttonAlternativeTextColor} />
+          <Icon
+            name='undo'
+            size={buttonFontSize}
+            type='font-awesome'
+            color={colors.buttonAlternativeTextColor}
+          />
         </View>
       }
     />
@@ -236,7 +302,12 @@ const Buttons = ({ pop, save, colors }: { pop: TPop; save: () => void; colors: a
       text={loc.entropy.save}
       icon={
         <View style={styles.buttonsIcon}>
-          <Icon name="arrow-down" size={buttonFontSize} type="font-awesome" color={colors.buttonAlternativeTextColor} />
+          <Icon
+            name='arrow-down'
+            size={buttonFontSize}
+            type='font-awesome'
+            color={colors.buttonAlternativeTextColor}
+          />
         </View>
       }
     />
@@ -245,18 +316,48 @@ const Buttons = ({ pop, save, colors }: { pop: TPop; save: () => void; colors: a
 
 const TollTab = ({ active }: { active: boolean }) => {
   const { colors } = useTheme();
-  return <Icon name="toll" type="material" color={active ? colors.buttonAlternativeTextColor : colors.buttonBackgroundColor} />;
-};
+  return (
+    <Icon
+      name='toll'
+      type='material'
+      color={
+        active
+          ? colors.buttonAlternativeTextColor
+          : colors.buttonBackgroundColor
+      }
+    />
+  )
+}
 
 const D6Tab = ({ active }: { active: boolean }) => {
   const { colors } = useTheme();
-  return <Icon name="dice" type="font-awesome-5" color={active ? colors.buttonAlternativeTextColor : colors.buttonBackgroundColor} />;
-};
+  return (
+    <Icon
+      name='dice'
+      type='font-awesome-5'
+      color={
+        active
+          ? colors.buttonAlternativeTextColor
+          : colors.buttonBackgroundColor
+      }
+    />
+  )
+}
 
 const D20Tab = ({ active }: { active: boolean }) => {
   const { colors } = useTheme();
-  return <Icon name="dice-d20" type="font-awesome-5" color={active ? colors.buttonAlternativeTextColor : colors.buttonBackgroundColor} />;
-};
+  return (
+    <Icon
+      name='dice-d20'
+      type='font-awesome-5'
+      color={
+        active
+          ? colors.buttonAlternativeTextColor
+          : colors.buttonBackgroundColor
+      }
+    />
+  )
+}
 
 const ProvideEntropy = () => {
   const [entropy, dispatch] = useReducer(eReducer, initialState);
@@ -271,14 +372,14 @@ const ProvideEntropy = () => {
     },
     entropyText: {
       color: colors.foregroundColor,
-    },
+    }
   });
 
   useEffect(() => {
     dispatch({ type: EActionType.limit, limit: words === 24 ? 256 : 128 });
   }, [dispatch, words]);
 
-  const handlePush: TPush = v => {
+  const handlePush: TPush = (v) => {
     if (v === null) {
       dispatch({ type: EActionType.noop });
     } else {
@@ -288,7 +389,7 @@ const ProvideEntropy = () => {
 
   const handlePop: TPop = () => {
     dispatch({ type: EActionType.pop });
-  };
+  }
 
   const handleSave = async () => {
     let buf = convertToBuffer(entropy);
@@ -300,11 +401,11 @@ const ProvideEntropy = () => {
       entropyTitle = loc.formatString(loc.wallets.add_entropy_remain, {
         gen: buf.length,
         rem: remaining,
-      });
+      })
     } else {
       entropyTitle = loc.formatString(loc.wallets.add_entropy_generated, {
         gen: buf.length,
-      });
+      })
     }
 
     Alert.alert(
@@ -328,7 +429,11 @@ const ProvideEntropy = () => {
               does not support passing Uint8Array objects between screens
             */
 
-            const popTo = StackActions.popTo('AddWallet', { entropy: uint8ArrayToHex(buf), words }, { merge: true });
+            const popTo = StackActions.popTo(
+              'AddWallet',
+              { entropy: uint8ArrayToHex(buf), words },
+              { merge: true }
+            );
 
             navigation.dispatch(popTo);
           },
@@ -336,8 +441,8 @@ const ProvideEntropy = () => {
         },
       ],
       { cancelable: true },
-    );
-  };
+    )
+  }
 
   const hex = entropyToHex(entropy);
   let bits = entropy.bits.toString();
@@ -346,10 +451,18 @@ const ProvideEntropy = () => {
   return (
     <SafeArea>
       <BlueSpacing20 />
-      <TouchableOpacity accessibilityRole="button" onPress={() => setShow(!show)}>
+      <TouchableOpacity
+        accessibilityRole='button'
+        onPress={() => setShow(!show)}
+      >
         <View style={[styles.entropy, stylesHook.entropy]}>
           <Text style={[styles.entropyText, stylesHook.entropyText]}>
-            {show ? hex : loc.formatString(loc.entropy.amountOfEntropy, { bits, limit: entropy.limit })}
+            {show
+              ? hex
+              : loc.formatString(loc.entropy.amountOfEntropy, {
+                bits,
+                limit: entropy.limit
+                })}
           </Text>
         </View>
       </TouchableOpacity>
@@ -363,7 +476,7 @@ const ProvideEntropy = () => {
       <Buttons pop={handlePop} save={handleSave} colors={colors} />
     </SafeArea>
   );
-};
+}
 
 const styles = StyleSheet.create({
   entropy: {
@@ -394,7 +507,7 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
     borderWidth: 1,
     borderRadius: 5,
-    borderColor: BlueCurrentTheme.colors.lightButton,
+    borderColor: MalinCurrentTheme.colors.lightButton,
     margin: 10,
     padding: 10,
     maxWidth: 100,
@@ -425,7 +538,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     aspectRatio: 1,
-    borderColor: BlueCurrentTheme.colors.buttonBackgroundColor,
+    borderColor: MalinCurrentTheme.colors.buttonBackgroundColor,
   },
   diceIcon: {
     margin: 3,
@@ -439,6 +552,6 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-45deg' }],
     alignItems: 'center',
   },
-});
+})
 
 export default ProvideEntropy;

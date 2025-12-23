@@ -68,7 +68,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>io.bluewallet.backup</string>
+				<string>io.malinwallet.backup</string>
 			</array>
 		</dict>
 		<dict>
@@ -82,7 +82,7 @@
 			<string>Owner</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>io.bluewallet.bwcosigner</string>
+				<string>io.malinwallet.bwcosigner</string>
 			</array>
 		</dict>
 	</array>
@@ -109,9 +109,9 @@
 			<array>
 				<string>bitcoin</string>
 				<string>lightning</string>
-				<string>bluewallet</string>
+				<string>malinwallet</string>
 				<string>lapp</string>
-				<string>blue</string>
+				<string>malin</string>
 			</array>
 		</dict>
 	</array>
@@ -264,7 +264,7 @@
 			<key>UTTypeDescription</key>
 			<string>BW COSIGNER</string>
 			<key>UTTypeIdentifier</key>
-			<string>io.bluewallet.bwcosigner</string>
+			<string>io.malinwallet.bwcosigner</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
@@ -298,7 +298,7 @@
 			<key>UTTypeDescription</key>
 			<string>Electrum Backup</string>
 			<key>UTTypeIdentifier</key>
-			<string>io.bluewallet.backup</string>
+			<string>io.malinwallet.backup</string>
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>

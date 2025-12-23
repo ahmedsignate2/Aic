@@ -1,7 +1,15 @@
 import { Platform } from 'react-native';
-import { pick, types, keepLocalCopy, errorCodes } from '@react-native-documents/picker';
+import {
+  pick,
+  types,
+  keepLocalCopy,
+  errorCodes
+} from '@react-native-documents/picker';
 import RNFS from 'react-native-fs';
-import { launchImageLibrary, ImagePickerResponse } from 'react-native-image-picker';
+import {
+  launchImageLibrary,
+  ImagePickerResponse
+} from 'react-native-image-picker';
 import RNQRGenerator from 'rn-qr-generator';
 import Share from 'react-native-share';
 
@@ -9,7 +17,10 @@ import presentAlert from '../components/Alert';
 import loc from '../loc';
 import { isDesktop } from './environment';
 import { readFile } from './react-native-bw-file-access';
-import { base64ToUint8Array, uint8ArrayToString } from './uint8array-extras/index';
+import {
+  base64ToUint8Array,
+  uint8ArrayToString
+} from './uint8array-extras/index';
 
 const _sanitizeFileName = (fileName: string) => {
   // Remove any path delimiters and non-alphanumeric characters except for -, _, and .
@@ -18,9 +29,12 @@ const _sanitizeFileName = (fileName: string) => {
 
 export const isCancel = (err: any): boolean => {
   return err.code && err.code === errorCodes.OPERATION_CANCELED;
-};
+}
 
-const _shareOpen = async (filePath: string, showShareDialog: boolean = false) => {
+const _shareOpen = async (
+  filePath: string,
+  showShareDialog: boolean = false
+) => {
   try {
     await Share.open({
       url: 'file://' + filePath,
@@ -28,7 +42,7 @@ const _shareOpen = async (filePath: string, showShareDialog: boolean = false) =>
       // @ts-ignore: Website claims this propertie exists, but TS cant find it. Send anyways.
       useInternalStorage: Platform.OS === 'android',
       failOnCancel: false,
-    });
+    })
   } catch (error: any) {
     console.log(error);
     // If user cancels sharing, we dont want to show an error. for some reason we get 'CANCELLED' string as error
@@ -45,7 +59,11 @@ const _shareOpen = async (filePath: string, showShareDialog: boolean = false) =>
  * or perhaps messaging app). Provided filename should be just a file name, NOT a path
  */
 
-export const writeFileAndExport = async function (fileName: string, contents: string, showShareDialog: boolean = true) {
+export const writeFileAndExport = async function (
+  fileName: string,
+  contents: string,
+  showShareDialog: boolean = true
+) {
   const sanitizedFileName = _sanitizeFileName(fileName);
   try {
     if (Platform.OS === 'ios') {
@@ -59,7 +77,11 @@ export const writeFileAndExport = async function (fileName: string, contents: st
         if (showShareDialog) {
           await _shareOpen(filePath);
         } else {
-          presentAlert({ message: loc.formatString(loc.send.file_saved_at_path, { filePath }) });
+          presentAlert({
+            message: loc.formatString(loc.send.file_saved_at_path, {
+              filePath
+            }),
+          })
         }
       } catch (e: any) {
         console.error(e);
@@ -75,11 +97,16 @@ export const writeFileAndExport = async function (fileName: string, contents: st
 /**
  * Opens & reads *.psbt files, and returns base64 psbt. FALSE if something went wrong (wont throw).
  */
-export const openSignedTransaction = async function (): Promise<string | false> {
+export const openSignedTransaction = async function (): Promise<
+  string | false
+  > {
   try {
     const [res] = await pick({
-      type: Platform.OS === 'ios' ? ['com.malinwallet.psbt', 'com.malinwallet.psbt.txn', types.json] : [types.allFiles],
-    });
+      type:
+        Platform.OS === 'ios'
+          ? ['com.malinwallet.psbt', 'com.malinwallet.psbt.txn', types.json]
+          : [types.allFiles],
+    })
 
     return await _readPsbtFileIntoBase64(res.uri);
   } catch (err) {
@@ -89,7 +116,7 @@ export const openSignedTransaction = async function (): Promise<string | false> 
   }
 
   return false;
-};
+}
 
 const _readPsbtFileIntoBase64 = async function (uri: string): Promise<string> {
   const base64 = await RNFS.readFile(uri, 'base64');
@@ -106,14 +133,16 @@ const _readPsbtFileIntoBase64 = async function (uri: string): Promise<string> {
   }
 };
 
-export const showImagePickerAndReadImage = async (): Promise<string | undefined> => {
+export const showImagePickerAndReadImage = async (): Promise<
+  string | undefined
+> => {
   try {
     const response: ImagePickerResponse = await launchImageLibrary({
       mediaType: 'photo',
       maxHeight: 800,
       maxWidth: 600,
       selectionLimit: 1,
-    });
+    })
 
     if (response.didCancel) {
       return undefined;
@@ -123,7 +152,9 @@ export const showImagePickerAndReadImage = async (): Promise<string | undefined>
       try {
         const uri = response.assets[0].uri;
         if (uri) {
-          const result = await RNQRGenerator.detect({ uri: decodeURI(uri.toString()) });
+          const result = await RNQRGenerator.detect({
+            uri: decodeURI(uri.toString())
+          });
           if (result?.values.length > 0) {
             return result?.values[0];
           }
@@ -142,14 +173,24 @@ export const showImagePickerAndReadImage = async (): Promise<string | undefined>
   }
 };
 
-export const showFilePickerAndReadFile = async function (): Promise<{ data: string | false; uri: string | false }> {
+export const showFilePickerAndReadFile = async function (): Promise<{
+  data: string | false;
+  uri: string | false;
+}> {
   try {
     const [pickedFile] = await pick({
       type:
         Platform.OS === 'ios'
-          ? ['io.bluewallet.psbt', 'io.bluewallet.psbt.txn', 'io.bluewallet.backup', types.plainText, types.json, types.images]
+          ? [
+              'io.malinwallet.psbt',
+              'io.malinwallet.psbt.txn',
+              'io.malinwallet.backup',
+              types.plainText,
+              types.json,
+              types.images
+            ]
           : [types.allFiles],
-    });
+    })
 
     const [localCopy] = await keepLocalCopy({
       files: [
@@ -163,7 +204,9 @@ export const showFilePickerAndReadFile = async function (): Promise<{ data: stri
 
     if (localCopy.status !== 'success') {
       // to make ts happy, should not need this check here
-      presentAlert({ message: 'Picking and caching a file failed: ' + localCopy.copyError });
+      presentAlert({
+        message: 'Picking and caching a file failed: ' + localCopy.copyError
+      });
       return { data: false, uri: false };
     }
 
@@ -175,7 +218,11 @@ export const showFilePickerAndReadFile = async function (): Promise<{ data: stri
       return { data: file, uri: fileCopyUri };
     }
 
-    if (localCopy.localUri.endsWith('.png') || localCopy.localUri.endsWith('.jpg') || localCopy.localUri.endsWith('.jpeg')) {
+    if (
+      localCopy.localUri.endsWith('.png') ||
+      localCopy.localUri.endsWith('.jpg') ||
+      localCopy.localUri.endsWith('.jpeg')
+    ) {
       return await handleImageFile(fileCopyUri);
     }
 
@@ -189,7 +236,9 @@ export const showFilePickerAndReadFile = async function (): Promise<{ data: stri
   }
 };
 
-const handleImageFile = async (fileCopyUri: string): Promise<{ data: string | false; uri: string | false }> => {
+const handleImageFile = async (
+  fileCopyUri: string
+): Promise<{ data: string | false; uri: string | false }> => {
   try {
     const exists = await RNFS.exists(fileCopyUri);
     if (!exists) {
@@ -230,8 +279,11 @@ export const readFileOutsideSandbox = (filePath: string) => {
 export const openSignedTransactionRaw: () => Promise<string> = async () => {
   try {
     const [res] = await pick({
-      type: Platform.OS === 'ios' ? ['io.bluewallet.psbt', 'io.bluewallet.psbt.txn', types.json] : [types.allFiles],
-    });
+      type:
+        Platform.OS === 'ios'
+          ? ['io.malinwallet.psbt', 'io.malinwallet.psbt.txn', types.json]
+          : [types.allFiles],
+    })
     const file = await RNFS.readFile(res.uri);
     if (file) {
       return file;
@@ -249,8 +301,16 @@ export const openSignedTransactionRaw: () => Promise<string> = async () => {
 
 export const pickTransaction = async () => {
   const [res] = await pick({
-    type: Platform.OS === 'ios' ? ['io.bluewallet.psbt', 'io.bluewallet.psbt.txn', types.plainText, types.json] : [types.allFiles],
-  });
+    type:
+      Platform.OS === 'ios'
+        ? [
+            'io.malinwallet.psbt',
+            'io.malinwallet.psbt.txn',
+            types.plainText,
+            types.json
+          ]
+        : [types.allFiles],
+  })
 
   return res;
-};
+}

@@ -1,9 +1,15 @@
 import React, { Component } from 'react';
-import { Dimensions, LayoutAnimation, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  LayoutAnimation,
+  StyleSheet,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import { Text } from '@rneui/themed';
 
 import { encodeUR } from '../malin_modules/ur';
-import { BlueCurrentTheme } from '../components/themes';
+import { MalinCurrentTheme } from '../components/themes';
 import loc from '../loc';
 import QRCodeComponent from './QRCodeComponent';
 import { BlueSpacing20 } from './BlueSpacing';
@@ -25,7 +31,10 @@ interface DynamicQRCodeState {
   hideControls?: boolean;
 }
 
-export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeState> {
+export class DynamicQRCode extends Component<
+  DynamicQRCodeProps,
+  DynamicQRCodeState
+> {
   constructor(props: DynamicQRCodeProps) {
     super(props);
     const qrCodeHeight = height > width ? width - 40 : width / 3;
@@ -36,12 +45,12 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
       qrCodeHeight: Math.min(qrCodeHeight, qrCodeMaxHeight),
       intervalHandler: null,
       displayQRCode: true,
-    };
+    }
   }
 
   fragments: string[] = [];
 
-  componentDidMount() {
+  componentDidMount () {
     const { value, capacity = 175, hideControls = true } = this.props;
     try {
       this.fragments = encodeUR(value, capacity);
@@ -53,8 +62,8 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
         },
         () => {
           this.startAutoMove();
-        },
-      );
+        }
+      )
     } catch (e) {
       console.log(e);
       this.setState({ displayQRCode: false, hideControls });
@@ -66,19 +75,19 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
     if (index === total - 1) {
       this.setState({
         index: 0,
-      });
+      })
     } else {
-      this.setState(state => ({
+      this.setState((state) => ({
         index: state.index + 1,
       }));
     }
   };
 
   startAutoMove = () => {
-    if (!this.state.intervalHandler)
-      this.setState(() => ({
-        intervalHandler: setInterval(this.moveToNextFragment, 500),
-      }));
+    if (!this.state.intervalHandler) {
+    { this.setState(() => ({
+      intervalHandler: setInterval(this.moveToNextFragment, 500)
+      }))}
   };
 
   stopAutoMove = () => {
@@ -86,16 +95,16 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
     this.setState(() => ({
       intervalHandler: null,
     }));
-  };
+  }
 
   moveToPreviousFragment = () => {
     const { index, total } = this.state;
     if (index > 0) {
-      this.setState(state => ({
+      this.setState((state) => ({
         index: state.index - 1,
       }));
     } else {
-      this.setState(state => ({
+      this.setState((state) => ({
         index: total - 1,
       }));
     }
@@ -104,9 +113,9 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
   onError = () => {
     console.log('Data is too large for QR Code.');
     this.setState({ displayQRCode: false });
-  };
+  }
 
-  render() {
+  render () {
     const currentFragment = this.fragments[this.state.index];
 
     if (!currentFragment && this.state.displayQRCode) {
@@ -123,8 +132,12 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
           accessibilityRole="button"
           testID="DynamicCode"
           onPress={() => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            this.setState(prevState => ({ hideControls: !prevState.hideControls }));
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut
+            );
+            this.setState((prevState) => ({
+              hideControls: !prevState.hideControls
+            }));
           }}
         >
           {this.state.displayQRCode && (
@@ -146,31 +159,55 @@ export class DynamicQRCode extends Component<DynamicQRCodeProps, DynamicQRCodeSt
             <BlueSpacing20 />
             <View>
               <Text style={animatedQRCodeStyle.text}>
-                {loc.formatString(loc._.of, { number: this.state.index + 1, total: this.state.total })}
+                {loc.formatString(loc._.of, {
+                  number: this.state.index + 1,
+                  total: this.state.total
+                })}
               </Text>
             </View>
             <BlueSpacing20 />
             <View style={animatedQRCodeStyle.controller}>
               <TouchableOpacity
                 accessibilityRole="button"
-                style={[animatedQRCodeStyle.button, animatedQRCodeStyle.buttonPrev]}
+                style={[
+                  animatedQRCodeStyle.button,
+                  animatedQRCodeStyle.buttonPrev
+                ]}
                 onPress={this.moveToPreviousFragment}
               >
-                <Text style={animatedQRCodeStyle.text}>{loc.send.dynamic_prev}</Text>
+                <Text style={animatedQRCodeStyle.text}>
+                  {loc.send.dynamic_prev}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 accessibilityRole="button"
-                style={[animatedQRCodeStyle.button, animatedQRCodeStyle.buttonStopStart]}
-                onPress={this.state.intervalHandler ? this.stopAutoMove : this.startAutoMove}
+                style={[
+                  animatedQRCodeStyle.button,
+                  animatedQRCodeStyle.buttonStopStart
+                ]}
+                onPress={
+                  this.state.intervalHandler
+                    ? this.stopAutoMove
+                    : this.startAutoMove
+                }
               >
-                <Text style={animatedQRCodeStyle.text}>{this.state.intervalHandler ? loc.send.dynamic_stop : loc.send.dynamic_start}</Text>
+                <Text style={animatedQRCodeStyle.text}>
+                  {this.state.intervalHandler
+                    ? loc.send.dynamic_stop
+                    : loc.send.dynamic_start}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 accessibilityRole="button"
-                style={[animatedQRCodeStyle.button, animatedQRCodeStyle.buttonNext]}
+                style={[
+                  animatedQRCodeStyle.button,
+                  animatedQRCodeStyle.buttonNext
+                ]}
                 onPress={this.moveToNextFragment}
               >
-                <Text style={animatedQRCodeStyle.text}>{loc.send.dynamic_next}</Text>
+                <Text style={animatedQRCodeStyle.text}>
+                  {loc.send.dynamic_next}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -217,7 +254,8 @@ const animatedQRCodeStyle = StyleSheet.create({
   },
   text: {
     fontSize: 14,
-    color: BlueCurrentTheme.colors.foregroundColor,
+    color: MalinCurrentTheme.colors.foregroundColor,
     fontWeight: 'bold',
   },
-});
+})
+export default DynamicQRCode;

@@ -1,6 +1,6 @@
 import { AbstractWallet } from './abstract-wallet';
 import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
-import { Keypair, PublicKey } from '@solana/web3.js';
+import { Keypair, PublicKey, Connection, clusterApiUrl } from '@solana/web3.js';
 import bs58 from 'bs58';
 
 export class SolanaWallet extends AbstractWallet {
@@ -12,13 +12,13 @@ export class SolanaWallet extends AbstractWallet {
   // @ts-ignore: override
   public readonly typeReadable = SolanaWallet.typeReadable;
 
-  constructor() {
+  constructor () {
     super();
     this.chain = Chain.OFFCHAIN;
     this.preferredBalanceUnit = BitcoinUnit.BTC;
   }
 
-   static fromJson(obj: string): SolanaWallet {
+  static fromJson(obj: string): SolanaWallet {
     const obj2 = JSON.parse(obj);
     const temp = new this();
     for (const key2 of Object.keys(obj2)) {
@@ -36,7 +36,7 @@ export class SolanaWallet extends AbstractWallet {
     return this._address as string;
   }
 
-   getAddressAsync(): Promise<string> {
+  getAddressAsync(): Promise<string> {
     return Promise.resolve(this.getAddress());
   }
 
@@ -59,77 +59,79 @@ export class SolanaWallet extends AbstractWallet {
 
   async fetchBalance(): Promise<void> {
     try {
-        const connection = new Connection(clusterApiUrl('mainnet-beta'));
-        if (this._address) {
-            const publicKey = new PublicKey(this._address);
-            const balance = await connection.getBalance(publicKey);
-            this.balance = balance / 1e9; // Convert Lamports to SOL to match ETH float approach
-            console.log('SOL Balance:', this.balance);
-        }
+      const connection = new Connection(clusterApiUrl("mainnet-beta"));
+      if (this._address) {
+        const publicKey = new PublicKey(this._address);
+        const balance = await connection.getBalance(publicKey)
+        this.balance = balance / 1e9 // Convert Lamports to SOL to match ETH float approach
+        console.log('SOL Balance:', this.balance)
+      }
     } catch (e) {
-        console.error('Error fetching SOL balance:', e);
+      console.error("Error fetching SOL balance:", e);
     }
   }
 
   async fetchTransactions(): Promise<void> {
-     try {
-         const connection = new Connection(clusterApiUrl('mainnet-beta'));
-         if (this._address) {
-             const publicKey = new PublicKey(this._address);
-             // Limit to last 10 signatures for basic activity check
-             const signatures = await connection.getSignaturesForAddress(publicKey, { limit: 10 });
-             console.log('SOL Transaction count (recent):', signatures.length);
-         }
-     } catch (e) {
-         console.error('Error fetching SOL transactions:', e);
-     }
+    try {
+      const connection = new Connection(clusterApiUrl("mainnet-beta"));
+      if (this._address) {
+        const publicKey = new PublicKey(this._address);
+        // Limit to last 10 signatures for basic activity check
+        const signatures = await connection.getSignaturesForAddress(publicKey, {
+          limit: 10
+        });
+        console.log('SOL Transaction count (recent):', signatures.length)
+      }
+    } catch (e) {
+      console.error("Error fetching SOL transactions:", e);
+    }
   }
 
   getTransactions(): any[] {
-      return [];
+    return [];
   }
 
   isAddressValid(address: string): boolean {
     try {
-        new PublicKey(address);
-        return true;
+      new PublicKey(address);
+      return true
     } catch (e) {
-        return false;
+      return false;
     }
   }
 
   _txs_by_external_index: any = {};
   _txs_by_internal_index: any = {};
 
-  timeToRefreshBalance(): boolean {
-      return false;
+  timeToRefreshBalance (): boolean {
+    return false;
   }
 
   timeToRefreshTransaction(): boolean {
-      return false;
+    return false;
   }
 
   getUtxo() {
-      return [];
+    return [];
   }
 
   async fetchUtxo() {
-      // no-op
+    // no-op
   }
 
   addressIsChange(address: string) {
-      return false;
+    return false;
   }
 
   broadcastTx(txhex: string) {
-      throw new Error('Not implemented');
+    throw new Error("Not implemented");
   }
 
   coinselect(utxos: any, targets: any, feeRate: any) {
-      return { inputs: [], outputs: [], fee: 0 };
+    return { inputs: [], outputs: [], fee: 0 };
   }
 
-   _getWIFbyAddress(address: string) {
-      return this.secret;
+  _getWIFbyAddress(address: string) {
+    return this.secret;
   }
 }

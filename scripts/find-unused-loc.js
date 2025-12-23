@@ -2,7 +2,16 @@ const fs = require('fs');
 const path = require('path');
 
 const mainLocFile = './loc/en.json';
-const dirsToInterate = ['components', 'screen', 'blue_modules', 'class', 'hooks', 'helpers', 'navigation', 'typings'];
+const dirsToInterate = [
+  'components',
+  'screen',
+  'malin_modules',
+  'class',
+  'hooks',
+  'helpers',
+  'navigation',
+  'typings',
+]
 const addFiles = ['BlueComponents.js', 'App.tsx', 'navigation/index.tsx'];
 const allowedLocPrefixes = ['loc.lnurl_auth', 'loc.units'];
 
@@ -22,7 +31,7 @@ const getAllFiles = function (dirPath, arrayOfFiles) {
   });
 
   return arrayOfFiles;
-};
+}
 
 const allDirFiles = [];
 for (const dir of dirsToInterate) {

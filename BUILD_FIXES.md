@@ -70,12 +70,12 @@ npm run lint:fix
 
 ### 🔧 Fix 1: Erreur de Package Name
 
-**Problème:** `io.bluewallet.bluewallet` vs `com.malinwallet.app`
+**Problème:** `com.malinwallet.app` vs `com.malinwallet.app`
 
 **Correction:**
 ```bash
 # Vérifier tous les fichiers
-grep -r "io.bluewallet.bluewallet" android/
+grep -r "com.malinwallet.app" android/
 
 # Remplacer partout
 find android -type f \( -name "*.gradle" -o -name "*.xml" -o -name "*.kt" -o -name "*.java" \) \

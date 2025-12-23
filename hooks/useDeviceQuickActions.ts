@@ -14,7 +14,10 @@ import { useStorage } from '../hooks/context/useStorage';
 const DeviceQuickActionsStorageKey = 'DeviceQuickActionsEnabled';
 
 export async function setEnabled(enabled: boolean = true): Promise<void> {
-  await AsyncStorage.setItem(DeviceQuickActionsStorageKey, JSON.stringify(enabled));
+  await AsyncStorage.setItem(
+    DeviceQuickActionsStorageKey,
+    JSON.stringify(enabled)
+  );
 }
 
 export async function getEnabled(): Promise<boolean> {
@@ -31,14 +34,22 @@ export async function getEnabled(): Promise<boolean> {
 }
 
 const useDeviceQuickActions = () => {
-  const { wallets, walletsInitialized, isStorageEncrypted, addWallet, saveToDisk, setSharedCosigner } = useStorage();
+  const {
+    wallets,
+    walletsInitialized,
+    isStorageEncrypted,
+    addWallet,
+    saveToDisk,
+    setSharedCosigner
+  } = useStorage();
   const { preferredFiatCurrency, isQuickActionsEnabled } = useSettings();
-  const { isViewAllWalletsEnabled, getSelectedDefaultWallet } = useOnAppLaunch();
+  const { isViewAllWalletsEnabled, getSelectedDefaultWallet } =
+    useOnAppLaunch();
 
   useEffect(() => {
     if (walletsInitialized) {
       isStorageEncrypted()
-        .then(value => {
+        .then((value) => {
           if (value) {
             removeShortcuts();
           } else {
@@ -47,7 +58,7 @@ const useDeviceQuickActions = () => {
         })
         .catch(() => removeShortcuts());
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wallets, walletsInitialized, preferredFiatCurrency, isStorageEncrypted]);
 
   useEffect(() => {
@@ -56,7 +67,7 @@ const useDeviceQuickActions = () => {
       popInitialShortcutAction().then(popInitialAction);
       return () => DeviceEventEmitter.removeAllListeners('quickActionShortcut');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletsInitialized]);
 
   useEffect(() => {
@@ -67,17 +78,19 @@ const useDeviceQuickActions = () => {
         removeShortcuts();
       }
     }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuickActionsEnabled, walletsInitialized]);
 
   const popInitialShortcutAction = async (): Promise<any> => {
     const data = await QuickActions.popInitialAction();
     return data;
-  };
+  }
 
   const popInitialAction = async (data: any): Promise<void> => {
     if (data) {
-      const wallet = wallets.find(w => w.getID() === data.userInfo.url.split('wallet/')[1]);
+      const wallet = wallets.find(
+        (w) => w.getID() === data.userInfo.url.split('wallet/')[1]
+      );
       if (wallet) {
         NavigationService.dispatch(
           CommonActions.navigate({
@@ -85,9 +98,9 @@ const useDeviceQuickActions = () => {
             params: {
               walletID: wallet.getID(),
               walletType: wallet.type,
-            },
+            }
           }),
-        );
+        )
       }
     } else {
       const url = await Linking.getInitialURL();
@@ -97,8 +110,11 @@ const useDeviceQuickActions = () => {
         }
       } else {
         if (!(await isViewAllWalletsEnabled())) {
-          const selectedDefaultWalletID = (await getSelectedDefaultWallet()) as string;
-          const selectedDefaultWallet = wallets.find((w: TWallet) => w.getID() === selectedDefaultWalletID);
+          const selectedDefaultWalletID =
+            (await getSelectedDefaultWallet()) as string;
+          const selectedDefaultWallet = wallets.find(
+            (w: TWallet) => w.getID() === selectedDefaultWalletID
+          );
           if (selectedDefaultWallet) {
             NavigationService.dispatch(
               CommonActions.navigate({
@@ -106,9 +122,9 @@ const useDeviceQuickActions = () => {
                 params: {
                   walletID: selectedDefaultWalletID,
                   walletType: selectedDefaultWallet.type,
-                },
+                }
               }),
-            );
+            )
           }
         }
       }
@@ -116,16 +132,22 @@ const useDeviceQuickActions = () => {
   };
 
   const handleOpenURL = (event: { url: string }): void => {
-    DeeplinkSchemaMatch.navigationRouteFor(event, (value: [string, any]) => NavigationService.navigate(...value), {
-      wallets,
-      addWallet,
-      saveToDisk,
-      setSharedCosigner,
-    });
-  };
+    DeeplinkSchemaMatch.navigationRouteFor(
+      event,
+      (value: [string, any]) => NavigationService.navigate(...value),
+      {
+        wallets,
+        addWallet,
+        saveToDisk,
+        setSharedCosigner,
+      }
+    );
+  }
 
   const walletQuickActions = (data: any): void => {
-    const wallet = wallets.find(w => w.getID() === data.userInfo.url.split('wallet/')[1]);
+    const wallet = wallets.find(
+      (w) => w.getID() === data.userInfo.url.split('wallet/')[1]
+    );
     if (wallet) {
       NavigationService.dispatch(
         CommonActions.navigate({
@@ -133,9 +155,9 @@ const useDeviceQuickActions = () => {
           params: {
             walletID: wallet.getID(),
             walletType: wallet.type,
-          },
+          }
         }),
-      );
+      )
     }
   };
 
@@ -152,21 +174,28 @@ const useDeviceQuickActions = () => {
     if (await getEnabled()) {
       QuickActions.isSupported((error: null, _supported: any) => {
         if (error === null) {
-          const shortcutItems: ShortcutItem[] = wallets.slice(0, 4).map((wallet, index) => ({
-            type: 'Wallets',
-            title: wallet.getLabel(),
-            subtitle:
-              wallet.hideBalance || wallet.getBalance() <= 0
-                ? ''
-                : formatBalance(Number(wallet.getBalance()), wallet.getPreferredBalanceUnit(), true),
-            userInfo: {
-              url: `bluewallet://wallet/${wallet.getID()}`,
-            },
-            icon: Platform.select({
-              android: 'quickactions',
-              ios: index === 0 ? 'Favorite' : 'Bookmark',
-            }) || 'quickactions',
-          }));
+          const shortcutItems: ShortcutItem[] = wallets
+            .slice(0, 4)
+            .map((wallet, index) => ({
+              type: 'Wallets',
+              title: wallet.getLabel(),
+              subtitle:
+                wallet.hideBalance || wallet.getBalance() <= 0
+                  ? ''
+                  : formatBalance(
+                    Number(wallet.getBalance()),
+                    wallet.getPreferredBalanceUnit(),
+                    true,
+                  ),
+              userInfo: {
+                url: `malinwallet://wallet/${wallet.getID()}`,
+              },
+              icon:
+                Platform.select({
+                  android: 'quickactions',
+                  ios: index === 0 ? 'Favorite' : 'Bookmark',
+                }) || 'quickactions',
+            }));
           QuickActions.setShortcutItems(shortcutItems);
         }
       });
@@ -176,6 +205,6 @@ const useDeviceQuickActions = () => {
   };
 
   return { popInitialAction };
-}
+};
 
 export default useDeviceQuickActions;

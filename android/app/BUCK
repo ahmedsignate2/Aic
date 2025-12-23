@@ -40,7 +40,7 @@ android_build_config(
 
 android_resource(
     name = "res",
-    package = "io.bluewallet.bluewallet",
+    package = "com.malinwallet.app",
     res = "src/main/res",
 )
 

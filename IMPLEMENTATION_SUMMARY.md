@@ -9,11 +9,11 @@
 ## 🎯 Objectifs Atteints
 
 ### ✅ Refactorisation Complète
-- [x] Identifiants Android : `io.bluewallet.bluewallet` → `com.malinwallet.app`
-- [x] Identifiants iOS : `io.bluewallet.bluewallet` → `com.malinwallet.app`
+- [x] Identifiants Android : `com.malinwallet.app` → `com.malinwallet.app`
+- [x] Identifiants iOS : `com.malinwallet.app` → `com.malinwallet.app`
 - [x] Deeplinks : Support de `malinwallet://` et `mw://`
 - [x] Handoff identifiers : Mise à jour complète
-- [x] Group identifiers : `group.io.bluewallet.bluewallet` → `group.com.malinwallet.app`
+- [x] Group identifiers : `group.com.malinwallet.app` → `group.com.malinwallet.app`
 - [x] Configuration Firebase : Prête pour migration
 
 ### ✅ Documentation Complète

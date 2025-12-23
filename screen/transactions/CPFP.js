@@ -1,16 +1,26 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, Linking, ScrollView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  ActivityIndicator,
+  Linking,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import PropTypes from 'prop-types';
 import { Text } from '@rneui/themed';
 import * as BlueElectrum from '../../malin_modules/BlueElectrum';
-import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
+import triggerHapticFeedback, {
+  HapticFeedbackTypes
+} from '../../malin_modules/hapticFeedback';
 import { BlueCard, BlueText } from '../../BlueComponents';
 import { HDSegwitBech32Transaction, HDSegwitBech32Wallet } from '../../class';
 import presentAlert, { AlertType } from '../../components/Alert';
 import Button from '../../components/Button';
 import SafeArea from '../../components/SafeArea';
-import { BlueCurrentTheme } from '../../components/themes';
+import { MalinCurrentTheme } from '../../components/themes';
 import loc from '../../loc';
 import { StorageContext } from '../../components/Context/StorageProvider';
 import ReplaceFeeSuggestions from '../../components/ReplaceFeeSuggestions';
@@ -30,7 +40,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   hex: {
-    color: BlueCurrentTheme.colors.buttonAlternativeTextColor,
+    color: MalinCurrentTheme.colors.buttonAlternativeTextColor,
     fontWeight: '500',
   },
   hexInput: {
@@ -54,11 +64,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     alignSelf: 'center',
   },
-});
+})
 
 export default class CPFP extends Component {
   static contextType = StorageContext;
-  constructor(props) {
+  constructor (props) {
     super(props);
     let txid;
     let wallet;
@@ -71,7 +81,7 @@ export default class CPFP extends Component {
       txid,
       wallet,
       isElectrumDisabled: true,
-    };
+    }
   }
 
   broadcast = () => {
@@ -93,12 +103,18 @@ export default class CPFP extends Component {
         presentAlert({ message: error.message, type: AlertType.Toast });
       }
     });
-  };
+  }
 
-  onSuccessBroadcast() {
-    this.context.txMetadata[this.state.newTxid] = { memo: 'Child pays for parent (CPFP)' };
+  onSuccessBroadcast () {
+    this.context.txMetadata[this.state.newTxid] = {
+      memo: 'Child pays for parent (CPFP)',
+    };
     majorTomToGroundControl([], [], [this.state.newTxid]);
-    this.context.sleep(4000).then(() => this.context.fetchAndSaveWalletTransactions(this.state.wallet.getID()));
+    this.context
+      .sleep(4000)
+      .then(() =>
+        this.context.fetchAndSaveWalletTransactions(this.state.wallet.getID())
+      );
     this.props.navigation.navigate('Success', { amount: undefined });
   }
 
@@ -108,7 +124,7 @@ export default class CPFP extends Component {
       isLoading: true,
       newFeeRate: '',
       nonReplaceable: false,
-    });
+    })
     try {
       await this.checkPossibilityOfCPFP();
     } catch (_) {
@@ -122,10 +138,22 @@ export default class CPFP extends Component {
       return this.setState({ nonReplaceable: true, isLoading: false });
     }
 
-    const tx = new HDSegwitBech32Transaction(null, this.state.txid, this.state.wallet);
-    if ((await tx.isToUsTransaction()) && (await tx.getRemoteConfirmationsNum()) === 0) {
+    const tx = new HDSegwitBech32Transaction(
+      null,
+      this.state.txid,
+      this.state.wallet
+    );
+    if (
+      (await tx.isToUsTransaction()) &&
+      (await tx.getRemoteConfirmationsNum()) === 0
+    ) {
       const info = await tx.getInfo();
-      return this.setState({ nonReplaceable: false, feeRate: info.feeRate + 1, isLoading: false, tx });
+      return this.setState({
+        nonReplaceable: false,
+        feeRate: info.feeRate + 1,
+        isLoading: false,
+        tx
+      });
       // 1 sat makes a lot of difference, since sometimes because of rounding created tx's fee might be insufficient
     } else {
       return this.setState({ nonReplaceable: true, isLoading: false });
@@ -140,7 +168,11 @@ export default class CPFP extends Component {
       this.setState({ isLoading: true });
       try {
         const { tx: newTx } = await tx.createCPFPbumpFee(newFeeRate);
-        this.setState({ stage: 2, txhex: newTx.toHex(), newTxid: newTx.getId() });
+        this.setState({
+          stage: 2,
+          txhex: newTx.toHex(),
+          newTxid: newTx.getId()
+        });
         this.setState({ isLoading: false });
       } catch (_) {
         this.setState({ isLoading: false });
@@ -156,7 +188,10 @@ export default class CPFP extends Component {
         <BlueCard style={styles.center}>
           <BlueText>{text}</BlueText>
           <BlueSpacing20 />
-          <ReplaceFeeSuggestions onFeeSelected={fee => this.setState({ newFeeRate: fee })} transactionMinimum={this.state.feeRate} />
+          <ReplaceFeeSuggestions
+            onFeeSelected={(fee) => this.setState({ newFeeRate: fee })}
+            transactionMinimum={this.state.feeRate}
+          />
           <BlueSpacing />
           <Button
             disabled={this.state.newFeeRate <= this.state.feeRate}
@@ -173,19 +208,34 @@ export default class CPFP extends Component {
       <View style={styles.root}>
         <BlueCard style={styles.center}>
           <BlueText style={styles.hex}>{loc.send.create_this_is_hex}</BlueText>
-          <TextInput style={styles.hexInput} height={112} multiline editable value={this.state.txhex} />
+          <TextInput
+            style={styles.hexInput}
+            height={112}
+            multiline
+            editable
+            value={this.state.txhex}
+          />
 
-          <TouchableOpacity accessibilityRole="button" style={styles.action} onPress={() => Clipboard.setString(this.state.txhex)}>
+          <TouchableOpacity
+            accessibilityRole='button'
+            style={styles.action}
+            onPress={() => Clipboard.setString(this.state.txhex)}
+          >
             <Text style={styles.actionText}>{loc.send.create_copy}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             accessibilityRole="button"
             style={styles.action}
-            onPress={() => Linking.openURL('https://coinb.in/?verify=' + this.state.txhex)}
+            onPress={() =>
+              Linking.openURL('https://coinb.in/?verify=' + this.state.txhex)}
           >
             <Text style={styles.actionText}>{loc.send.create_verify}</Text>
           </TouchableOpacity>
-          <Button disabled={this.context.isElectrumDisabled} onPress={this.broadcast} title={loc.send.confirm_sendNow} />
+          <Button
+            disabled={this.context.isElectrumDisabled}
+            onPress={this.broadcast}
+            title={loc.send.confirm_sendNow}
+          />
         </BlueCard>
       </View>
     );
@@ -242,6 +292,6 @@ CPFP.propTypes = {
     params: PropTypes.shape({
       txid: PropTypes.string,
       wallet: PropTypes.object,
-    }),
+    })
   }),
-};
+}

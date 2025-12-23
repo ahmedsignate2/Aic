@@ -16,7 +16,7 @@ let mockStorageState: MockStorage = {
   txMetadata: {},
   counterpartyMetadata: {},
   fetchAndSaveWalletTransactions: mockFetchAndSaveWalletTransactions,
-};
+}
 
 jest.mock('../../hooks/context/useStorage', () => ({
   useStorage: () => mockStorageState,
@@ -41,22 +41,22 @@ jest.mock('@react-navigation/native', () => {
       setOptions: jest.fn(),
       goBack: jest.fn(),
       addListener: jest.fn(),
-    }),
-  };
-});
+    })
+  }
+})
 
 jest.mock('../../hooks/useExtendedNavigation', () => ({
   useExtendedNavigation: () => ({
     navigate: jest.fn(),
     setOptions: jest.fn(),
     goBack: jest.fn(),
-  }),
+  })
 }));
 
 jest.mock('../../hooks/context/useSettings', () => ({
   useSettings: () => ({
     selectedBlockExplorer: { url: 'https://block.explorer' },
-  }),
+  })
 }));
 
 jest.mock('../../components/themes', () => ({
@@ -74,17 +74,21 @@ jest.mock('../../components/themes', () => ({
       lightBorder: '#333',
       customHeader: '#000',
     },
-  }),
+  })
 }));
 
 jest.mock('../../BlueComponents', () => {
   const React = require('react');
   const { Text, View } = require('react-native');
   return {
-    BlueCard: ({ children }: { children: React.ReactNode }) => <View>{children}</View>,
-    BlueText: ({ children }: { children: React.ReactNode }) => <Text>{children}</Text>,
-  };
-});
+    BlueCard: ({ children }: { children: React.ReactNode }) => (
+      <View>{children}</View>
+    ),
+    BlueText: ({ children }: { children: React.ReactNode }) => (
+      <Text>{children}</Text>
+    )
+  }
+})
 
 jest.mock('../../components/Button', () => 'Button');
 jest.mock('../../components/HandOffComponent', () => 'HandOffComponent');
@@ -93,23 +97,38 @@ jest.mock('../../components/BlueSpacing', () => ({
   BlueSpacing10: 'BlueSpacing10',
   BlueSpacing20: 'BlueSpacing20',
 }));
-jest.mock('../../components/BlueLoading', () => ({ BlueLoading: 'BlueLoading' }));
-jest.mock('../../components/SafeArea', () => ({ children }: { children: React.ReactNode }) => <>{children}</>);
+jest.mock('../../components/BlueLoading', () => ({
+  BlueLoading: 'BlueLoading',
+}));
+jest.mock(
+  '../../components/SafeArea',
+  () =>
+    ({ children }: { children: React.ReactNode }) => <>{children}</>
+);
 
-jest.mock('../../components/icons/TransactionIncomingIcon', () => 'TransactionIncomingIcon');
-jest.mock('../../components/icons/TransactionOutgoingIcon', () => 'TransactionOutgoingIcon');
-jest.mock('../../components/icons/TransactionPendingIcon', () => 'TransactionPendingIcon');
+jest.mock(
+  '../../components/icons/TransactionIncomingIcon',
+  () => 'TransactionIncomingIcon',
+)
+jest.mock(
+  '../../components/icons/TransactionOutgoingIcon',
+  () => 'TransactionOutgoingIcon',
+)
+jest.mock(
+  '../../components/icons/TransactionPendingIcon',
+  () => 'TransactionPendingIcon',
+)
 
 jest.mock('@rneui/themed', () => ({
   Icon: 'Icon',
 }));
 
-jest.mock('../../blue_modules/hapticFeedback', () => ({
+jest.mock('../../malin_modules/hapticFeedback', () => ({
   default: jest.fn(),
   HapticFeedbackTypes: {},
 }));
 
-jest.mock('../../blue_modules/BlueElectrum', () => ({
+jest.mock('../../malin_modules/BlueElectrum', () => ({
   multiGetTransactionByTxid: jest.fn(),
   getMempoolTransactionsByAddress: jest.fn(),
   estimateFees: jest.fn(),
@@ -119,7 +138,10 @@ jest.mock('../../loc', () => ({
   __esModule: true,
   default: {
     formatString: (template: string, params: Record<string, any>) => {
-      return Object.entries(params).reduce((acc, [key, value]) => acc.replace(`{${key}}`, String(value)), template);
+      return Object.entries(params).reduce(
+        (acc, [key, value]) => acc.replace(`{${key}}`, String(value)),
+        template
+      );
     },
     transactions: {
       eta_10m: '10 minutes',
@@ -159,7 +181,7 @@ const mockTxBase = {
   value: 1200,
   fee: 10,
   counterparty: undefined,
-};
+}
 
 const setup = (confirmations: number, lastFetch: number) => {
   let currentConfirmations = confirmations;
@@ -167,7 +189,9 @@ const setup = (confirmations: number, lastFetch: number) => {
 
   const walletMock = {
     getID: () => 'mock-wallet',
-    getTransactions: jest.fn(() => [{ ...mockTxBase, confirmations: currentConfirmations }]),
+    getTransactions: jest.fn(() => [
+      { ...mockTxBase, confirmations: currentConfirmations }
+    ]),
     getLastTxFetch: jest.fn(() => currentLastFetch),
     allowRBF: jest.fn(() => false),
     preferredBalanceUnit: 'BTC',
@@ -176,7 +200,7 @@ const setup = (confirmations: number, lastFetch: number) => {
   mockStorageState = {
     ...mockStorageState,
     wallets: [walletMock],
-  };
+  }
 
   mockWalletSubscribe = walletMock;
 
@@ -192,16 +216,16 @@ const setup = (confirmations: number, lastFetch: number) => {
     mockStorageState = {
       ...mockStorageState,
       wallets: [walletMock],
-    };
+    }
     view.rerender(<TransactionStatus />);
     await waitFor(() => {
       expect(walletMock.getTransactions).toHaveBeenCalled();
-    });
+    })
     return view;
-  };
+  }
 
   return { walletMock, view, update };
-};
+}
 
 describe('TransactionStatus regression', () => {
   beforeEach(() => {
@@ -210,28 +234,30 @@ describe('TransactionStatus regression', () => {
       txMetadata: {},
       counterpartyMetadata: {},
       fetchAndSaveWalletTransactions: mockFetchAndSaveWalletTransactions,
-    };
+    }
     mockWalletSubscribe = null;
-  });
+  })
 
   afterEach(() => {
     jest.clearAllMocks();
-  });
+  })
 
   it('re-fetches wallet transactions when lastTxFetch changes', async () => {
     const { view, update, walletMock } = setup(1, 1000);
 
     await waitFor(() => {
       expect(view.getByText('confirmations: 1')).toBeTruthy();
-    });
+    })
 
     const initialCalls = walletMock.getTransactions.mock.calls.length;
 
     await update(4, 2000);
 
     await waitFor(() => {
-      expect(walletMock.getTransactions).toHaveBeenCalledTimes(initialCalls + 1);
+      expect(walletMock.getTransactions).toHaveBeenCalledTimes(
+        initialCalls + 1
+      );
       expect(view.getByText('confirmations: 4')).toBeTruthy();
-    });
+    })
   });
-});
+})

@@ -1,7 +1,24 @@
 import React from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
-import { Alert, Image, Linking, Platform, Pressable, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { getApplicationName, getBuildNumber, getBundleId, getUniqueIdSync, getVersion, hasGmsSync } from 'react-native-device-info';
+import {
+  Alert,
+  Image,
+  Linking,
+  Platform,
+  Pressable,
+  StyleSheet,
+  Text,
+  useWindowDimensions,
+  View
+} from 'react-native';
+import {
+  getApplicationName,
+  getBuildNumber,
+  getBundleId,
+  getUniqueIdSync,
+  getVersion,
+  hasGmsSync
+} from 'react-native-device-info';
 import { Icon } from '@rneui/themed';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import A from '../../malin_modules/analytics';
@@ -37,7 +54,7 @@ const About: React.FC = () => {
     },
     textLink: {
       color: colors.foregroundColor,
-    },
+    }
   });
 
   const handleOnReleaseNotesPress = () => {
@@ -57,46 +74,55 @@ const About: React.FC = () => {
   };
 
   const handleOnTwitterPress = () => {
-    Linking.openURL('https://twitter.com/bluewalletio');
-  };
-
-  const handleOnDiscordPress = () => {
-    Linking.openURL('https://discord.gg/btWq2Aby2z');
+    Linking.openURL('https://twitter.com/malinwallet');
   };
 
   const handleOnTelegramPress = () => {
-    Linking.openURL('https://t.me/bluewallethat');
+    Linking.openURL('https://t.me/malinwallet');
   };
 
   const handleOnGithubPress = () => {
-    Linking.openURL('https://github.com/BlueWallet/BlueWallet');
+    Linking.openURL('https://github.com/MalinWallet/MalinWallet-wallet');
   };
 
   const handleOnRatePress = () => {
     const options = {
       AppleAppID: '1376878040',
-      GooglePackageName: 'io.bluewallet.bluewallet',
+      GooglePackageName: 'com.malinwallet.app',
       preferredAndroidMarket: AndroidMarket.Google,
       preferInApp: Platform.OS !== 'android',
       openAppStoreIfInAppFails: true,
-      fallbackPlatformURL: 'https://bluewallet.io',
+      fallbackPlatformURL: 'https://malinwallet.io',
     };
-    Rate.rate(options, success => {
+    Rate.rate(options, (success) => {
       if (success) {
         console.log('User Rated.');
       }
     });
-  };
+  }
 
   return (
-    <SafeAreaScrollView testID="AboutScrollView" contentInsetAdjustmentBehavior="automatic" automaticallyAdjustContentInsets>
+    <SafeAreaScrollView
+      testID='AboutScrollView'
+      contentInsetAdjustmentBehavior='automatic'
+      automaticallyAdjustContentInsets
+    >
       <BlueCard>
         <View style={styles.center}>
-          <Image style={styles.logo} source={require('../../img/bluebeast.png')} />
+          <Image
+            style={styles.logo}
+            source={require('../../img/bluebeast.png')}
+          />
           <Text style={styles.textFree}>{loc.settings.about_free}</Text>
-          <Text style={[styles.textBackup, stylesHook.textBackup]}>{formatStringAddTwoWhiteSpaces(loc.settings.about_backup)}</Text>
-          {((Platform.OS === 'android' && hasGmsSync()) || Platform.OS !== 'android') && (
-            <Button onPress={handleOnRatePress} title={loc.settings.about_review + ' ⭐🙏'} />
+          <Text style={[styles.textBackup, stylesHook.textBackup]}>
+            {formatStringAddTwoWhiteSpaces(loc.settings.about_backup)}
+          </Text>
+          {((Platform.OS === 'android' && hasGmsSync()) ||
+            Platform.OS !== 'android') && (
+              <Button
+              onPress={handleOnRatePress}
+              title={loc.settings.about_review + ' ⭐🙏'}
+            />
           )}
         </View>
       </BlueCard>
@@ -118,15 +144,6 @@ const About: React.FC = () => {
         onPress={handleOnTelegramPress}
         title={loc.settings.about_sm_telegram}
       />
-      <ListItem
-        leftIcon={{
-          name: 'discord',
-          type: 'font-awesome-5',
-          color: '#7289da',
-        }}
-        onPress={handleOnDiscordPress}
-        title={loc.settings.about_sm_discord}
-      />
       <BlueCard>
         <View style={[styles.buildWith, stylesHook.buildWith]}>
           <BlueSpacing20 />
@@ -137,16 +154,27 @@ const About: React.FC = () => {
           <BlueTextCentered>Nodejs</BlueTextCentered>
           <BlueTextCentered>Electrum server</BlueTextCentered>
           <BlueSpacing20 />
-          <BlueTextCentered>Inspired by BlueWallet, AlphaWallet, Mycelium</BlueTextCentered>
+          <BlueTextCentered>Inspired by AlphaWallet, Mycelium</BlueTextCentered>
           <BlueSpacing20 />
           <Pressable
             accessibilityRole="button"
             onPress={handleOnGithubPress}
             android_ripple={{ color: colors.androidRippleColor }}
-            style={({ pressed }) => [Platform.OS === 'ios' && pressed ? styles.pressed : null, styles.buttonLink, stylesHook.buttonLink]}
+            style={({ pressed }) => [
+              Platform.OS === 'ios' && pressed ? styles.pressed : null,
+              styles.buttonLink,
+              stylesHook.buttonLink
+            ]}
           >
-            <Icon size={22} name="github" type="font-awesome-5" color={colors.foregroundColor} />
-            <Text style={[styles.textLink, stylesHook.textLink]}>{formatStringAddTwoWhiteSpaces(loc.settings.about_sm_github)}</Text>
+            <Icon
+              size={22}
+              name='github'
+              type='font-awesome-5'
+              color={colors.foregroundColor}
+            />
+            <Text style={[styles.textLink, stylesHook.textLink]}>
+              {formatStringAddTwoWhiteSpaces(loc.settings.about_sm_github)}
+            </Text>
           </Pressable>
         </View>
       </BlueCard>
@@ -189,7 +217,8 @@ const About: React.FC = () => {
         }}
         chevron
         onPress={async () => {
-          const secret = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
+          const secret =
+            'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
           const w = new HDSegwitBech32Wallet();
           w.setSecret(secret);
 
@@ -202,16 +231,21 @@ const About: React.FC = () => {
             }
           }
 
-          Alert.alert(loc.formatString(loc.settings.performance_score, { num }));
+          Alert.alert(
+            loc.formatString(loc.settings.performance_score, { num })
+          );
         }}
         title={loc.settings.run_performance_test}
       />
       <BlueSpacing20 />
       <BlueSpacing20 />
       <BlueTextCentered>
-        {getApplicationName()} ver {getVersion()} (build {getBuildNumber() + ' ' + branch})
+        {getApplicationName()} ver {getVersion()} (build{' '}
+        {getBuildNumber() + ' ' + branch})
       </BlueTextCentered>
-      <BlueTextCentered>{new Date(Number(getBuildNumber()) * 1000).toUTCString()}</BlueTextCentered>
+      <BlueTextCentered>
+        {new Date(Number(getBuildNumber()) * 1000).toUTCString()}
+      </BlueTextCentered>
       <BlueTextCentered>{getBundleId()}</BlueTextCentered>
       <BlueTextCentered>
         w, h = {width}, {height}
@@ -227,14 +261,16 @@ const About: React.FC = () => {
           }}
           style={({ pressed }) => [pressed && styles.pressed]}
         >
-          <Text style={styles.copyToClipboardText}>{loc.transactions.details_copy}</Text>
+          <Text style={styles.copyToClipboardText}>
+            {loc.transactions.details_copy}
+          </Text>
         </Pressable>
       </View>
       <BlueSpacing20 />
       <BlueSpacing20 />
     </SafeAreaScrollView>
   );
-};
+}
 
 export default About;
 
@@ -289,5 +325,5 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.6,
-  },
+  }
 });

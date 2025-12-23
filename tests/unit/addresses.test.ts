@@ -1,25 +1,66 @@
 import assert from 'assert';
-import { TABS, filterByAddressType, getAddress, sortByAddressIndex, totalBalance } from '../../screen/wallets/WalletAddresses';
+import {
+  TABS,
+  filterByAddressType,
+  getAddress,
+  sortByAddressIndex,
+  totalBalance
+} from '../../screen/wallets/WalletAddresses';
 
-jest.mock('../../blue_modules/currency', () => {
+jest.mock('../../malin_modules/currency', () => {
   return {
     initCurrencyDaemon: jest.fn(),
-  };
+  }
 });
 
-jest.mock('../../blue_modules/BlueElectrum', () => {
+jest.mock('../../malin_modules/BlueElectrum', () => {
   return {
     connectMain: jest.fn(),
-  };
+  }
 });
 
 const mockAddressesList = [
-  { index: 2, isInternal: false, key: 'third_external_address', address: '', balance: 0, transactions: 0 },
-  { index: 0, isInternal: true, key: 'first_internal_address', address: '', balance: 0, transactions: 0 },
-  { index: 1, isInternal: false, key: 'second_external_address', address: '', balance: 0, transactions: 0 },
-  { index: 1, isInternal: true, key: 'second_internal_address', address: '', balance: 0, transactions: 0 },
-  { index: 0, isInternal: false, key: 'first_external_address', address: '', balance: 0, transactions: 0 },
-];
+  {
+    index: 2,
+    isInternal: false,
+    key: 'third_external_address',
+    address: '',
+    balance: 0,
+    transactions: 0
+  },
+  {
+    index: 0,
+    isInternal: true,
+    key: 'first_internal_address',
+    address: '',
+    balance: 0,
+    transactions: 0
+  },
+  {
+    index: 1,
+    isInternal: false,
+    key: 'second_external_address',
+    address: '',
+    balance: 0,
+    transactions: 0
+  },
+  {
+    index: 1,
+    isInternal: true,
+    key: 'second_internal_address',
+    address: '',
+    balance: 0,
+    transactions: 0
+  },
+  {
+    index: 0,
+    isInternal: false,
+    key: 'first_external_address',
+    address: '',
+    balance: 0,
+    transactions: 0
+  }
+]
 
 describe('Addresses', () => {
   it('Sort by index', () => {
@@ -28,7 +69,7 @@ describe('Addresses', () => {
     assert.strictEqual(sortedList[0].index, 0);
     assert.strictEqual(sortedList[2].index, 1);
     assert.strictEqual(sortedList[4].index, 2);
-  });
+  })
 
   it('Have tabs defined', () => {
     const tabsEnum = {
@@ -37,24 +78,28 @@ describe('Addresses', () => {
     };
 
     assert.deepStrictEqual(TABS, tabsEnum);
-  });
+  })
 
   it('Filter by type', () => {
     let currentTab: (typeof TABS)[keyof typeof TABS] = TABS.EXTERNAL;
 
-    const externalAddresses = mockAddressesList.filter(address => filterByAddressType(TABS.INTERNAL, address.isInternal, currentTab));
+    const externalAddresses = mockAddressesList.filter((address) =>
+      filterByAddressType(TABS.INTERNAL, address.isInternal, currentTab)
+    );
 
     currentTab = TABS.INTERNAL;
 
-    const internalAddresses = mockAddressesList.filter(address => filterByAddressType(TABS.INTERNAL, address.isInternal, currentTab));
+    const internalAddresses = mockAddressesList.filter((address) =>
+      filterByAddressType(TABS.INTERNAL, address.isInternal, currentTab)
+    );
 
-    externalAddresses.forEach(address => {
+    externalAddresses.forEach((address) => {
       assert.strictEqual(address.isInternal, false);
-    });
+    })
 
-    internalAddresses.forEach(address => {
+    internalAddresses.forEach((address) => {
       assert.strictEqual(address.isInternal, true);
-    });
+    })
   });
 
   it('Sum confirmed/unconfirmed balance', () => {
@@ -65,17 +110,19 @@ describe('Addresses', () => {
     assert.strictEqual(totalBalance(wallet1Balance), 0);
     assert.strictEqual(totalBalance(wallet2Balance), 10);
     assert.strictEqual(totalBalance(wallet3Balance), 10);
-  });
+  })
 
   it('Returns AddressItem object', () => {
     const fakeWallet = {
-      _getExternalAddressByIndex: (index: number) => `external_address_${index}`,
-      _getInternalAddressByIndex: (index: number) => `internal_address_${index}`,
+      _getExternalAddressByIndex: (index: number) =>
+        `external_address_${index}`,
+      _getInternalAddressByIndex: (index: number) =>
+        `internal_address_${index}`,
       _balances_by_external_index: [{ c: 0, u: 0 }],
       _balances_by_internal_index: [{ c: 0, u: 0 }],
       _txs_by_external_index: { 0: [{}] },
       _txs_by_internal_index: { 0: [{}, {}] },
-    };
+    }
 
     const firstExternalAddress = getAddress(fakeWallet, 0, false);
     const firstInternalAddress = getAddress(fakeWallet, 0, true);
@@ -87,7 +134,7 @@ describe('Addresses', () => {
       isInternal: false,
       key: 'external_address_0',
       transactions: 1,
-    });
+    })
 
     assert.deepStrictEqual(firstInternalAddress, {
       address: 'internal_address_0',
@@ -96,6 +143,6 @@ describe('Addresses', () => {
       isInternal: true,
       key: 'internal_address_0',
       transactions: 2,
-    });
+    })
   });
-});
+})

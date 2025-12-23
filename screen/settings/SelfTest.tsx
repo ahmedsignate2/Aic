@@ -41,7 +41,13 @@ type TState = {
 
 function assertStrictEqual<T>(actual: T, expected: T, message?: string) {
   if (expected !== actual) {
-    throw new Error(message || 'Assertion failed that ' + JSON.stringify(expected) + ' equals ' + JSON.stringify(actual));
+    throw new Error(
+      message ||
+        'Assertion failed that ' +
+          JSON.stringify(expected) +
+          ' equals ' +
+          JSON.stringify(actual)
+    );
   }
 }
 
@@ -49,21 +55,21 @@ const styles = StyleSheet.create({
   center: {
     alignItems: 'center',
   },
-});
+})
 
 export default class SelfTest extends Component {
   state: TState;
 
-  constructor(props: any) {
+  constructor (props: any) {
     super(props);
     this.state = {
       isLoading: true,
-    };
+    }
   }
 
   onPressImportDocument = async () => {
     try {
-      fs.showFilePickerAndReadFile().then(file => {
+      fs.showFilePickerAndReadFile().then((file) => {
         if (file && file.data && file.data.length > 0) {
           presentAlert({ message: file.data });
         } else {
@@ -81,7 +87,10 @@ export default class SelfTest extends Component {
     let isOk = true;
 
     try {
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         const uniqs: Record<string, 1> = {};
         const w = new SegwitP2SHWallet();
         for (let c = 0; c < 1000; c++) {
@@ -97,9 +106,14 @@ export default class SelfTest extends Component {
 
       //
 
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         const spkw = new LightningArkWallet();
-        spkw.setSecret('abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about');
+        spkw.setSecret(
+          'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+        )
         await spkw.init();
         assertStrictEqual(
           await spkw.getArkAddress(),
@@ -112,32 +126,53 @@ export default class SelfTest extends Component {
 
       //
 
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         await BlueElectrum.ping();
         await BlueElectrum.waitTillConnected();
         const addr4elect = '3GCvDBAktgQQtsbN6x5DYiQCMmgZ9Yk8BK';
-        const electrumBalance = await BlueElectrum.getBalanceByAddress(addr4elect);
-        if (electrumBalance.confirmed !== 51432)
-          throw new Error('BlueElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance));
+        const electrumBalance =
+          await BlueElectrum.getBalanceByAddress(addr4elect);
+        if (electrumBalance.confirmed !== 51432) {
+        { throw new Error('BlueElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance))}
 
-        const electrumTxs = await BlueElectrum.getTransactionsByAddress(addr4elect);
-        if (electrumTxs.length !== 1) throw new Error('BlueElectrum getTransactionsByAddress failure, got ' + JSON.stringify(electrumTxs));
+        const electrumTxs =
+          await BlueElectrum.getTransactionsByAddress(addr4elect);
+        if (electrumTxs.length !== 1)
+          {throw new Error(
+            "BlueElectrum getTransactionsByAddress failure, got " +
+              JSON.stringify(electrumTxs),
+          );}
       } else {
         // skipping RN-specific test'
       }
 
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         const aezeed = new HDAezeedWallet();
         aezeed.setSecret(
           'abstract rhythm weird food attract treat mosquito sight royal actor surround ride strike remove guilt catch filter summer mushroom protect poverty cruel chaos pattern',
         );
-        assertStrictEqual(await aezeed.validateMnemonicAsync(), true, 'Aezeed failed');
-        assertStrictEqual(aezeed._getExternalAddressByIndex(0), 'bc1qdjj7lhj9lnjye7xq3dzv3r4z0cta294xy78txn', 'Aezeed failed');
+        assertStrictEqual(
+          await aezeed.validateMnemonicAsync(),
+          true,
+          'Aezeed failed',
+        )
+        assertStrictEqual(
+          aezeed._getExternalAddressByIndex(0),
+          'bc1qdjj7lhj9lnjye7xq3dzv3r4z0cta294xy78txn',
+          'Aezeed failed',
+        )
       } else {
         // skipping RN-specific test
       }
 
-      let l: LegacyWallet | SegwitP2SHWallet | TaprootWallet = new LegacyWallet();
+      let l: LegacyWallet | SegwitP2SHWallet | TaprootWallet =
+        new LegacyWallet();
       l.setSecret('L4ccWrPMmFDZw4kzAKFqJNxgHANjdy6b7YKNXMwB4xac4FLF3Tov');
       assertStrictEqual(l.getAddress(), '14YZ6iymQtBVQJk6gKnLCk49UScJK7SH4M');
       let utxos: CreateTransactionUtxo[] = [
@@ -148,7 +183,7 @@ export default class SelfTest extends Component {
           txhex:
             '0200000000010161890cd52770c150da4d7d190920f43b9f88e7660c565a5a5ad141abb6de09de00000000000000008002a0860100000000001976a91426e01119d265aa980390c49eece923976c218f1588ac3e17000000000000160014c1af8c9dd85e0e55a532a952282604f820746fcd02473044022072b3f28808943c6aa588dd7a4e8f29fad7357a2814e05d6c5d767eb6b307b4e6022067bc6a8df2dbee43c87b8ce9ddd9fe678e00e0f7ae6690d5cb81eca6170c47e8012102e8fba5643e15ab70ec79528833a2c51338c1114c4eebc348a235b1a3e13ab07100000000',
         },
-      ];
+      ]
 
       let txNew = l.createTransaction(
         utxos,
@@ -158,7 +193,7 @@ export default class SelfTest extends Component {
         0xffffffff,
         false,
         0,
-      );
+      )
       const txBitcoin = bitcoin.Transaction.fromHex(txNew.tx!.toHex());
       assertStrictEqual(
         txNew.tx!.toHex(),
@@ -166,8 +201,14 @@ export default class SelfTest extends Component {
       );
       assertStrictEqual(txBitcoin.ins.length, 1);
       assertStrictEqual(txBitcoin.outs.length, 2);
-      assertStrictEqual('1GX36PGBUrF8XahZEGQqHqnJGW2vCZteoB', bitcoin.address.fromOutputScript(txBitcoin.outs[0].script)); // to address
-      assertStrictEqual(l.getAddress(), bitcoin.address.fromOutputScript(txBitcoin.outs[1].script)); // change address
+      assertStrictEqual(
+        '1GX36PGBUrF8XahZEGQqHqnJGW2vCZteoB',
+        bitcoin.address.fromOutputScript(txBitcoin.outs[0].script)
+      ); // to address
+      assertStrictEqual(
+        l.getAddress(),
+        bitcoin.address.fromOutputScript(txBitcoin.outs[1].script)
+      ); // change address
 
       //
 
@@ -181,15 +222,18 @@ export default class SelfTest extends Component {
 
       const wallet = new SegwitP2SHWallet();
       wallet.setSecret('Ky1vhqYGCiCbPd8nmbUeGfwLdXB1h5aGwxHwpXrzYRfY5cTZPDo4');
-      assertStrictEqual(wallet.getAddress(), '3CKN8HTCews4rYJYsyub5hjAVm5g5VFdQJ');
+      assertStrictEqual(
+        wallet.getAddress(),
+        '3CKN8HTCews4rYJYsyub5hjAVm5g5VFdQJ',
+      )
 
       utxos = [
         {
           txid: 'a56b44080cb606c0bd90e77fcd4fb34c863e68e5562e75b4386e611390eb860c',
           vout: 0,
           value: 300000,
-        },
-      ];
+        }
+      ]
 
       txNew = wallet.createTransaction(
         utxos,
@@ -199,7 +243,7 @@ export default class SelfTest extends Component {
         0xffffffff,
         false,
         0,
-      );
+      )
       const tx = bitcoin.Transaction.fromHex(txNew.tx!.toHex());
       assertStrictEqual(
         txNew.tx!.toHex(),
@@ -207,14 +251,23 @@ export default class SelfTest extends Component {
       );
       assertStrictEqual(tx.ins.length, 1);
       assertStrictEqual(tx.outs.length, 2);
-      assertStrictEqual('1GX36PGBUrF8XahZEGQqHqnJGW2vCZteoB', bitcoin.address.fromOutputScript(tx.outs[0].script)); // to address
-      assertStrictEqual(bitcoin.address.fromOutputScript(tx.outs[1].script), wallet.getAddress()); // change address
+      assertStrictEqual(
+        '1GX36PGBUrF8XahZEGQqHqnJGW2vCZteoB',
+        bitcoin.address.fromOutputScript(tx.outs[0].script)
+      ); // to address
+      assertStrictEqual(
+        bitcoin.address.fromOutputScript(tx.outs[1].script),
+        wallet.getAddress()
+      ); // change address
 
       //
 
       l = new TaprootWallet();
       l.setSecret('L4PKRVk1Peaar5WuH5LiKfkTygWtFfGrFeH2g2t3YVVqiwpJjMoF');
-      if (l.getAddress() !== 'bc1pm6lqlel3qxefsx0v39nshtghasvvp6ghn3e5hd5q280j5m9h7csqrkzssu') {
+      if (
+        l.getAddress() !==
+        'bc1pm6lqlel3qxefsx0v39nshtghasvvp6ghn3e5hd5q280j5m9h7csqrkzssu'
+      ) {
         throw new Error('failed to generate Taproot address from WIF');
       }
 
@@ -224,10 +277,11 @@ export default class SelfTest extends Component {
         [
           {
             value: 10000,
-            address: 'bc1pm6lqlel3qxefsx0v39nshtghasvvp6ghn3e5hd5q280j5m9h7csqrkzssu',
+            address:
+              'bc1pm6lqlel3qxefsx0v39nshtghasvvp6ghn3e5hd5q280j5m9h7csqrkzssu',
             txid: '4dc4c9a03dd7005310a313c5ef1754e5e53888d587073f01a5a662501c12ac3b',
             vout: 0,
-          },
+          }
         ],
         [{ address: '13HaCAB4jf7FYSZexJxoczyDDnutzZigjS' }],
         1,
@@ -235,7 +289,7 @@ export default class SelfTest extends Component {
         0xffffffff,
         false,
         0,
-      );
+      )
       if (!txNewTaproot.tx) {
         throw new Error('failed to create Taproot tx');
       }
@@ -271,7 +325,10 @@ export default class SelfTest extends Component {
       }
 
       //
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         const hd = new HDSegwitP2SHWallet();
         const hashmap: Record<string, 1> = {};
         for (let c = 0; c < 1000; c++) {
@@ -281,7 +338,10 @@ export default class SelfTest extends Component {
             throw new Error('Duplicate secret generated!');
           }
           hashmap[secret] = 1;
-          if (secret.split(' ').length !== 12 && secret.split(' ').length !== 24) {
+          if (
+            secret.split(' ').length !== 12 &&
+            secret.split(' ').length !== 24
+          ) {
             throw new Error('mnemonic phrase not ok');
           }
         }
@@ -295,62 +355,101 @@ export default class SelfTest extends Component {
         //
 
         const hd4 = new HDSegwitBech32Wallet();
-        hd4._xpub = 'zpub6r7jhKKm7BAVx3b3nSnuadY1WnshZYkhK8gKFoRLwK9rF3Mzv28BrGcCGA3ugGtawi1WLb2vyjQAX9ZTDGU5gNk2bLdTc3iEXr6tzR1ipNP';
+        hd4._xpub =
+          'zpub6r7jhKKm7BAVx3b3nSnuadY1WnshZYkhK8gKFoRLwK9rF3Mzv28BrGcCGA3ugGtawi1WLb2vyjQAX9ZTDGU5gNk2bLdTc3iEXr6tzR1ipNP';
         await hd4.fetchBalance();
-        if (hd4.getBalance() !== 200000) throw new Error('Could not fetch HD Bech32 balance');
+        if (hd4.getBalance() !== 200000)
+          {throw new Error("Could not fetch HD Bech32 balance");}
         await hd4.fetchTransactions();
-        if (hd4.getTransactions().length !== 4) throw new Error('Could not fetch HD Bech32 transactions');
+        if (hd4.getTransactions().length !== 4)
+          {throw new Error("Could not fetch HD Bech32 transactions");}
       } else {
         // skipping RN-specific test
       }
 
       // BlueCrypto test
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-        const hex = await BlueCrypto.scrypt('717765727479', '4749345a22b23cf3', 64, 8, 8, 32); // using non-default parameters to speed it up (not-bip38 compliant)
-        if (hex.toUpperCase() !== 'F36AB2DC12377C788D61E6770126D8A01028C8F6D8FE01871CE0489A1F696A90')
-          throw new Error('react-native-blue-crypto is not ok');
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
+        const hex = await BlueCrypto.scrypt(
+          '717765727479',
+          '4749345a22b23cf3',
+          64,
+          8,
+          8,
+          32
+        ); // using non-default parameters to speed it up (not-bip38 compliant)
+        if (
+          hex.toUpperCase() !==
+          'F36AB2DC12377C788D61E6770126D8A01028C8F6D8FE01871CE0489A1F696A90'
+        ) {
+        { throw new Error('react-native-blue-crypto is not ok')}
       }
 
       // bip38 test
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         let callbackWasCalled = false;
         const decryptedKey = await bip38.decryptAsync(
           '6PnU5voARjBBykwSddwCdcn6Eu9EcsK24Gs5zWxbJbPZYW7eiYQP8XgKbN',
           'qwerty',
           () => (callbackWasCalled = true),
-        );
+        )
         assertStrictEqual(
           wif.encode(0x80, decryptedKey.privateKey, decryptedKey.compressed),
           'KxqRtpd9vFju297ACPKHrGkgXuberTveZPXbRDiQ3MXZycSQYtjc',
           'bip38 failed',
         );
         // bip38 with BlueCrypto doesn't support progress callback
-        assertStrictEqual(callbackWasCalled, false, "bip38 doesn't use BlueCrypto");
+        assertStrictEqual(
+          callbackWasCalled,
+          false,
+          "bip38 doesn't use BlueCrypto"
+        );
       }
 
       // slip39 test
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
         const w = new SLIP39LegacyP2PKHWallet();
         w.setSecret(
           'shadow pistol academic always adequate wildlife fancy gross oasis cylinder mustang wrist rescue view short owner flip making coding armed\n' +
             'shadow pistol academic acid actress prayer class unknown daughter sweater depict flip twice unkind craft early superior advocate guest smoking',
         );
-        assertStrictEqual(w._getExternalAddressByIndex(0), '18pvMjy7AJbCDtv4TLYbGPbR7SzGzjqUpj', 'SLIP39 failed');
+        assertStrictEqual(
+          w._getExternalAddressByIndex(0),
+          '18pvMjy7AJbCDtv4TLYbGPbR7SzGzjqUpj',
+          'SLIP39 failed',
+        )
       }
 
       //
 
-      if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative') {
-        assertStrictEqual(await Linking.canOpenURL('https://bluewallet.io/'), true, 'Linking can not open https url');
+      if (
+        typeof navigator !== 'undefined' &&
+        navigator.product === 'ReactNative'
+      ) {
+        assertStrictEqual(
+          await Linking.canOpenURL('https://malinwallet.io/'),
+          true,
+          'Linking can not open https url',
+        )
       } else {
         // skipping RN-specific test'
       }
 
       //
 
-      assertStrictEqual(Buffer.from('00ff0f', 'hex').reverse().toString('hex'), '0fff00');
+      assertStrictEqual(
+        Buffer.from('00ff0f', 'hex').reverse().toString('hex'),
+        '0fff00',
+      )
 
-      //
     } catch (Err) {
       console.log(Err);
       errorMessage += Err;
@@ -361,20 +460,23 @@ export default class SelfTest extends Component {
       isLoading: false,
       isOk,
       errorMessage,
-    });
+    })
   }
 
   render() {
     return (
-      <ScrollView automaticallyAdjustContentInsets contentInsetAdjustmentBehavior="automatic">
+      <ScrollView
+        automaticallyAdjustContentInsets
+        contentInsetAdjustmentBehavior='automatic'
+      >
         <BlueSpacing20 />
 
         {this.state.isLoading ? (
-          <BlueLoading testID="SelfTestLoading" />
-        ) : (
-          (() => {
-            if (this.state.isOk) {
-              return (
+  <BlueLoading testID="SelfTestLoading" />
+            ) : (
+              (() => {
+                if (this.state.isOk) {
+                  return (
                 <View style={styles.center}>
                   <BlueText testID="SelfTestOk" h4>
                     OK
@@ -382,20 +484,23 @@ export default class SelfTest extends Component {
                   <BlueSpacing20 />
                   <BlueText>{loc.settings.about_selftest_ok}</BlueText>
                 </View>
-              );
-            } else {
-              return (
+                  );
+                } else {
+                  return (
                 <View style={styles.center}>
                   <BlueText h4 numberOfLines={0}>
                     {this.state.errorMessage}
                   </BlueText>
                 </View>
-              );
-            }
-          })()
-        )}
+                  );
+                }
+              })()
+            )}
         <BlueSpacing20 />
-        <SaveFileButton fileName="bluewallet-selftest.txt" fileContent={'Success on ' + new Date().toUTCString()}>
+        <SaveFileButton
+          fileName='malinwallet-selftest.txt'
+          fileContent={'Success on ' + new Date().toUTCString()}
+        >
           <Button title="Test Save to Storage" />
         </SaveFileButton>
         <BlueSpacing20 />

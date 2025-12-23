@@ -7,9 +7,7 @@ Ce guide documente la refactorisation complète du projet de BlueWallet vers Mal
 
 ## 1️⃣ REFACTORISATION ANDROID
 
-### 1.1 Package Identifiers
-
-**Ancien :** `io.bluewallet.bluewallet`
+**Ancien :** `com.malinwallet.app`
 **Nouveau :** `com.malinwallet.app`
 
 #### Fichiers à mettre à jour :
@@ -17,12 +15,12 @@ Ce guide documente la refactorisation complète du projet de BlueWallet vers Mal
 ```bash
 # Build configuration
 android/app/build.gradle
-  - namespace: io.bluewallet.bluewallet → com.malinwallet.app
-  - applicationId: io.bluewallet.bluewallet → com.malinwallet.app
+  - namespace: com.malinwallet.app → com.malinwallet.app
+  - applicationId: com.malinwallet.app → com.malinwallet.app
 
 # BUCK configuration
 android/app/BUCK
-  - package: io.bluewallet.bluewallet → com.malinwallet.app
+  - package: com.malinwallet.app → com.malinwallet.app
 
 # Kotlin source files
 android/app/src/main/java/io/bluewallet/bluewallet/
@@ -75,7 +73,7 @@ package com.malinwallet.app
 
 ### 2.1 Bundle Identifiers
 
-**Ancien :** `io.bluewallet.bluewallet`
+**Ancien :** `com.malinwallet.app`
 **Nouveau :** `com.malinwallet.app`
 
 #### Fichiers à mettre à jour :
@@ -83,17 +81,17 @@ package com.malinwallet.app
 ```bash
 # Info.plist
 ios/BlueWallet/Info.plist
-  - BGTaskSchedulerPermittedIdentifiers: io.bluewallet.bluewallet.* → com.malinwallet.app.*
+  - BGTaskSchedulerPermittedIdentifiers: com.malinwallet.app.* → com.malinwallet.app.*
 
 # Xcode project (via Xcode UI ou pbxproj)
 ios/BlueWallet.xcodeproj/project.pbxproj
-  - PRODUCT_BUNDLE_IDENTIFIER: io.bluewallet.bluewallet → com.malinwallet.app
+  - PRODUCT_BUNDLE_IDENTIFIER: com.malinwallet.app → com.malinwallet.app
 
 # Handoff identifiers
 ios/BlueWalletWatch/Objects/Handoff.swift
-  - ReceiveOnchain: io.bluewallet.bluewallet.receiveonchain → com.malinwallet.app.receiveonchain
-  - Xpub: io.bluewallet.bluewallet.xpub → com.malinwallet.app.xpub
-  - ViewInBlockExplorer: io.bluewallet.bluewallet.blockexplorer → com.malinwallet.app.blockexplorer
+  - ReceiveOnchain: com.malinwallet.app.receiveonchain → com.malinwallet.app.receiveonchain
+  - Xpub: com.malinwallet.app.xpub → com.malinwallet.app.xpub
+  - ViewInBlockExplorer: com.malinwallet.app.blockexplorer → com.malinwallet.app.blockexplorer
 
 # Shared framework
 ios/Shared/UserDefaultsGroupKey.swift
@@ -104,10 +102,10 @@ ios/Shared/UserDefaultsGroupKey.swift
 
 ```bash
 fastlane/Matchfile
-  - app_identifier: ["io.bluewallet.bluewallet", ...] → ["com.malinwallet.app", ...]
+  - app_identifier: ["com.malinwallet.app", ...] → ["com.malinwallet.app", ...]
 
 ios/export_options.plist
-  - provisioningProfiles: io.bluewallet.bluewallet → com.malinwallet.app
+  - provisioningProfiles: com.malinwallet.app → com.malinwallet.app
 ```
 
 ---

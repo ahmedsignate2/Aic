@@ -3,10 +3,10 @@ import assert from 'assert';
 
 import { BlueApp, HDSegwitBech32Wallet, SegwitP2SHWallet } from '../../class';
 
-jest.mock('../../blue_modules/BlueElectrum', () => {
+jest.mock('../../malin_modules/BlueElectrum', () => {
   return {
     connectMain: jest.fn(),
-  };
+  }
 });
 
 it('Appstorage - loadFromDisk works', async () => {
@@ -20,12 +20,12 @@ it('Appstorage - loadFromDisk works', async () => {
     txid: {
       memo: 'tx label',
     },
-  };
+  }
   Storage.counterparty_metadata = {
     'payment code': {
       label: 'yegor letov',
     },
-  };
+  }
   await Storage.saveToDisk();
 
   // saved, now trying to load
@@ -35,7 +35,10 @@ it('Appstorage - loadFromDisk works', async () => {
   assert.strictEqual(Storage2.wallets.length, 1);
   assert.strictEqual(Storage2.wallets[0].getLabel(), 'testlabel');
   assert.strictEqual(Storage2.tx_metadata.txid.memo, 'tx label');
-  assert.strictEqual(Storage2.counterparty_metadata['payment code'].label, 'yegor letov');
+  assert.strictEqual(
+    Storage2.counterparty_metadata['payment code'].label,
+    'yegor letov',
+  )
   let isEncrypted = await Storage2.storageIsEncrypted();
   assert.ok(!isEncrypted);
 
@@ -46,7 +49,7 @@ it('Appstorage - loadFromDisk works', async () => {
   const Storage3 = new BlueApp();
   isEncrypted = await Storage3.storageIsEncrypted();
   assert.ok(isEncrypted);
-});
+})
 
 it('AppStorage - getTransactions() work', async () => {
   const Storage = new BlueApp();
@@ -56,7 +59,8 @@ it('AppStorage - getTransactions() work', async () => {
   w._txs_by_internal_index = {
     0: [
       {
-        blockhash: '000000000000000000054fae1935a8e5c3ac29ce04a45cca25d7329af5e5db2e',
+        blockhash:
+          '000000000000000000054fae1935a8e5c3ac29ce04a45cca25d7329af5e5db2e',
         blocktime: 1678137003,
         confirmations: 61788,
         hash: '73a2ac70858c5b306b101a861d582f40c456a692096a4e4805aa739258c4400d',
@@ -82,7 +86,7 @@ it('AppStorage - getTransactions() work', async () => {
             vout: 3,
             addresses: ['bc1qtnsyvl8zkteg7ap57j6w8hc7gk5nxk8vj5vrmz'],
             value: 0.00077308,
-          },
+          }
         ],
         outputs: [
           {
@@ -96,13 +100,13 @@ it('AppStorage - getTransactions() work', async () => {
               addresses: ['bc1qaxxc4gwx6rd6rymq08qwpxhesd4jqu93lvjsyt'],
             },
             value: 0.00074822,
-          },
+          }
         ],
         received: 1678137003000,
         value: -77308,
         sort_ts: 1678137003000,
-      },
-    ],
+      }
+    ]
   };
 
   const w2 = new HDSegwitBech32Wallet();
@@ -111,7 +115,8 @@ it('AppStorage - getTransactions() work', async () => {
   w2._txs_by_internal_index = {
     0: [
       {
-        blockhash: '000000000000000000054fae1935a8e5c3ac29ce04a45cca25d7329af5e5db2e',
+        blockhash:
+          '000000000000000000054fae1935a8e5c3ac29ce04a45cca25d7329af5e5db2e',
         blocktime: 1678137003,
         confirmations: 61788,
         hash: 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
@@ -137,7 +142,7 @@ it('AppStorage - getTransactions() work', async () => {
             vout: 3,
             addresses: ['bc1qtnsyvl8zkteg7ap57j6w8hc7gk5nxk8vj5vrmz'],
             value: 0.00077308,
-          },
+          }
         ],
         outputs: [
           {
@@ -151,13 +156,13 @@ it('AppStorage - getTransactions() work', async () => {
               addresses: ['bc1qaxxc4gwx6rd6rymq08qwpxhesd4jqu93lvjsyt'],
             },
             value: 0.00074822,
-          },
+          }
         ],
         received: 1678137003000,
         value: -77308,
         sort_ts: 1678137003000,
-      },
-    ],
+      }
+    ]
   };
 
   Storage.wallets.push(w);
@@ -171,7 +176,10 @@ it('AppStorage - getTransactions() work', async () => {
 
   for (const tx of txs) {
     assert.ok([w.getID(), w2.getID()].includes(tx.walletID));
-    assert.strictEqual(tx.walletPreferredBalanceUnit, w.getPreferredBalanceUnit());
+    assert.strictEqual(
+      tx.walletPreferredBalanceUnit,
+      w.getPreferredBalanceUnit()
+    );
     assert.strictEqual(tx.walletPreferredBalanceUnit, 'BTC');
   }
 
@@ -182,7 +190,10 @@ it('AppStorage - getTransactions() work', async () => {
 
   for (const tx of txs) {
     assert.ok([w.getID()].includes(tx.walletID));
-    assert.strictEqual(tx.walletPreferredBalanceUnit, w.getPreferredBalanceUnit());
+    assert.strictEqual(
+      tx.walletPreferredBalanceUnit,
+      w.getPreferredBalanceUnit()
+    );
     assert.strictEqual(tx.walletPreferredBalanceUnit, 'BTC');
   }
 
@@ -193,7 +204,10 @@ it('AppStorage - getTransactions() work', async () => {
 
   for (const tx of txs) {
     assert.ok([w2.getID()].includes(tx.walletID));
-    assert.strictEqual(tx.walletPreferredBalanceUnit, w.getPreferredBalanceUnit());
+    assert.strictEqual(
+      tx.walletPreferredBalanceUnit,
+      w.getPreferredBalanceUnit()
+    );
     assert.strictEqual(tx.walletPreferredBalanceUnit, 'BTC');
   }
 });
@@ -260,7 +274,8 @@ it('Appstorage - encryptStorage & load encrypted storage works', async () => {
   assert.strictEqual(Storage2.wallets[1].getLabel(), 'testlabel2');
 
   // next, adding new `fake` storage which should be unlocked with `fake` password
-  const createFakeStorageResult = await Storage2.createFakeStorage('fakePassword');
+  const createFakeStorageResult =
+    await Storage2.createFakeStorage('fakePassword');
   assert.ok(createFakeStorageResult);
   assert.strictEqual(Storage2.wallets.length, 0);
   assert.strictEqual(Storage2.cachedPassword, 'fakePassword');
@@ -346,7 +361,8 @@ it('Appstorage - encryptStorage & load encrypted, then decryptStorage and load s
   assert.strictEqual(Storage2.wallets[1].getLabel(), 'testlabel2');
 
   // next, adding new `fake` storage which should be unlocked with `fake` password
-  const createFakeStorageResult = await Storage2.createFakeStorage('fakePassword');
+  const createFakeStorageResult =
+    await Storage2.createFakeStorage('fakePassword');
   assert.ok(createFakeStorageResult);
   assert.strictEqual(Storage2.wallets.length, 0);
   assert.strictEqual(Storage2.cachedPassword, 'fakePassword');
@@ -405,7 +421,8 @@ it('can decrypt storage that is second in a list of buckets; and isPasswordInUse
   assert.ok(isEncrypted);
 
   // next, adding new `fake` storage which should be unlocked with `fake` password
-  const createFakeStorageResult = await Storage.createFakeStorage('fakePassword');
+  const createFakeStorageResult =
+    await Storage.createFakeStorage('fakePassword');
   assert.ok(createFakeStorageResult);
   assert.strictEqual(Storage.wallets.length, 0);
   assert.strictEqual(Storage.cachedPassword, 'fakePassword');
@@ -468,5 +485,8 @@ it('can decrypt storage that is second in a list of buckets; and isPasswordInUse
 
 it('Appstorage - hashIt() works', async () => {
   const storage = new BlueApp();
-  assert.strictEqual(storage.hashIt('hello'), '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824');
+  assert.strictEqual(
+    storage.hashIt('hello'),
+    '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824',
+  )
 });

@@ -1,7 +1,11 @@
-import { DarkTheme, DefaultTheme, useTheme as useThemeBase } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  useTheme as useThemeBase
+} from '@react-navigation/native';
 import { Appearance } from 'react-native';
 
-export const BlueDefaultTheme = {
+export const MalinDefaultTheme = {
   ...DefaultTheme,
   closeImage: require('../img/close.png'),
   barStyle: 'dark-content',
@@ -72,17 +76,17 @@ export const BlueDefaultTheme = {
     navigationBarColor: '#FFFFFF',
     androidRippleColor: '#CCCCCC',
   },
-};
+}
 
-export type Theme = typeof BlueDefaultTheme;
+export type Theme = typeof MalinDefaultTheme;
 
-export const BlueDarkTheme: Theme = {
+export const MalinDarkTheme: Theme = {
   ...DarkTheme,
   closeImage: require('../img/close-white.png'),
   scanImage: require('../img/scan-white.png'),
   barStyle: 'light-content',
   colors: {
-    ...BlueDefaultTheme.colors,
+    ...MalinDefaultTheme.colors,
     ...DarkTheme.colors,
     customHeader: '#000000',
     brandingColor: '#000000',
@@ -130,22 +134,28 @@ export const BlueDarkTheme: Theme = {
     navigationBarColor: '#3A3A3C',
     androidRippleColor: '#444444',
   },
-};
+}
 
 // Casting theme value to get autocompletion
 export const useTheme = (): Theme => useThemeBase() as Theme;
 
-export class BlueCurrentTheme {
+export class MalinCurrentTheme {
   static colors: Theme['colors'];
   static closeImage: Theme['closeImage'];
   static scanImage: Theme['scanImage'];
 
   static updateColorScheme(): void {
     const isColorSchemeDark = Appearance.getColorScheme() === 'dark';
-    BlueCurrentTheme.colors = isColorSchemeDark ? BlueDarkTheme.colors : BlueDefaultTheme.colors;
-    BlueCurrentTheme.closeImage = isColorSchemeDark ? BlueDarkTheme.closeImage : BlueDefaultTheme.closeImage;
-    BlueCurrentTheme.scanImage = isColorSchemeDark ? BlueDarkTheme.scanImage : BlueDefaultTheme.scanImage;
+    MalinCurrentTheme.colors = isColorSchemeDark
+      ? MalinDarkTheme.colors
+      : MalinDefaultTheme.colors;
+    MalinCurrentTheme.closeImage = isColorSchemeDark
+      ? MalinDarkTheme.closeImage
+      : MalinDefaultTheme.closeImage;
+    MalinCurrentTheme.scanImage = isColorSchemeDark
+      ? MalinDarkTheme.scanImage
+      : MalinDefaultTheme.scanImage;
   }
 }
 
-BlueCurrentTheme.updateColorScheme();
+MalinCurrentTheme.updateColorScheme();
