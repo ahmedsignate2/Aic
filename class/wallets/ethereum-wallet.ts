@@ -2,7 +2,8 @@ import { AbstractWallet } from './abstract-wallet';
 import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
 import { ethers } from 'ethers';
 // @ts-ignore
-import { NEXT_PUBLIC_INFURA_GAS_API_KEY } from '@env';
+import { ETHEREUM_RPC_URL } from '@env';
+import { EthereumTransaction } from './types';
 
 export class EthereumWallet extends AbstractWallet {
   static readonly type = 'ethereum';
@@ -12,11 +13,12 @@ export class EthereumWallet extends AbstractWallet {
   public readonly type = EthereumWallet.type;
   // @ts-ignore: override
   public readonly typeReadable = EthereumWallet.typeReadable;
+  private _transactions: EthereumTransaction[] = [];
 
   constructor() {
     super();
     this.chain = Chain.OFFCHAIN;
-    this.preferredBalanceUnit = BitcoinUnit.BTC;
+    this.preferredBalanceUnit = BitcoinUnit.ETH;
   }
 
   static fromJson(obj: string): EthereumWallet {
@@ -42,7 +44,10 @@ export class EthereumWallet extends AbstractWallet {
   }
 
   getLatestTransactionTime(): string | 0 {
-    return 0;
+    if (this._transactions.length === 0) {
+      return 0;
+    }
+    return this._transactions[0].timestamp;
   }
 
   async generate(): Promise<void> {
@@ -60,7 +65,7 @@ export class EthereumWallet extends AbstractWallet {
 
   async fetchBalance(): Promise<void> {
     try {
-      const provider = new ethers.JsonRpcProvider(`https://mainnet.infura.io/v3/${NEXT_PUBLIC_INFURA_GAS_API_KEY}`);
+      const provider = new ethers.JsonRpcProvider(ETHEREUM_RPC_URL);
       if (this._address) {
         const balance = await provider.getBalance(this._address);
         // Store as ETH unit (float) to avoid Number overflow with Wei (18 decimals)
@@ -74,21 +79,34 @@ export class EthereumWallet extends AbstractWallet {
   }
 
   async fetchTransactions(): Promise<void> {
-     // Basic implementation for fetching transaction count as a proxy for activity
-     try {
-        const provider = new ethers.JsonRpcProvider(`https://mainnet.infura.io/v3/${NEXT_PUBLIC_INFURA_GAS_API_KEY}`);
-        if (this._address) {
-            const count = await provider.getTransactionCount(this._address);
-            console.log('ETH Transaction count:', count);
-            // In a real app, use Etherscan API or similar for full transaction history
-        }
-     } catch (e) {
-         console.error('Error fetching ETH transactions:', e);
-     }
+    if (!this._address) return;
+
+    try {
+      const provider = new ethers.EtherscanProvider('mainnet', 'freekey');
+      const history = await provider.getHistory(this._address);
+      this._transactions = history.map(tx => ({
+        hash: tx.hash,
+        from: tx.from,
+        to: tx.to ?? '',
+        value: Number(tx.value),
+        gasPrice: Number(tx.gasPrice),
+        gas: Number(tx.gasLimit),
+        nonce: tx.nonce,
+        input: tx.data,
+        blockHash: tx.blockHash ?? '',
+        blockNumber: tx.blockNumber ?? 0,
+        confirmations: tx.confirmations ?? 0,
+        timestamp: tx.timestamp ?? 0,
+        fee: tx.gasPrice ? Number(tx.gasPrice * tx.gasLimit) : undefined,
+      }));
+    } catch (e) {
+      console.error('Error fetching ETH transactions:', e);
+    }
   }
 
-  getTransactions(): any[] {
-      return [];
+  // @ts-ignore: override
+  getTransactions(): EthereumTransaction[] {
+    return this._transactions;
   }
 
   isAddressValid(address: string): boolean {
@@ -120,8 +138,15 @@ export class EthereumWallet extends AbstractWallet {
       return false;
   }
 
-  broadcastTx(txhex: string) {
-      throw new Error('Not implemented');
+  async broadcastTx(txhex: string): Promise<string> {
+    const provider = new ethers.JsonRpcProvider(ETHEREUM_RPC_URL);
+    try {
+      const tx = await provider.broadcastTransaction(txhex);
+      return tx.hash;
+    } catch (e) {
+      console.error('Error broadcasting ETH transaction:', e);
+      throw e;
+    }
   }
 
   coinselect(utxos: any, targets: any, feeRate: any) {

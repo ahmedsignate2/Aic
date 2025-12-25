@@ -2,6 +2,9 @@ import { AbstractWallet } from './abstract-wallet';
 import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
 import { Keypair, PublicKey, Connection, clusterApiUrl } from '@solana/web3.js';
 import bs58 from 'bs58';
+import { Buffer } from 'buffer';
+import { SolanaTransaction } from './types';
+import { SOLANA_RPC_URL } from '@env';
 
 export class SolanaWallet extends AbstractWallet {
   static readonly type = 'solana';
@@ -11,11 +14,12 @@ export class SolanaWallet extends AbstractWallet {
   public readonly type = SolanaWallet.type;
   // @ts-ignore: override
   public readonly typeReadable = SolanaWallet.typeReadable;
+  private _transactions: SolanaTransaction[] = [];
 
   constructor () {
     super();
     this.chain = Chain.OFFCHAIN;
-    this.preferredBalanceUnit = BitcoinUnit.BTC;
+    this.preferredBalanceUnit = BitcoinUnit.SOL;
   }
 
   static fromJson(obj: string): SolanaWallet {
@@ -41,7 +45,10 @@ export class SolanaWallet extends AbstractWallet {
   }
 
   getLatestTransactionTime(): string | 0 {
-    return 0;
+    if (this._transactions.length === 0) {
+      return 0;
+    }
+    return this._transactions[0].blockTime;
   }
 
   async generate(): Promise<void> {
@@ -59,7 +66,7 @@ export class SolanaWallet extends AbstractWallet {
 
   async fetchBalance(): Promise<void> {
     try {
-      const connection = new Connection(clusterApiUrl("mainnet-beta"));
+      const connection = new Connection(SOLANA_RPC_URL);
       if (this._address) {
         const publicKey = new PublicKey(this._address);
         const balance = await connection.getBalance(publicKey)
@@ -72,23 +79,38 @@ export class SolanaWallet extends AbstractWallet {
   }
 
   async fetchTransactions(): Promise<void> {
+    if (!this._address) return;
+
     try {
-      const connection = new Connection(clusterApiUrl("mainnet-beta"));
-      if (this._address) {
-        const publicKey = new PublicKey(this._address);
-        // Limit to last 10 signatures for basic activity check
-        const signatures = await connection.getSignaturesForAddress(publicKey, {
-          limit: 10
-        });
-        console.log('SOL Transaction count (recent):', signatures.length)
-      }
+      const connection = new Connection(SOLANA_RPC_URL);
+      const publicKey = new PublicKey(this._address);
+      const signatures = await connection.getSignaturesForAddress(publicKey, { limit: 25 });
+      const transactions = await connection.getParsedTransactions(signatures.map(s => s.signature));
+
+      this._transactions = transactions
+        .map((tx, i) => {
+          if (!tx) return null;
+          return {
+            signature: signatures[i].signature,
+            slot: tx.slot,
+            blockTime: tx.blockTime ?? 0,
+            memo: tx.transaction.message.instructions.find(
+              (ix: any) => ix.programId.toBase58() === 'MemoSq4gqABAXKb96qnH8TysNcVnuizgaCkW19D2Hy'
+            )?.data,
+            fee: tx.meta?.fee ?? 0,
+            preBalances: tx.meta?.preBalances ?? [],
+            postBalances: tx.meta?.postBalances ?? [],
+          };
+        })
+        .filter((tx): tx is SolanaTransaction => tx !== null);
     } catch (e) {
-      console.error("Error fetching SOL transactions:", e);
+      console.error('Error fetching SOL transactions:', e);
     }
   }
 
-  getTransactions(): any[] {
-    return [];
+  // @ts-ignore: override
+  getTransactions(): SolanaTransaction[] {
+    return this._transactions;
   }
 
   isAddressValid(address: string): boolean {
@@ -123,8 +145,16 @@ export class SolanaWallet extends AbstractWallet {
     return false;
   }
 
-  broadcastTx(txhex: string) {
-    throw new Error("Not implemented");
+  async broadcastTx(txhex: string): Promise<string> {
+    const connection = new Connection(SOLANA_RPC_URL);
+    try {
+      const txBuffer = Buffer.from(txhex, 'hex');
+      const signature = await connection.sendRawTransaction(txBuffer);
+      return signature;
+    } catch (e) {
+      console.error('Error broadcasting SOL transaction:', e);
+      throw e;
+    }
   }
 
   coinselect(utxos: any, targets: any, feeRate: any) {

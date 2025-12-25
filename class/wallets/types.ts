@@ -115,6 +115,33 @@ export type LightningTransaction = {
   description?: string;
 };
 
+export type EthereumTransaction = {
+  hash: string;
+  from: string;
+  to: string;
+  value: number; // in wei
+  gasPrice?: number; // in wei
+  gasUsed?: number;
+  gas: number;
+  nonce: number;
+  input: string;
+  blockHash: string;
+  blockNumber: number;
+  confirmations: number;
+  timestamp: number; // in seconds
+  fee?: number; // in wei
+};
+
+export type SolanaTransaction = {
+  signature: string;
+  slot: number;
+  blockTime: number; // in seconds
+  memo?: string;
+  fee: number; // in lamports
+  preBalances: number[];
+  postBalances: number[];
+};
+
 export type Transaction = {
   txid: string;
   hash: string;

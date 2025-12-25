@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { Linking, View, ViewStyle, StyleSheet } from 'react-native';
 import Lnurl from '../class/lnurl';
-import { LightningTransaction, Transaction } from '../class/wallets/types';
+import { EthereumTransaction, LightningTransaction, SolanaTransaction, Transaction } from '../class/wallets/types';
 import TransactionExpiredIcon from '../components/icons/TransactionExpiredIcon';
 import TransactionIncomingIcon from '../components/icons/TransactionIncomingIcon';
 import TransactionOffchainIcon from '../components/icons/TransactionOffchainIcon';
@@ -26,6 +26,7 @@ import { CommonToolTipActions } from '../typings/CommonToolTipActions';
 import { pop } from '../NavigationService';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HighlightedText from './HighlightedText';
+import { EthereumWallet, SolanaWallet } from '../class';
 
 const styles = StyleSheet.create({
   subtitle: {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
 interface TransactionListItemProps {
   itemPriceUnit?: BitcoinUnit;
   walletID: string;
-  item: Transaction & LightningTransaction; // using type intersection to have less issues with ts
+  item: Transaction | LightningTransaction | EthereumTransaction | SolanaTransaction;
   searchQuery?: string;
   style?: ViewStyle;
   renderHighlightedText?: (text: string, query: string) => JSX.Element;
@@ -51,6 +52,11 @@ interface TransactionListItemProps {
 }
 
 type NavigationProps = NativeStackNavigationProp<DetailViewStackParamList>;
+
+const isBitcoinTransaction = (tx: any): tx is Transaction => typeof tx.txid === 'string';
+const isLightningTransaction = (tx: any): tx is LightningTransaction => tx.type === 'user_invoice' || tx.type === 'payment_request' || tx.type === 'paid_invoice' || tx.type === 'bitcoind_tx';
+const isEthereumTransaction = (tx: any): tx is EthereumTransaction => typeof tx.gasPrice === 'number';
+const isSolanaTransaction = (tx: any): tx is SolanaTransaction => typeof tx.slot === 'number';
 
 export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
   ({
@@ -68,13 +74,13 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     const menuRef = useRef<ToolTipMenuProps>();
     const { txMetadata, counterpartyMetadata, wallets } = useStorage();
     const { language, selectedBlockExplorer } = useSettings();
+    const wallet = wallets.find(w => w.getID() === walletID);
     const insets = useSafeAreaInsets();
     const containerStyle = useMemo(
       () => ({
         backgroundColor: colors.background,
         borderBottomColor: colors.lightBorder,
         paddingLeft: 16,
-
         paddingRight: 16,
       }),
       [colors.background, colors.lightBorder],
@@ -82,42 +88,92 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
 
     const combinedStyle = useMemo(() => [containerStyle, style], [containerStyle, style]);
 
+    const normalizedTx = useMemo(() => {
+      if (isEthereumTransaction(item) && wallet) {
+        const direction = item.from.toLowerCase() === wallet.getAddress().toLowerCase() ? 'sent' : 'received';
+        const value = parseFloat(formatBalanceWithoutSuffix(item.value, BitcoinUnit.ETH).toString());
+        return {
+          hash: item.hash,
+          value: direction === 'sent' ? -value : value,
+          timestamp: item.timestamp,
+          confirmations: item.confirmations,
+          direction,
+          memo: '',
+        };
+      } else if (isSolanaTransaction(item) && wallet) {
+        const walletAddress = wallet.getAddress();
+        const preBalance = item.preBalances[0] ?? 0;
+        const postBalance = item.postBalances[0] ?? 0;
+        const value = postBalance - preBalance;
+        const direction = value > 0 ? 'received' : 'sent';
+        return {
+          hash: item.signature,
+          value: parseFloat(formatBalanceWithoutSuffix(Math.abs(value), BitcoinUnit.SOL).toString()),
+          timestamp: item.blockTime,
+          confirmations: item.slot ? 1 : 0,
+          direction,
+          memo: item.memo ?? '',
+        };
+      } else if (isLightningTransaction(item)) {
+         return {
+          hash: (item.payment_hash && typeof item.payment_hash === 'string') ? item.payment_hash : '',
+          value: item.value ?? 0,
+          timestamp: item.timestamp,
+          confirmations: 99, // LN txs are instant
+          direction: item.value && item.value < 0 ? 'sent' : 'received',
+          memo: item.memo ?? '',
+        };
+      } else if (isBitcoinTransaction(item)) {
+        return {
+          hash: item.hash,
+          value: item.value,
+          timestamp: item.timestamp,
+          confirmations: item.confirmations,
+          direction: item.value && item.value < 0 ? 'sent' : 'received',
+          memo: txMetadata[item.hash]?.memo ?? '',
+        };
+      }
+      return null;
+    }, [item, wallet, txMetadata]);
+
     const shortenContactName = (name: string): string => {
       if (name.length < 16) return name;
       return name.substr(0, 7) + '...' + name.substr(name.length - 7, 7);
     };
 
     const title = useMemo(() => {
-      if (item.confirmations === 0) {
+      if (normalizedTx && normalizedTx.confirmations === 0) {
         return loc.transactions.pending;
-      } else {
-        return transactionTimeToReadable(item.timestamp);
+      } else if (normalizedTx) {
+        return transactionTimeToReadable(normalizedTx.timestamp);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [item.confirmations, item.timestamp, language]);
+      return '';
+    }, [normalizedTx, language]);
 
     let counterparty;
-    if (item.counterparty) {
+    if ('counterparty' in item && item.counterparty) {
       counterparty = counterpartyMetadata?.[item.counterparty]?.label ?? item.counterparty;
     }
-    const txMemo = (counterparty ? `[${shortenContactName(counterparty)}] ` : '') + (txMetadata[item.hash]?.memo ?? '');
+    const txMemo = (counterparty ? `[${shortenContactName(counterparty)}] ` : '') + (normalizedTx?.memo ?? '');
     const subtitle = useMemo(() => {
-      let sub = Number(item.confirmations) < 7 ? loc.formatString(loc.transactions.list_conf, { number: item.confirmations }) : '';
+      if (!normalizedTx) return '';
+      let sub = Number(normalizedTx.confirmations) < 7 ? loc.formatString(loc.transactions.list_conf, { number: normalizedTx.confirmations }) : '';
       if (sub !== '') sub += ' ';
       sub += txMemo;
-      if (item.memo) sub += item.memo;
+      if (isLightningTransaction(item) && item.memo) sub += item.memo;
       return sub || undefined;
-    }, [txMemo, item.confirmations, item.memo]);
+    }, [normalizedTx, txMemo, item]);
 
     const formattedAmount = useMemo(() => {
-      return formatBalanceWithoutSuffix(item.value && item.value, itemPriceUnit, true).toString();
-    }, [item.value, itemPriceUnit]);
+      if (!normalizedTx) return '';
+      return formatBalanceWithoutSuffix(normalizedTx.value, itemPriceUnit, true).toString();
+    }, [normalizedTx, itemPriceUnit]);
 
     const rowTitle = useMemo(() => {
-      if (item.type === 'user_invoice' || item.type === 'payment_request') {
+      if (isLightningTransaction(item) && (item.type === 'user_invoice' || item.type === 'payment_request')) {
         const currentDate = new Date();
         const now = Math.floor(currentDate.getTime() / 1000);
-        const invoiceExpiration = item.timestamp! + item.expire_time!;
+        const invoiceExpiration = item.timestamp! + (item.expire_time ?? 0);
         if (invoiceExpiration > now || item.ispaid) {
           return formattedAmount;
         } else {
@@ -128,12 +184,13 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     }, [item, formattedAmount]);
 
     const rowTitleStyle = useMemo(() => {
+      if (!normalizedTx) return {};
       let color = colors.successColor;
 
-      if (item.type === 'user_invoice' || item.type === 'payment_request') {
+      if (isLightningTransaction(item) && (item.type === 'user_invoice' || item.type === 'payment_request')) {
         const currentDate = new Date();
-        const now = (currentDate.getTime() / 1000) | 0; // eslint-disable-line no-bitwise
-        const invoiceExpiration = item.timestamp! + item.expire_time!;
+        const now = (currentDate.getTime() / 1000) | 0;
+        const invoiceExpiration = item.timestamp! + (item.expire_time ?? 0);
 
         if (invoiceExpiration > now) {
           color = colors.successColor;
@@ -144,7 +201,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
             color = '#9AA0AA';
           }
         }
-      } else if (item.value! / 100000000 < 0) {
+      } else if (normalizedTx.direction === 'sent') {
         color = colors.foregroundColor;
       }
 
@@ -159,65 +216,65 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     }, [
       colors.successColor,
       colors.foregroundColor,
-      item.type,
-      item.value,
-      item.timestamp,
-      item.expire_time,
-      item.ispaid,
+      item,
+      normalizedTx,
       insets.right,
       insets.left,
     ]);
 
     const determineTransactionTypeAndAvatar = () => {
-      if (item.category === 'receive' && item.confirmations! < 3) {
-        return {
-          label: loc.transactions.pending_transaction,
-          icon: <TransactionPendingIcon />,
-        };
-      }
-
-      if (item.type && item.type === 'bitcoind_tx') {
-        return {
-          label: loc.transactions.onchain,
-          icon: <TransactionOnchainIcon />,
-        };
-      }
-
-      if (item.type === 'paid_invoice') {
-        return {
-          label: loc.transactions.offchain,
-          icon: <TransactionOffchainIcon />,
-        };
-      }
-
-      if (item.type === 'user_invoice' || item.type === 'payment_request') {
-        const currentDate = new Date();
-        const now = (currentDate.getTime() / 1000) | 0; // eslint-disable-line no-bitwise
-        const invoiceExpiration = item.timestamp! + item.expire_time!;
-        if (!item.ispaid && invoiceExpiration < now) {
-          return {
-            label: loc.transactions.expired_transaction,
-            icon: <TransactionExpiredIcon />,
-          };
-        } else if (!item.ispaid) {
-          return {
-            label: loc.transactions.expired_transaction,
+      if (!normalizedTx) return { label: '', icon: null };
+      if (isLightningTransaction(item)) {
+        if (item.category === 'receive' && item.confirmations! < 3) {
+            return {
+            label: loc.transactions.pending_transaction,
             icon: <TransactionPendingIcon />,
-          };
-        } else {
-          return {
-            label: loc.transactions.incoming_transaction,
-            icon: <TransactionOffchainIncomingIcon />,
-          };
+            };
+        }
+
+        if (item.type && item.type === 'bitcoind_tx') {
+            return {
+            label: loc.transactions.onchain,
+            icon: <TransactionOnchainIcon />,
+            };
+        }
+
+        if (item.type === 'paid_invoice') {
+            return {
+            label: loc.transactions.offchain,
+            icon: <TransactionOffchainIcon />,
+            };
+        }
+
+        if (item.type === 'user_invoice' || item.type === 'payment_request') {
+            const currentDate = new Date();
+            const now = (currentDate.getTime() / 1000) | 0; // eslint-disable-line no-bitwise
+            const invoiceExpiration = item.timestamp! + (item.expire_time ?? 0);
+            if (!item.ispaid && invoiceExpiration < now) {
+            return {
+                label: loc.transactions.expired_transaction,
+                icon: <TransactionExpiredIcon />,
+            };
+            } else if (!item.ispaid) {
+            return {
+                label: loc.transactions.expired_transaction,
+                icon: <TransactionPendingIcon />,
+            };
+            } else {
+            return {
+                label: loc.transactions.incoming_transaction,
+                icon: <TransactionOffchainIncomingIcon />,
+            };
+            }
         }
       }
 
-      if (!item.confirmations) {
+      if (!normalizedTx.confirmations) {
         return {
           label: loc.transactions.pending_transaction,
           icon: <TransactionPendingIcon />,
         };
-      } else if (item.value! < 0) {
+      } else if (normalizedTx.direction === 'sent') {
         return {
           label: loc.transactions.outgoing_transaction,
           icon: <TransactionOutgoingIcon />,
@@ -233,7 +290,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     const { label: transactionTypeLabel, icon: avatar } = determineTransactionTypeAndAvatar();
 
     const amountWithUnit = useMemo(() => {
-      const unitSuffix = itemPriceUnit === BitcoinUnit.BTC || itemPriceUnit === BitcoinUnit.SATS ? ` ${itemPriceUnit}` : ' ';
+      const unitSuffix = itemPriceUnit === BitcoinUnit.BTC || itemPriceUnit === BitcoinUnit.SATS || itemPriceUnit === BitcoinUnit.ETH || itemPriceUnit === BitcoinUnit.SOL ? ` ${itemPriceUnit}` : ' ';
       return `${formattedAmount}${unitSuffix}`;
     }, [formattedAmount, itemPriceUnit]);
 
@@ -243,22 +300,22 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
 
     const onPress = useCallback(async () => {
       menuRef?.current?.dismissMenu?.();
-      // If a custom onPress handler was provided, use it and return
       if (customOnPress) {
         customOnPress();
         return;
       }
 
-      if (item.hash) {
+      if (normalizedTx?.hash) {
         if (renderHighlightedText) {
           pop();
         }
-        navigate('TransactionStatus', { hash: item.hash, walletID });
-      } else if (item.type === 'user_invoice' || item.type === 'payment_request' || item.type === 'paid_invoice') {
-        const lightningWallet = wallets.filter(wallet => wallet?.getID() === item.walletID);
-        if (lightningWallet.length === 1) {
+        if (wallet?.type === EthereumWallet.type || wallet?.type === SolanaWallet.type || wallet?.type.startsWith('bitcoin')) {
+          navigate('TransactionStatus', { hash: normalizedTx.hash, walletID });
+        }
+      } else if (isLightningTransaction(item) && (item.type === 'user_invoice' || item.type === 'payment_request' || item.type === 'paid_invoice')) {
+        const lightningWallet = wallets.find(w => w.getID() === item.walletID);
+        if (lightningWallet) {
           try {
-            // is it a successful lnurl-pay?
             const LN = new Lnurl(false, AsyncStorage);
             let paymentHash = item.payment_hash!;
             if (typeof paymentHash === 'object') {
@@ -271,7 +328,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
                 params: {
                   paymentHash,
                   justPaid: false,
-                  fromWalletID: lightningWallet[0].getID(),
+                  fromWalletID: lightningWallet.getID(),
                 },
               });
               return;
@@ -282,23 +339,23 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
 
           navigate('LNDViewInvoice', {
             invoice: item,
-            walletID: lightningWallet[0].getID(),
+            walletID: lightningWallet.getID(),
           });
         }
       } else {
         console.log('cant handle press');
       }
-    }, [item, renderHighlightedText, navigate, walletID, wallets, customOnPress]);
+    }, [normalizedTx, item, renderHighlightedText, navigate, walletID, wallets, customOnPress, wallet]);
 
     const handleOnExpandNote = useCallback(() => {
       setSubtitleNumberOfLines(0);
     }, []);
 
     const handleOnDetailsPress = useCallback(() => {
-      if (walletID && item && item.hash) {
-        navigate('TransactionDetails', { tx: item, hash: item.hash, walletID });
-      } else {
-        const lightningWallet = wallets.find(wallet => wallet?.getID() === item.walletID);
+      if (walletID && normalizedTx && normalizedTx.hash) {
+        navigate('TransactionDetails', { tx: item, hash: normalizedTx.hash, walletID });
+      } else if (isLightningTransaction(item)) {
+        const lightningWallet = wallets.find(w => w.getID() === item.walletID);
         if (lightningWallet) {
           navigate('LNDViewInvoice', {
             invoice: item,
@@ -306,22 +363,40 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
           });
         }
       }
-    }, [item, navigate, walletID, wallets]);
+    }, [item, navigate, walletID, wallets, normalizedTx]);
 
-    const handleOnCopyAmountTap = useCallback(() => Clipboard.setString(rowTitle.replace(/[\s\\-]/g, '')), [rowTitle]);
-    const handleOnCopyTransactionID = useCallback(() => Clipboard.setString(item.hash), [item.hash]);
+    const handleOnCopyAmountTap = useCallback(() => Clipboard.setString(rowTitle.replace(/[\s\-]/g, '')), [rowTitle]);
+    const handleOnCopyTransactionID = useCallback(() => Clipboard.setString(normalizedTx?.hash ?? ''), [normalizedTx]);
     const handleOnCopyNote = useCallback(() => Clipboard.setString(subtitle ?? ''), [subtitle]);
+    
     const handleOnViewOnBlockExplorer = useCallback(() => {
-      const url = `${selectedBlockExplorer.url}/tx/${item.hash}`;
+      let url = '';
+      if (wallet?.type === EthereumWallet.type) {
+        url = `https://etherscan.io/tx/${normalizedTx?.hash}`;
+      } else if (wallet?.type === SolanaWallet.type) {
+        url = `https://solscan.io/tx/${normalizedTx?.hash}`;
+      } else {
+        url = `${selectedBlockExplorer.url}/tx/${normalizedTx?.hash}`;
+      }
+
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
           Linking.openURL(url);
         }
       });
-    }, [item.hash, selectedBlockExplorer]);
+    }, [normalizedTx, wallet, selectedBlockExplorer]);
+    
     const handleCopyOpenInBlockExplorerPress = useCallback(() => {
-      Clipboard.setString(`${selectedBlockExplorer.url}/tx/${item.hash}`);
-    }, [item.hash, selectedBlockExplorer]);
+      let url = '';
+      if (wallet?.type === EthereumWallet.type) {
+        url = `https://etherscan.io/tx/${normalizedTx?.hash}`;
+      } else if (wallet?.type === SolanaWallet.type) {
+        url = `https://solscan.io/tx/${normalizedTx?.hash}`;
+      } else {
+        url = `${selectedBlockExplorer.url}/tx/${normalizedTx?.hash}`;
+      }
+      Clipboard.setString(url);
+    }, [normalizedTx, wallet, selectedBlockExplorer]);
 
     const onToolTipPress = useCallback(
       (id: any) => {
@@ -363,13 +438,13 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
         },
         {
           ...CommonToolTipActions.CopyTXID,
-          hidden: !item.hash,
+          hidden: !normalizedTx?.hash,
         },
         {
           ...CommonToolTipActions.CopyBlockExplorerLink,
-          hidden: !item.hash,
+          hidden: !normalizedTx?.hash,
         },
-        [{ ...CommonToolTipActions.OpenInBlockExplorer, hidden: !item.hash }, CommonToolTipActions.Details],
+        [{ ...CommonToolTipActions.OpenInBlockExplorer, hidden: !normalizedTx?.hash }, CommonToolTipActions.Details],
         [
           {
             ...CommonToolTipActions.ExpandNote,
@@ -379,7 +454,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
       ];
 
       return actions as Action[];
-    }, [rowTitle, subtitle, item.hash, subtitleNumberOfLines]);
+    }, [rowTitle, subtitle, normalizedTx, subtitleNumberOfLines]);
 
     const accessibilityState = useMemo(() => {
       return {
