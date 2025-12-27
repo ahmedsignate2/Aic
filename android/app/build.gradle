@@ -18,7 +18,6 @@ react {
 
     /* Bundling */
     nodeExecutableAndArgs = ["node"]
-    bundleCommand = "ram-bundle"
     bundleAssetName = "index.android.bundle"
     entryFile = file("../../index.js")
     extraPackagerArgs = []
