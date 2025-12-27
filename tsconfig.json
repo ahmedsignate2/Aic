@@ -12,9 +12,26 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "module": "esnext",
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
     "paths": {
+      "@/*": ["src/*"],
+      "@screens/*": ["src/screens/*"],
+      "@components/*": ["src/components/*"],
+      "@services/*": ["src/services/*"],
+      "@utils/*": ["src/utils/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "extends": "@react-native/typescript-config/tsconfig.json",
-  "exclude": ["node_modules", "babel.config.js", "jest.config.js", "components/react-native-draggable-flatlist", "scripts/maccatalystpatches"],
+  "exclude": ["node_modules", "babel.config.js", "jest.config.js", "scripts"]
 }

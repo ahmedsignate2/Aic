@@ -23,7 +23,8 @@ type TBothBitcoinAndLightning =
 class DeeplinkSchemaMatch {
   static hasSchema (schemaString: string): boolean {
     if (typeof schemaString !== "string" || schemaString.length <= 0) {
-    { return false }
+      return false
+    }
     const lowercaseString = schemaString.trim().toLowerCase()
     return (
       lowercaseString.startsWith("bitcoin:") ||
@@ -282,7 +283,8 @@ class DeeplinkSchemaMatch {
       !url.startsWith("malinwallet:setelectrumserver") &&
       !url.startsWith("setelectrumserver")
     ) {
-    { return false }
+      return false
+    }
     const splt = url.split("server=");
     if (splt[1]) return decodeURIComponent(splt[1])
     return false
@@ -300,7 +302,8 @@ class DeeplinkSchemaMatch {
       !url.startsWith("malinwallet:setlndhuburl") &&
       !url.startsWith("setlndhuburl")
     ) {
-    { return false }
+      return false
+    }
     const splt = url.split("url=");
     if (splt[1]) return decodeURIComponent(splt[1])
     return false

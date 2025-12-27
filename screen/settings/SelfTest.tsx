@@ -136,7 +136,8 @@ export default class SelfTest extends Component {
         const electrumBalance =
           await BlueElectrum.getBalanceByAddress(addr4elect);
         if (electrumBalance.confirmed !== 51432) {
-        { throw new Error('BlueElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance))}
+          throw new Error('BlueElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance))
+        }
 
         const electrumTxs =
           await BlueElectrum.getTransactionsByAddress(addr4elect);
@@ -384,7 +385,8 @@ export default class SelfTest extends Component {
           hex.toUpperCase() !==
           'F36AB2DC12377C788D61E6770126D8A01028C8F6D8FE01871CE0489A1F696A90'
         ) {
-        { throw new Error('react-native-blue-crypto is not ok')}
+          throw new Error('react-native-blue-crypto is not ok')
+        }
       }
 
       // bip38 test

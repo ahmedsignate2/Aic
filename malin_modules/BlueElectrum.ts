@@ -783,10 +783,12 @@ export const getTransactionsFullByAddress = async (
 
     for (const output of full.vout) {
       if (output?.scriptPubKey && output.scriptPubKey.addresses) {
-      { output.addresses = output.scriptPubKey.addresses }
+        output.addresses = output.scriptPubKey.addresses
+      }
       // in bitcoin core 22.0.0+ they removed `.addresses` and replaced it with plain `.address`:
       if (output?.scriptPubKey?.address) {
-      { output.addresses = [output.scriptPubKey.address] }
+        output.addresses = [output.scriptPubKey.address]
+      }
     }
     full.inputs = full.vin
     full.outputs = full.vout
@@ -978,7 +980,8 @@ export const multiGetHistoryByAddress = async function (
 
     for (const history of results) {
       if (history.error) {
-      { console.warn('multiGetHistoryByAddress():', history.error) }
+        console.warn('multiGetHistoryByAddress():', history.error)
+      }
       ret[scripthash2addr[history.param]] = history.result || []
       for (const result of history.result || []) {
         if (result.tx_hash) txhashHeightCache[result.tx_hash] = result.height // cache tx height
@@ -1138,7 +1141,8 @@ export async function multiGetTransactionByTxid<T extends boolean> (
     for (const vout of tx?.vout ?? []) {
       // @ts-ignore: address is not in type definition
       if (vout?.scriptPubKey?.address) {
-      { vout.scriptPubKey.addresses = [vout.scriptPubKey.address] }
+        vout.scriptPubKey.addresses = [vout.scriptPubKey.address]
+      }
     }
   }
 
@@ -1291,7 +1295,8 @@ export const estimateFees = async function (): Promise<{
    * (fallback to bitcoin core estimates)
    */
   if (!histogram || histogram?.[0]?.[0] > 1000) {
-  { return { fast: _fast, medium: _medium, slow: _slow } }
+    return { fast: _fast, medium: _medium, slow: _slow }
+  }
 
   // calculating fast fees from mempool:
   const fast = Math.max(2, calcEstimateFeeFromFeeHistorgam(1, histogram))
@@ -1441,4 +1446,4 @@ const semVerToInt = function (semver: string): number {
 
   return ret
 }
-}
+

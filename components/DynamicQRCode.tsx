@@ -85,9 +85,10 @@ export class DynamicQRCode extends Component<
 
   startAutoMove = () => {
     if (!this.state.intervalHandler) {
-    { this.setState(() => ({
-      intervalHandler: setInterval(this.moveToNextFragment, 500)
-      }))}
+      this.setState(() => ({
+        intervalHandler: setInterval(this.moveToNextFragment, 500)
+      }))
+    }
   };
 
   stopAutoMove = () => {

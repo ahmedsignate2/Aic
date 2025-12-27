@@ -295,7 +295,8 @@ export class LegacyWallet extends AbstractWallet {
       this.getTransactions().length === 0 &&
       Object.values(txs).length > 1000
     ) {
-    { throw new Error('Addresses with history of > 1000 transactions are not supported')}
+      throw new Error('Addresses with history of > 1000 transactions are not supported')
+    }
     // we check existing transactions, so if there are any then user is just using his wallet and gradually reaching the theshold, which
     // is safe because in that case our cache is filled
 

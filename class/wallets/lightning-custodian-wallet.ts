@@ -153,7 +153,8 @@ export class LightningCustodianWallet extends LegacyWallet {
   async getUserInvoices (limit: number | false = false) {
     let limitString = "";
     if (limit) {
-    { limitString = '?limit=' + parseInt(limit as unknown as string, 10) }
+      limitString = '?limit=' + parseInt(limit as unknown as string, 10)
+    }
     const response = await fetch(
       this.baseURI + "/getuserinvoices" + limitString,
       {
@@ -186,7 +187,8 @@ export class LightningCustodianWallet extends LegacyWallet {
         for (const newInvoice of json) {
           // iterate all NEW invoices
           if (newInvoice.payment_request === oldInvoice.payment_request) {
-          { found = true }
+            found = true
+          }
         }
 
         if (!found) {
@@ -562,7 +564,8 @@ export class LightningCustodianWallet extends LegacyWallet {
    */
   decodeInvoice (invoice: string): DecodedInvoice {
     if (_staticDecodedInvoiceCache[invoice]) {
-    { return _staticDecodedInvoiceCache[invoice] } // cache hit
+      return _staticDecodedInvoiceCache[invoice]
+    } // cache hit
 
     const { payeeNodeKey, tags, satoshis, millisatoshis, timestamp } =
       bolt11.decode(invoice)

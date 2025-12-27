@@ -123,11 +123,11 @@ const SignVerify = () => {
   }
 
   if (loading) {
-  { return (
+    return (
       <View style={[stylesHooks.root, styles.loading]}>
         <ActivityIndicator />
       </View>
-  );
+    );
   }
 
   return (

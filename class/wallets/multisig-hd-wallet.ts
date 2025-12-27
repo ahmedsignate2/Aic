@@ -172,7 +172,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
 
   getFingerprint (index: number) {
     if (index === 0) {
-    { throw new Error('cosigners fingerprints indexation starts from 1'); }
+      throw new Error('cosigners fingerprints indexation starts from 1');
+    }
     return this._cosignersFingerprints[index - 1]
   }
 
@@ -237,7 +238,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     } else if (MultisigHDWallet.isXpubString(key)) {
       // nop, just validate
       if (!MultisigHDWallet.isXpubValid(key)) {
-      { throw new Error('Not a valid xpub: ' + key) }
+        throw new Error('Not a valid xpub: ' + key)
+      }
     } else if (key.startsWith(ELECTRUM_SEED_PREFIX) && fingerprint && path) {
       // its an electrum seed
       const mnemonic = key.replace(ELECTRUM_SEED_PREFIX, "");
@@ -255,7 +257,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     } else {
       // mnemonics. lets derive fingerprint (if it wasnt provided)
       if (!bip39.validateMnemonic(key)) {
-      { throw new Error('Not a valid mnemonic phrase'); }
+        throw new Error('Not a valid mnemonic phrase');
+      }
       fingerprint =
         fingerprint || MultisigHDWallet.mnemonicToFingerprint(key, passphrase)
     }
@@ -272,7 +275,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     const index = this._cosigners.length
     this._cosigners[index] = key
     if (fingerprint) {
-    { this._cosignersFingerprints[index] = fingerprint.toUpperCase() }
+      this._cosignersFingerprints[index] = fingerprint.toUpperCase()
+    }
     if (path) this._cosignersCustomPaths[index] = path
     if (passphrase) this._cosignersPassphrases[index] = passphrase
   }
@@ -303,7 +307,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     }
     let cosigner: string = this._cosigners[index]
     if (MultisigHDWallet.isXprvString(cosigner)) {
-    { cosigner = MultisigHDWallet.convertXprvToXpub(cosigner) }
+      cosigner = MultisigHDWallet.convertXprvToXpub(cosigner)
+    }
     let xpub = cosigner
     if (!MultisigHDWallet.isXpubString(cosigner)) {
       xpub = MultisigHDWallet.seedToXpub(
@@ -319,7 +324,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     if (!this._m) throw new Error("m is not set");
     index = +index
     if (this.external_addresses_cache[index]) {
-    { return this.external_addresses_cache[index] } // cache hit
+      return this.external_addresses_cache[index]
+    } // cache hit
 
     const address = this._getAddressFromNode(0, index)
     this.external_addresses_cache[index] = address
@@ -392,7 +398,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     if (!this._m) throw new Error("m is not set");
     index = +index
     if (this.internal_addresses_cache[index]) {
-    { return this.internal_addresses_cache[index] } // cache hit
+      return this.internal_addresses_cache[index]
+    } // cache hit
 
     const address = this._getAddressFromNode(1, index)
     this.internal_addresses_cache[index] = address
@@ -472,7 +479,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
   static ckccXfp2fingerprint (xfp: string | number): string {
     let masterFingerprintHex = Number(xfp).toString(16)
     while (masterFingerprintHex.length < 8) {
-    { masterFingerprintHex = '0' + masterFingerprintHex } // conversion without explicit zero might result in lost byte
+      masterFingerprintHex = '0' + masterFingerprintHex
+    } // conversion without explicit zero might result in lost byte
 
     // poor man's little-endian conversion:
     // ¯\_(ツ)_/¯
@@ -499,7 +507,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
         '# this file contains only public keys and is safe to\n# distribute among cosigners\n';
     }
     if (!coordinationSetup) {
-    { ret += '# this file may contain private information\n'; }
+      ret += '# this file may contain private information\n';
+    }
     ret += "#\n";
     ret += "Name: " + this.getLabel() + "\n";
     ret += "Policy: " + this.getM() + " of " + this.getN() + "\n";
@@ -509,7 +518,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     for (let index = 0; index < this.getN(); index++) {
       if (this._cosignersCustomPaths[index]) hasCustomPaths++
       if (this._cosignersCustomPaths[index]) {
-      { customPaths[this._cosignersCustomPaths[index]] = 1 }
+        customPaths[this._cosignersCustomPaths[index]] = 1
+      }
     }
 
     let printedGlobalDerivation = false
@@ -573,7 +583,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
         } else {
           ret += "seed: " + this._cosigners[index]
           if (this._cosignersPassphrases[index]) {
-          { ret += ' - ' + this._cosignersPassphrases[index] }
+            ret += ' - ' + this._cosignersPassphrases[index]
+          }
           ret += "\n# warning! sensitive information, do not disclose ^^^ \n";
         }
       }
@@ -809,7 +820,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     const path = customPathPrefix || this._derivationPath
     for (let c = 0; c < this.next_free_address_index + this.gap_limit; c++) {
       if (this._getExternalAddressByIndex(c) === address) {
-      { return path + '/0/' + c }
+        return path + '/0/' + c
+      }
     }
     for (
       let c = 0;
@@ -817,7 +829,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
       c++
     ) {
       if (this._getInternalAddressByIndex(c) === address) {
-      { return path + '/1/' + c }
+        return path + '/1/' + c
+      }
     }
 
     return false
@@ -1070,7 +1083,8 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
         !MultisigHDWallet.isXpubString(cosigner) &&
         !MultisigHDWallet.isXprvString(cosigner)
       ) {
-      { howManyPrivKeysWeGot++ }
+        howManyPrivKeysWeGot++
+      }
     }
 
     return howManyPrivKeysWeGot
@@ -1399,9 +1413,11 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     const index = externalIndex - 1
     const fingerprint = this._cosignersFingerprints[index]
     if (!MultisigHDWallet.isXpubValid(this._cosigners[index])) {
-    { throw new Error('This cosigner doesnt contain valid xpub'); }
+      throw new Error('This cosigner doesnt contain valid xpub');
+    }
     if (!bip39.validateMnemonic(mnemonic)) {
-    { throw new Error('Not a valid mnemonic phrase'); }
+      throw new Error('Not a valid mnemonic phrase');
+    }
     if (
       fingerprint !==
       MultisigHDWallet.mnemonicToFingerprint(mnemonic, passphrase)
@@ -1419,9 +1435,9 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
     const index = externalIndex - 1
     const mnemonics = this._cosigners[index]
     if (!bip39.validateMnemonic(mnemonics)) {
-    { throw new Error(
-      "This cosigner doesnt contain valid xpub mnemonic phrase",
-    );
+      throw new Error(
+        "This cosigner doesnt contain valid xpub mnemonic phrase",
+      );
     }
     const passphrase = this._cosignersPassphrases[index]
     const path = this._cosignersCustomPaths[index] || this._derivationPath
