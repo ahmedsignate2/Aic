@@ -94,8 +94,8 @@ android {
     kotlinOptions {
         jvmTarget = '11'
         freeCompilerArgs += [
-            "-Xopt-in=kotlin.ExperimentalStdlibApi",
-            "-Xopt-in=kotlin.RequiresOptIn"
+            "-opt-in=kotlin.ExperimentalStdlibApi",
+            "-opt-in=kotlin.RequiresOptIn"
         ]
     }
 
