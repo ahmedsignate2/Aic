@@ -503,7 +503,7 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
   getSecret (coordinationSetup = false) {
     let ret = "# MalinWallet Multisig setup file\n";
     if (coordinationSetup) {
-    { ret +=
+      ret +=
         '# this file contains only public keys and is safe to\n# distribute among cosigners\n';
     }
     if (!coordinationSetup) {
