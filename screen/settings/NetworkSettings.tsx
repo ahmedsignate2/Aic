@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import { isNotificationsCapable } from '../../malin_modules/notifications';
 import ListItem from '../../components/ListItem';

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useEffect } from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import BigNumber from 'bignumber.js';

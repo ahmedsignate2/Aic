@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import BigNumber from 'bignumber.js';
 import * as bitcoin from 'bitcoinjs-lib';
 import assert from 'assert';

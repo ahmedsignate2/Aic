@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
 import loc from '../loc';

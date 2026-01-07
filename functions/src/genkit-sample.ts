@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import {genkit, z} from "genkit";
 import {vertexAI} from "@genkit-ai/google-genai";
 

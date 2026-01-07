@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 export const AvailableLanguages: Readonly<TLanguage[]> = Object.freeze([
   { label: 'English', value: 'en' },
   { label: 'Afrikaans (AFR)', value: 'zar_afr' },

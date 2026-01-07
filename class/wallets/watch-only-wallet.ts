@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import BIP32Factory from 'bip32';
 import * as bitcoin from 'bitcoinjs-lib';
 

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // Type definitions for react-native-prompt-android 0.3.1
 // Project: https://github.com/shimohq/react-native-prompt-android
 // Definitions by: Krystof Celba <https://github.com/krystofcelba>

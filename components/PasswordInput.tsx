@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, TextInput, View } from 'react-native';
 import { useTheme } from './themes';

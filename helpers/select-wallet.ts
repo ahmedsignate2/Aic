@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /**
  * Helper function to select wallet.
  * Navigates to selector screen, and then navigates back while resolving promise with selected wallet.

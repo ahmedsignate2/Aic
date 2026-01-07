@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // blockExplorer.ts
 import DefaultPreference from 'react-native-default-preference';
 

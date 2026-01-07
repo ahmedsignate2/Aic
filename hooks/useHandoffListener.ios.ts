@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useEffect, useCallback } from 'react';
 import { NativeEventEmitter, NativeModules } from 'react-native';
 import { useStorage } from '../hooks/context/useStorage';

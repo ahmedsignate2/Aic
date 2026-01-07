@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useMemo } from 'react';
 import { StyleSheet, GestureResponderEvent, Pressable } from 'react-native';
 import { Icon } from '@rneui/themed';

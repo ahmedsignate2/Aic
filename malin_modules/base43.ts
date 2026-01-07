@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import base from 'base-x';
 import { uint8ArrayToHex } from './uint8array-extras/index';
 

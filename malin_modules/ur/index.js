@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { URDecoder } from '@ngraveio/bc-ur';
 import b58 from 'bs58check';
 import {

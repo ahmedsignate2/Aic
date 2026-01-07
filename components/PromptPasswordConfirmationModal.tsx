@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useState, useRef, forwardRef, useImperativeHandle, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Animated, Easing, ViewStyle, Keyboard, Platform, UIManager } from 'react-native';
 import BottomModal, { BottomModalHandle } from './BottomModal';

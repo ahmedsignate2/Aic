@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Badge, Icon, Text } from '@rneui/themed';
 import BigNumber from 'bignumber.js';

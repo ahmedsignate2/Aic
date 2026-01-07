@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 

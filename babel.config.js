@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   plugins: [

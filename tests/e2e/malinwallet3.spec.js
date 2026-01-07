@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { hashIt, helperDeleteWallet, helperImportWallet, sleep, waitForId } from './helperz';
 
 // if loglevel is set to `error`, this kind of logging will still get through

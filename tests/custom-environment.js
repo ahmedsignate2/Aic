@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /**
  * @fileOverview see tests/custom-reporter.js for more information
  */

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { bech32 } from 'bech32';
 import bolt11 from 'bolt11';
 import { sha256 } from '@noble/hashes/sha256';

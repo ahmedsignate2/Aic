@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { CaptureProtection, useCaptureProtection } from 'react-native-capture-protection';
 import { isDesktop } from '../malin_modules/environment';
 

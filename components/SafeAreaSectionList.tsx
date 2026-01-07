@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useMemo } from 'react';
 import { StyleSheet, SectionList, SectionListProps } from 'react-native';
 

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { AbstractWallet } from './abstract-wallet';
 import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
 import { Keypair, PublicKey, Connection, clusterApiUrl } from '@solana/web3.js';

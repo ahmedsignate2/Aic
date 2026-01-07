@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 require('dotenv').config();
 const { Telegraf, Markup } = require('telegraf');
 const { ethers } = require('ethers');

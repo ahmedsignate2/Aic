@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // @ts-ignore
 import { NEXT_PUBLIC_GOPLUS_API_KEY } from '@env';
 

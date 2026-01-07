@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useEffect, useRef, useState } from 'react';
 import { RouteProp, useNavigation, useNavigationState, useRoute, useLocale } from '@react-navigation/native';
 import { BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

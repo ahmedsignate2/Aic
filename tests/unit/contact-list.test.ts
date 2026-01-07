@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import assert from 'assert';
 
 import { ContactList } from '../../class/contact-list';

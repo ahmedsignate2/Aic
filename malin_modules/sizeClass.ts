@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { Dimensions, Platform, AppState, AppStateStatus } from 'react-native';
 import { useState, useEffect } from 'react';
 import { isDesktop } from './environment';

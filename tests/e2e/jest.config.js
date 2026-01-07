@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 module.exports = {
   maxWorkers: 1,
   testTimeout: 333_000,

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import DefaultPreference from 'react-native-default-preference';
 // @ts-ignore: Handoff is not typed

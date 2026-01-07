@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 declare module 'slip39' {
   export function recoverSecret(secret: string[], passphrase?: string): Buffer;
   export function validateMnemonic(mnemonic: string): boolean;

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractSingleWorkload = exports.decodeUR = void 0;

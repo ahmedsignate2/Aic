@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { NativeModules, Platform } from 'react-native';
 
 interface SettingsModuleInterface {

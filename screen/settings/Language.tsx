@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import presentAlert from '../../components/Alert';
 import ListItem from '../../components/ListItem';

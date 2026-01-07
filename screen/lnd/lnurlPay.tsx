@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useLocale, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';

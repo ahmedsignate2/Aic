@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import bolt11 from "bolt11";
 import { BitcoinUnit, Chain } from "../../models/bitcoinUnits";
 import { fetch } from "../../util/fetch";

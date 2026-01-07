@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import mockClipboard from "@react-native-clipboard/clipboard/jest/clipboard-mock.js";
 
 const consoleWarnOrig = console.warn;

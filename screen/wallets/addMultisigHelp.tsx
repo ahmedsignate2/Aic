@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, View } from 'react-native';
 

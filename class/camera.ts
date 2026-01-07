@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { Alert, Linking } from 'react-native';
 
 import { isDesktop } from '../malin_modules/environment';

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // ActionSheet.ts
 import { Alert, InteractionManager } from 'react-native';
 

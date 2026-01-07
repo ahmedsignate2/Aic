@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /* eslint react/prop-types: "off" */
 import React from 'react';
 import { render } from '@testing-library/react-native';

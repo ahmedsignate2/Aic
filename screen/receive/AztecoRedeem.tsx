@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { Icon } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';

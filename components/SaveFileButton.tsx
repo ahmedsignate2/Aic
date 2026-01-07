@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { ReactNode, useCallback } from 'react';
 import { StyleProp, TouchableOpacityProps, ViewStyle } from 'react-native';
 

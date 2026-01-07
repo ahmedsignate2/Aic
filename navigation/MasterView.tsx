@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import DevMenu from '../components/DevMenu';
 import MainRoot from './index';

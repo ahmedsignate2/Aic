@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useState, useRef } from 'react';
 import { Animated, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 // @ts-ignore: no declaration file yet

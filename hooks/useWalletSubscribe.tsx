@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useStorage } from './context/useStorage';
 import { TWallet } from '../class/wallets/types';

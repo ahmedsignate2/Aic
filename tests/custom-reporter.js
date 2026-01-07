@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /**
  * @fileOverview to combat flakiness of jest integration tests we implement a diy retry mechanism:
  * a custom reporter writes a lock file in /tmp for each successfull testcase.

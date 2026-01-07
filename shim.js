@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /* global __DEV__, localStorage */
 import 'text-encoding';
 if (typeof Buffer === 'undefined') global.Buffer = require('buffer').Buffer;

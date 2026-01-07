@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import * as bip39 from 'bip39';
 
 const WORDLISTS: string[][] = [

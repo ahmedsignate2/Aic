@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useFocusEffect, useLocale, useNavigation, useRoute, CommonActions } from '@react-navigation/native';
 import { navigationRef } from '../../NavigationService';

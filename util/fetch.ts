@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 const DEFAULT_TIMEOUT = 20_000; // default timeout in ms
 
 // protection against calling itself recursively

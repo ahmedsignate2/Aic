@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 declare module 'coinselect' {
   export type CoinSelectTarget = {
     address: string;

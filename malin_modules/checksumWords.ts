@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import * as bip39 from 'bip39';
 import { sha256 } from '@noble/hashes/sha256';
 

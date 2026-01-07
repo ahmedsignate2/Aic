@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // https://levelup.gitconnected.com/debounce-in-javascript-improve-your-applications-performance-5b01855e086
 // malin_modules/debounce.ts
 type DebouncedFunction<T extends (...args: any[]) => void> = {

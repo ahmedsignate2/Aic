@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useEffect, useReducer, useState } from 'react';
 import {
   RouteProp,

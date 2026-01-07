@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /* global it, describe */
 import assert from 'assert';
 import * as bitcoin from 'bitcoinjs-lib';

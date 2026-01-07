@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 module.exports = {
   testEnvironment: '<rootDir>/tests/custom-environment.js',
   reporters: ['default', ['<rootDir>/tests/custom-reporter.js', {}]],

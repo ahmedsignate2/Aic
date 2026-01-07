@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {

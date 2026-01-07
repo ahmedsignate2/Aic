@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import assert from 'assert';
 import bip38 from 'bip38';
 import wif from 'wif';

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useMemo } from 'react';
 import { StyleSheet, ViewProps, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

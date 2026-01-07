@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { isValidBech32Address } from '../../utils/isValidBech32Address';
 
 describe('isValidBech32Address', () => {

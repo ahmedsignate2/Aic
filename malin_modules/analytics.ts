@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import Bugsnag from '@bugsnag/react-native';
 import { getUniqueId } from 'react-native-device-info';
 

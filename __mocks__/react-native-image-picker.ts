@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { NativeModules } from 'react-native';
 
 // Mock the ImagePickerManager native module to allow us to unit test the JavaScript code

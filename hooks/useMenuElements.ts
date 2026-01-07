@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useCallback } from 'react';
 
 type MenuActionHandler = () => void;

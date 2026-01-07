@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useSizeClass as useSizeClassOriginal, SizeClass } from '../malin_modules/sizeClass';
 import type { SizeClassInfo } from '../malin_modules/sizeClass';
 

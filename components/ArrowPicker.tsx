@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /* eslint react/prop-types: "off", react-native/no-inline-styles: "off" */
 import React, { useState } from 'react';
 import { Keyboard, Pressable, StyleSheet, View } from 'react-native';

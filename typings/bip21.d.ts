@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 declare module 'bip21' {
   export type TOptions =
     | {

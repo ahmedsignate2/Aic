@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useEffect, useReducer, useRef } from 'react';
 import {
   ActivityIndicator,

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import { StyleSheet, TextInput, View, Switch } from 'react-native';
 import { ListItem } from '@rneui/themed';

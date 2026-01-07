@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import bip21, { TOptions } from "bip21";
 import * as bitcoin from "bitcoinjs-lib";
 import URL from "url";

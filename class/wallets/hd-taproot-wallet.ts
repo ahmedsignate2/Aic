@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import BIP32Factory, { BIP32Interface } from 'bip32';
 import { AbstractHDElectrumWallet } from './abstract-hd-electrum-wallet';
 import ecc from '../../malin_modules/noble_ecc';

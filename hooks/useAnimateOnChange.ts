@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useEffect, useRef } from 'react';
 import { LayoutAnimation } from 'react-native';
 

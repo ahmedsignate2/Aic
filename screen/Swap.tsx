@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, Text, SafeAreaView, ActivityIndicator, Alert } from 'react-native';
 import { useTheme } from '../components/themes';

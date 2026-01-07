@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // import assert from 'assert';
 import BIP47Factory from '@spsina/bip47';
 import assert from 'assert';

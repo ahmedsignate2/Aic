@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useState } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, SafeAreaView } from 'react-native';
 import { WebView } from 'react-native-webview';

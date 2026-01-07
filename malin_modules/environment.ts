@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { getDeviceType, isTablet as checkIsTablet } from 'react-native-device-info';
 
 const isTablet: boolean = checkIsTablet();

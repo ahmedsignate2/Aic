@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { sha256 } from '@noble/hashes/sha256';
 import { element } from 'detox';
 

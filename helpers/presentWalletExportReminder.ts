@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { Alert } from 'react-native';
 import loc from '../loc';
 

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 export enum ItemType {
   WalletSection = 'wallet',
   TransactionSection = 'transaction',

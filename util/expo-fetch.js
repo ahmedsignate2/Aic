@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // shim for expo-fetch
 // vibe-coded with ChatGPT-5
 //

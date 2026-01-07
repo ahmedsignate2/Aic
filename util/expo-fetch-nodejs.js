@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // Node.js polyfill for expo/fetch
 // Minimal "expo/fetch" polyfill for Node.js using http/https modules
 // - Streaming via Response.body.getReader() and async iteration (for SSE)

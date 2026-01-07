@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import assert from 'assert';
 import * as bitcoin from 'bitcoinjs-lib';
 import ElectrumClient from 'electrum-client';

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useEffect, useState } from 'react';
 import { RouteProp, useRoute, useLocale } from '@react-navigation/native';
 import { Alert, Linking, StyleSheet } from 'react-native';

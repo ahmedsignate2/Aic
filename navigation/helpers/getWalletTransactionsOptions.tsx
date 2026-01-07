@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React from 'react';
 import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from '@rneui/themed';

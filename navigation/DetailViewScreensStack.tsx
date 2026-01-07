@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useCallback, useMemo } from 'react';
 import { View } from 'react-native';
 import { NativeStackNavigationOptions } from '@react-navigation/native-stack';

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useState, useEffect, useMemo } from 'react';
 import debounce from '../malin_modules/debounce';
 

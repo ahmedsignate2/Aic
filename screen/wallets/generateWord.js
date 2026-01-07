@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useTheme } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';

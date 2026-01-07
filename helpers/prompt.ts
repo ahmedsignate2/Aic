@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { Platform } from 'react-native';
 import prompt from 'react-native-prompt-android';
 import loc from '../loc';

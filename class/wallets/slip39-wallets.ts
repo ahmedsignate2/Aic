@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { sha256 } from '@noble/hashes/sha256';
 import slip39 from 'slip39';
 import { WORD_LIST } from 'slip39/src/slip39_helper';

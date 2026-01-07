@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import React, { useEffect, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import {

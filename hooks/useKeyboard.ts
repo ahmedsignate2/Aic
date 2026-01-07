@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { useState, useEffect } from 'react';
 import { Keyboard, KeyboardEvent, Platform } from 'react-native';
 

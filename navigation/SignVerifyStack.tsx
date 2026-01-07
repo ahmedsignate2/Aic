@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 

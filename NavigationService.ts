@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { createNavigationContainerRef, NavigationAction, ParamListBase, StackActions } from '@react-navigation/native';
 
 export const navigationRef = createNavigationContainerRef<ParamListBase>();

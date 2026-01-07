@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 // @ts-ignore
 import { ZEROX_API_KEY, NEXT_PUBLIC_FEE_RECIPIENT } from '@env';
 

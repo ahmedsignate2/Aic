@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AES from 'crypto-js/aes';
 import ENCHEX from 'crypto-js/enc-hex';

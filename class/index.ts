@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 export * from './malin-app';
 export * from './hd-segwit-bech32-transaction';
 export * from './multisig-cosigner';

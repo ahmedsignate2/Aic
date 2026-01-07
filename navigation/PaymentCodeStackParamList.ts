@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 import { BitcoinUnit } from '../models/bitcoinUnits';
 
 export type PaymentCodeStackParamList = {

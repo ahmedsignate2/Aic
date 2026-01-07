@@ -1,3 +1,4 @@
+// Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
 /**
  * @fileOverview creates an rng module that will bring all calls to 'crypto'
  * into one place to try and prevent mistakes when touching the crypto code.
