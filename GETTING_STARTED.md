@@ -87,8 +87,8 @@ sudo apt install -y openjdk-11-jdk
 ### 📄 Étape 1: Cloner le Repository
 
 ```bash
-git clone https://gitlab.com/amsss900-group/amsss900-project.git
-cd amsss900-project
+git clone https://github.com/amsss400/MW.git
+cd MW
 ```
 
 ### 📄 Étape 2: Installer les Dépendances
