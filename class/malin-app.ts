@@ -68,15 +68,15 @@ type TBucketStorage = {
 
 const isReactNative = typeof navigator !== 'undefined' && navigator?.product === 'ReactNative';
 
-export class BlueApp {
+export class MalinApp {
   static FLAG_ENCRYPTED = 'data_encrypted';
   static LNDHUB = 'lndhub';
   static DO_NOT_TRACK = 'donottrack';
   static HANDOFF_STORAGE_KEY = 'HandOff';
 
-  private static _instance: BlueApp | null = null;
+  private static _instance: MalinApp | null = null;
 
-  static keys2migrate = [BlueApp.HANDOFF_STORAGE_KEY, BlueApp.DO_NOT_TRACK];
+  static keys2migrate = [MalinApp.HANDOFF_STORAGE_KEY, MalinApp.DO_NOT_TRACK];
 
   public cachedPassword?: false | string;
   public tx_metadata: TTXMetadata;
@@ -90,12 +90,12 @@ export class BlueApp {
     this.cachedPassword = false;
   }
 
-  static getInstance(): BlueApp {
-    if (!BlueApp._instance) {
-      BlueApp._instance = new BlueApp();
+  static getInstance(): MalinApp {
+    if (!MalinApp._instance) {
+      MalinApp._instance = new MalinApp();
     }
 
-    return BlueApp._instance;
+    return MalinApp._instance;
   }
 
   async migrateKeys() {
@@ -104,7 +104,7 @@ export class BlueApp {
       return;
     }
 
-    for (const key of BlueApp.keys2migrate) {
+    for (const key of MalinApp.keys2migrate) {
       try {
         const value = await RNSecureKeyStore.get(key);
         if (value) {
@@ -162,9 +162,9 @@ export class BlueApp {
   storageIsEncrypted = async (): Promise<boolean> => {
     let data;
     try {
-      data = await this.getItemWithFallbackToRealm(BlueApp.FLAG_ENCRYPTED);
+      data = await this.getItemWithFallbackToRealm(MalinApp.FLAG_ENCRYPTED);
     } catch (error: any) {
-      console.warn('error reading `' + BlueApp.FLAG_ENCRYPTED + '` key:', error.message);
+      console.warn('error reading `' + MalinApp.FLAG_ENCRYPTED + '` key:', error.message);
       return false;
     }
 
@@ -227,7 +227,7 @@ export class BlueApp {
     data = JSON.stringify(data);
     this.cachedPassword = password;
     await this.setItem('data', data);
-    await this.setItem(BlueApp.FLAG_ENCRYPTED, '1');
+    await this.setItem(MalinApp.FLAG_ENCRYPTED, '1');
   };
 
   /**
@@ -721,12 +721,12 @@ export class BlueApp {
       }
 
       await this.setItem('data', JSON.stringify(data));
-      await this.setItem(BlueApp.FLAG_ENCRYPTED, this.cachedPassword ? '1' : '');
+      await this.setItem(MalinApp.FLAG_ENCRYPTED, this.cachedPassword ? '1' : '');
 
       // now, backing up same data in realm:
       const realmkeyValue = await this.openRealmKeyValue();
       this.saveToRealmKeyValue(realmkeyValue, 'data', JSON.stringify(data));
-      this.saveToRealmKeyValue(realmkeyValue, BlueApp.FLAG_ENCRYPTED, this.cachedPassword ? '1' : '');
+      this.saveToRealmKeyValue(realmkeyValue, MalinApp.FLAG_ENCRYPTED, this.cachedPassword ? '1' : '');
       realmkeyValue.close();
     } catch (error: any) {
       console.error('save to disk exception:', error.message);
@@ -893,37 +893,37 @@ export class BlueApp {
 
   isHandoffEnabled = async (): Promise<boolean> => {
     try {
-      return !!(await AsyncStorage.getItem(BlueApp.HANDOFF_STORAGE_KEY));
+      return !!(await AsyncStorage.getItem(MalinApp.HANDOFF_STORAGE_KEY));
     } catch (_) {}
     return false;
   };
 
   setIsHandoffEnabled = async (value: boolean): Promise<void> => {
-    await AsyncStorage.setItem(BlueApp.HANDOFF_STORAGE_KEY, value ? '1' : '');
+    await AsyncStorage.setItem(MalinApp.HANDOFF_STORAGE_KEY, value ? '1' : '');
   };
 
   isDoNotTrackEnabled = async (): Promise<boolean> => {
     try {
-      const keyExists = await AsyncStorage.getItem(BlueApp.DO_NOT_TRACK);
+      const keyExists = await AsyncStorage.getItem(MalinApp.DO_NOT_TRACK);
       if (keyExists !== null) {
         const doNotTrackValue = !!keyExists;
         if (doNotTrackValue) {
-          await DefaultPreference.set(BlueApp.DO_NOT_TRACK, '1');
-          AsyncStorage.removeItem(BlueApp.DO_NOT_TRACK);
+          await DefaultPreference.set(MalinApp.DO_NOT_TRACK, '1');
+          AsyncStorage.removeItem(MalinApp.DO_NOT_TRACK);
         } else {
-          return Boolean(await DefaultPreference.get(BlueApp.DO_NOT_TRACK));
+          return Boolean(await DefaultPreference.get(MalinApp.DO_NOT_TRACK));
         }
       }
     } catch (_) {}
-    const doNotTrackValue = await DefaultPreference.get(BlueApp.DO_NOT_TRACK);
+    const doNotTrackValue = await DefaultPreference.get(MalinApp.DO_NOT_TRACK);
     return doNotTrackValue === '1' || false;
   };
 
   setDoNotTrack = async (value: boolean) => {
     if (value) {
-      await DefaultPreference.set(BlueApp.DO_NOT_TRACK, '1');
+      await DefaultPreference.set(MalinApp.DO_NOT_TRACK, '1');
     } else {
-      await DefaultPreference.clear(BlueApp.DO_NOT_TRACK);
+      await DefaultPreference.clear(MalinApp.DO_NOT_TRACK);
     }
   };
 

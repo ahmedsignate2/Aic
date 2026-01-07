@@ -573,8 +573,8 @@ end
       # Project structure analysis
       UI.message("\033[1;36mProject Structure Analysis:\033[0m")
       %w[
-        ios/BlueWallet.xcworkspace
-        ios/BlueWallet.xcodeproj
+        ios/MalinWallet.xcworkspace
+        ios/MalinWallet.xcodeproj
         ios/export_options.plist
         ios/Podfile
         ios/Podfile.lock
@@ -617,7 +617,7 @@ end
       # Comprehensive destination analysis
       UI.message("\033[1;33mBuild Destinations Analysis:\033[0m")
       begin
-        destinations_output = sh("xcodebuild -workspace '#{workspace_path}' -scheme BlueWallet -showdestinations", log: false)
+        destinations_output = sh("xcodebuild -workspace '#{workspace_path}' -scheme MalinWallet -showdestinations", log: false)
         UI.message("  Available destinations:")
         destinations_output.lines.each_with_index do |line, index|
           UI.message("    #{index + 1}. #{line.strip}") if line.strip.length > 0
@@ -657,7 +657,7 @@ end
       
       # Define the IPA output path before building
       ipa_directory = File.join(project_root, "ios", "build")
-      ipa_name = "BlueWallet_#{ENV['PROJECT_VERSION']}_#{ENV['NEW_BUILD_NUMBER']}.ipa"
+      ipa_name = "MalinWallet_#{ENV['PROJECT_VERSION']}_#{ENV['NEW_BUILD_NUMBER']}.ipa"
       ipa_path = File.join(ipa_directory, ipa_name)
       
       UI.message("\033[1;36mBuild Output Configuration:\033[0m")
@@ -671,7 +671,7 @@ end
       begin
         UI.message("🚀 Starting iOS Build Process...")
         UI.message("  Build Parameters:")
-        UI.message("    Scheme: BlueWallet")
+        UI.message("    Scheme: MalinWallet")
         UI.message("    Workspace: #{workspace_path}")
         UI.message("    Export Method: app-store")
         UI.message("    Export Options: #{export_options_path}")
@@ -706,7 +706,7 @@ end
         end
         
         build_ios_app(
-          scheme: "BlueWallet",
+          scheme: "MalinWallet",
           workspace: workspace_path,
           export_method: "app-store",
           export_options: export_options_path,
@@ -750,7 +750,7 @@ end
         if destinations_output.include?("Any iOS Device")
           UI.message("Retrying build without explicit destination...")
           build_ios_app(
-            scheme: "BlueWallet",
+            scheme: "MalinWallet",
             workspace: workspace_path,
             export_method: "app-store",
             export_options: export_options_path,

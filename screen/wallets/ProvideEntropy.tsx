@@ -28,7 +28,7 @@ import { Tabs } from '../../components/Tabs';
 import { MalinCurrentTheme, useTheme } from '../../components/themes';
 import loc from '../../loc';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 import {
   concatUint8Arrays,
   uint8ArrayToHex
@@ -450,7 +450,7 @@ const ProvideEntropy = () => {
 
   return (
     <SafeArea>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <TouchableOpacity
         accessibilityRole='button'
         onPress={() => setShow(!show)}

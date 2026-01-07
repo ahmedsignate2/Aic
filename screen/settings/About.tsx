@@ -22,7 +22,7 @@ import {
 import { Icon } from '@rneui/themed';
 import Rate, { AndroidMarket } from 'react-native-rate';
 import A from '../../malin_modules/analytics';
-import { BlueCard, BlueTextCentered } from '../../BlueComponents';
+import { MalinCard, MalinTextCentered } from '../../MalinComponents';
 import { HDSegwitBech32Wallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
@@ -32,7 +32,7 @@ import loc, { formatStringAddTwoWhiteSpaces } from '../../loc';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { useSettings } from '../../hooks/context/useSettings';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 const branch = require('../../current-branch.json');
 
@@ -107,11 +107,11 @@ const About: React.FC = () => {
       contentInsetAdjustmentBehavior='automatic'
       automaticallyAdjustContentInsets
     >
-      <BlueCard>
+      <MalinCard>
         <View style={styles.center}>
           <Image
             style={styles.logo}
-            source={require('../../img/bluebeast.png')}
+            source={require('../../img/malinbeast.png')}
           />
           <Text style={styles.textFree}>{loc.settings.about_free}</Text>
           <Text style={[styles.textBackup, stylesHook.textBackup]}>
@@ -125,7 +125,7 @@ const About: React.FC = () => {
             />
           )}
         </View>
-      </BlueCard>
+      </MalinCard>
       <ListItem
         leftIcon={{
           name: 'twitter',
@@ -144,18 +144,18 @@ const About: React.FC = () => {
         onPress={handleOnTelegramPress}
         title={loc.settings.about_sm_telegram}
       />
-      <BlueCard>
+      <MalinCard>
         <View style={[styles.buildWith, stylesHook.buildWith]}>
-          <BlueSpacing20 />
-          <BlueTextCentered>{loc.settings.about_awesome} 👍</BlueTextCentered>
-          <BlueSpacing20 />
-          <BlueTextCentered>React Native</BlueTextCentered>
-          <BlueTextCentered>bitcoinjs-lib</BlueTextCentered>
-          <BlueTextCentered>Nodejs</BlueTextCentered>
-          <BlueTextCentered>Electrum server</BlueTextCentered>
-          <BlueSpacing20 />
-          <BlueTextCentered>Inspired by AlphaWallet, Mycelium</BlueTextCentered>
-          <BlueSpacing20 />
+          <MalinSpacing20 />
+          <MalinTextCentered>{loc.settings.about_awesome} 👍</MalinTextCentered>
+          <MalinSpacing20 />
+          <MalinTextCentered>React Native</MalinTextCentered>
+          <MalinTextCentered>bitcoinjs-lib</MalinTextCentered>
+          <MalinTextCentered>Nodejs</MalinTextCentered>
+          <MalinTextCentered>Electrum server</MalinTextCentered>
+          <MalinSpacing20 />
+          <MalinTextCentered>Inspired by AlphaWallet, Mycelium</MalinTextCentered>
+          <MalinSpacing20 />
           <Pressable
             accessibilityRole="button"
             onPress={handleOnGithubPress}
@@ -177,7 +177,7 @@ const About: React.FC = () => {
             </Text>
           </Pressable>
         </View>
-      </BlueCard>
+      </MalinCard>
       <ListItem
         leftIcon={{
           name: 'book',
@@ -237,20 +237,20 @@ const About: React.FC = () => {
         }}
         title={loc.settings.run_performance_test}
       />
-      <BlueSpacing20 />
-      <BlueSpacing20 />
-      <BlueTextCentered>
+      <MalinSpacing20 />
+      <MalinSpacing20 />
+      <MalinTextCentered>
         {getApplicationName()} ver {getVersion()} (build{' '}
         {getBuildNumber() + ' ' + branch})
-      </BlueTextCentered>
-      <BlueTextCentered>
+      </MalinTextCentered>
+      <MalinTextCentered>
         {new Date(Number(getBuildNumber()) * 1000).toUTCString()}
-      </BlueTextCentered>
-      <BlueTextCentered>{getBundleId()}</BlueTextCentered>
-      <BlueTextCentered>
+      </MalinTextCentered>
+      <MalinTextCentered>{getBundleId()}</MalinTextCentered>
+      <MalinTextCentered>
         w, h = {width}, {height}
-      </BlueTextCentered>
-      <BlueTextCentered>Unique ID: {getUniqueIdSync()}</BlueTextCentered>
+      </MalinTextCentered>
+      <MalinTextCentered>Unique ID: {getUniqueIdSync()}</MalinTextCentered>
       <View style={styles.copyToClipboard}>
         <Pressable
           accessibilityRole="button"
@@ -266,8 +266,8 @@ const About: React.FC = () => {
           </Text>
         </Pressable>
       </View>
-      <BlueSpacing20 />
-      <BlueSpacing20 />
+      <MalinSpacing20 />
+      <MalinSpacing20 />
     </SafeAreaScrollView>
   );
 }

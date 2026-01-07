@@ -15,7 +15,7 @@ import Share from 'react-native-share';
 import triggerHapticFeedback, {
   HapticFeedbackTypes
 } from '../../malin_modules/hapticFeedback';
-import { BlueFormLabel } from '../../BlueComponents';
+import { MalinFormLabel } from '../../MalinComponents';
 import presentAlert from '../../components/Alert';
 import { FButton, FContainer } from '../../components/FloatButtons';
 import { useTheme } from '../../components/themes';
@@ -26,10 +26,10 @@ import {
   DoneAndDismissKeyboardInputAccessoryViewID,
 } from '../../components/DoneAndDismissKeyboardInputAccessory';
 import {
-  BlueSpacing10,
-  BlueSpacing20,
-  BlueSpacing40
-} from '../../components/BlueSpacing';
+  MalinSpacing10,
+  MalinSpacing20,
+  MalinSpacing40
+} from '../../components/MalinSpacing';
 
 const SignVerify = () => {
   const { colors } = useTheme();
@@ -140,9 +140,9 @@ const SignVerify = () => {
     >
       {!isKeyboardVisible && (
         <>
-          <BlueSpacing20 />
-          <BlueFormLabel>{loc.addresses.sign_help}</BlueFormLabel>
-          <BlueSpacing20 />
+          <MalinSpacing20 />
+          <MalinFormLabel>{loc.addresses.sign_help}</MalinFormLabel>
+          <MalinSpacing20 />
         </>
       )}
 
@@ -161,7 +161,7 @@ const SignVerify = () => {
         spellCheck={false}
         editable={!loading}
       />
-      <BlueSpacing10 />
+      <MalinSpacing10 />
 
       <TextInput
         multiline
@@ -178,7 +178,7 @@ const SignVerify = () => {
         spellCheck={false}
         editable={!loading}
       />
-      <BlueSpacing10 />
+      <MalinSpacing10 />
 
       <TextInput
         multiline
@@ -196,7 +196,7 @@ const SignVerify = () => {
         onFocus={() => handleFocus(true)}
         onBlur={() => handleFocus(false)}
       />
-      <BlueSpacing40 />
+      <MalinSpacing40 />
 
       {isShareVisible && !isKeyboardVisible && (
         <>
@@ -216,7 +216,7 @@ const SignVerify = () => {
               }
             />
           </FContainer>
-          <BlueSpacing10 />
+          <MalinSpacing10 />
         </>
       )}
 
@@ -234,7 +234,7 @@ const SignVerify = () => {
               disabled={loading}
             />
           </FContainer>
-          <BlueSpacing10 />
+          <MalinSpacing10 />
         </>
       )}
 

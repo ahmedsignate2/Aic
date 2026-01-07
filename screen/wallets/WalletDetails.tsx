@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { writeFileAndExport } from '../../malin_modules/fs';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import {
   HDAezeedWallet,
   HDSegwitBech32Wallet,
@@ -43,8 +43,8 @@ import HeaderMenuButton from '../../components/HeaderMenuButton';
 import { Action } from '../../components/types';
 import { CommonToolTipActions } from '../../typings/CommonToolTipActions';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
 
 type RouteProps = RouteProp<DetailViewStackParamList, 'WalletDetails'>;
 const WalletDetails: React.FC = () => {
@@ -438,10 +438,10 @@ const WalletDetails: React.FC = () => {
     <SafeAreaScrollView centerContent={isLoading} testID="WalletDetailsScroll">
       <>
         {isLoading ? (
-          <BlueLoading />
+          <MalinLoading />
         ) : (
           <>
-            <BlueCard style={styles.address}>
+            <MalinCard style={styles.address}>
               {(() => {
                 if (
                   [LegacyWallet.type, SegwitBech32Wallet.type, SegwitP2SHWallet.type].includes(wallet.type) ||
@@ -484,7 +484,7 @@ const WalletDetails: React.FC = () => {
                   testID="WalletNameInput"
                 />
               </View>
-              <BlueSpacing20 />
+              <MalinSpacing20 />
               <Text style={[styles.textLabel1, stylesHook.textLabel1]}>{loc.wallets.details_type.toLowerCase()}</Text>
               <Text style={[styles.textValue, stylesHook.textValue]} selectable>
                 {wallet.typeReadable}
@@ -501,40 +501,40 @@ const WalletDetails: React.FC = () => {
               {wallet.type === MultisigHDWallet.type && (
                 <>
                   <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.wallets.details_multisig_type}</Text>
-                  <BlueText>
+                  <MalinText>
                     {`${wallet.getM()} / ${wallet.getN()} (${
                       wallet.isNativeSegwit() ? 'native segwit' : wallet.isWrappedSegwit() ? 'wrapped segwit' : 'legacy'
                     })`}
-                  </BlueText>
+                  </MalinText>
                 </>
               )}
               {wallet.type === MultisigHDWallet.type && (
                 <>
-                  <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.multisig.how_many_signatures_can_bluewallet_make}</Text>
-                  <BlueText>{wallet.howManySignaturesCanWeMake()}</BlueText>
+                  <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.multisig.how_many_signatures_can_malinwallet_make}</Text>
+                  <MalinText>{wallet.howManySignaturesCanWeMake()}</MalinText>
                 </>
               )}
 
               {wallet.type === LightningCustodianWallet.type && (
                 <>
                   <Text style={[styles.textLabel1, stylesHook.textLabel1]}>{loc.wallets.details_connected_to.toLowerCase()}</Text>
-                  <BlueText>{wallet.getBaseURI()}</BlueText>
+                  <MalinText>{wallet.getBaseURI()}</MalinText>
                 </>
               )}
 
               {wallet.type === HDAezeedWallet.type && (
                 <>
                   <Text style={[styles.textLabel1, stylesHook.textLabel1]}>{loc.wallets.identity_pubkey.toLowerCase()}</Text>
-                  <BlueText>{wallet.getIdentityPubkey()}</BlueText>
+                  <MalinText>{wallet.getIdentityPubkey()}</MalinText>
                 </>
               )}
-              <BlueSpacing20 />
+              <MalinSpacing20 />
               <>
                 <Text onPress={exportInternals} style={[styles.textLabel2, stylesHook.textLabel2]}>
                   {loc.transactions.list_title.toLowerCase()}
                 </Text>
                 <View style={styles.hardware}>
-                  <BlueText>{loc.wallets.details_display}</BlueText>
+                  <MalinText>{loc.wallets.details_display}</MalinText>
                   <Switch
                     value={hideTransactionsInWalletsList}
                     onValueChange={async (value: boolean) => {
@@ -557,14 +557,14 @@ const WalletDetails: React.FC = () => {
                 <Text onPress={purgeTransactions} style={[styles.textLabel2, stylesHook.textLabel2]} testID="PurgeBackdoorButton">
                   {loc.transactions.transactions_count.toLowerCase()}
                 </Text>
-                <BlueText>{wallet.getTransactions().length}</BlueText>
+                <MalinText>{wallet.getTransactions().length}</MalinText>
               </>
 
               {wallet.allowBIP47 && wallet.allowBIP47() ? (
                 <>
                   <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.bip47.payment_code}</Text>
                   <View style={styles.hardware}>
-                    <BlueText>{loc.bip47.purpose}</BlueText>
+                    <MalinText>{loc.bip47.purpose}</MalinText>
                     <Switch
                       value={isBIP47Enabled}
                       onValueChange={async (value: boolean) => {
@@ -589,10 +589,10 @@ const WalletDetails: React.FC = () => {
               <View>
                 {wallet.type === WatchOnlyWallet.type && wallet.isHd && wallet.isHd() && (
                   <>
-                    <BlueSpacing10 />
+                    <MalinSpacing10 />
                     <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.wallets.details_advanced.toLowerCase()}</Text>
                     <View style={styles.hardware}>
-                      <BlueText>{loc.wallets.details_use_with_hardware_wallet}</BlueText>
+                      <MalinText>{loc.wallets.details_use_with_hardware_wallet}</MalinText>
                       <Switch
                         value={walletUseWithHardwareWallet}
                         onValueChange={async (value: boolean) => {
@@ -617,10 +617,10 @@ const WalletDetails: React.FC = () => {
                     <View style={styles.marginRight16}>
                       <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.wallets.details_master_fingerprint.toLowerCase()}</Text>
                       {isMasterFingerPrintVisible ? (
-                        <BlueText selectable>{masterFingerprint ?? <ActivityIndicator />}</BlueText>
+                        <MalinText selectable>{masterFingerprint ?? <ActivityIndicator />}</MalinText>
                       ) : (
                         <TouchableOpacity onPress={onViewMasterFingerPrintPress}>
-                          <BlueText>{loc.multisig.view}</BlueText>
+                          <MalinText>{loc.multisig.view}</MalinText>
                         </TouchableOpacity>
                       )}
                     </View>
@@ -629,25 +629,25 @@ const WalletDetails: React.FC = () => {
                   {derivationPath && (
                     <View>
                       <Text style={[styles.textLabel2, stylesHook.textLabel2]}>{loc.wallets.details_derivation_path}</Text>
-                      <BlueText selectable testID="DerivationPath">
+                      <MalinText selectable testID="DerivationPath">
                         {derivationPath}
-                      </BlueText>
+                      </MalinText>
                     </View>
                   )}
                 </View>
               </View>
-            </BlueCard>
+            </MalinCard>
             {(wallet instanceof AbstractHDElectrumWallet || (wallet.type === WatchOnlyWallet.type && wallet.isHd && wallet.isHd())) && (
               <ListItem onPress={navigateToAddresses} title={loc.wallets.details_show_addresses} chevron />
             )}
             {isContactsVisible ? <ListItem onPress={navigateToContacts} title={loc.bip47.contacts} chevron /> : null}
-            <BlueCard style={styles.address}>
+            <MalinCard style={styles.address}>
               <View>
-                <BlueSpacing20 />
+                <MalinSpacing20 />
                 <Button onPress={navigateToWalletExport} testID="WalletExport" title={loc.wallets.details_export_backup} />
                 {wallet.type === MultisigHDWallet.type && (
                   <>
-                    <BlueSpacing20 />
+                    <MalinSpacing20 />
                     <SecondButton
                       onPress={navigateToMultisigCoordinationSetup}
                       testID="MultisigCoordinationSetup"
@@ -658,7 +658,7 @@ const WalletDetails: React.FC = () => {
 
                 {wallet.type === MultisigHDWallet.type && (
                   <>
-                    <BlueSpacing20 />
+                    <MalinSpacing20 />
                     <SecondButton
                       onPress={navigateToViewEditCosigners}
                       testID="ViewEditCosigners"
@@ -669,20 +669,20 @@ const WalletDetails: React.FC = () => {
 
                 {wallet.allowXpub && wallet.allowXpub() && (
                   <>
-                    <BlueSpacing20 />
+                    <MalinSpacing20 />
                     <SecondButton onPress={navigateToXPub} testID="XpubButton" title={loc.wallets.details_show_xpub} />
                   </>
                 )}
                 {wallet.allowSignVerifyMessage && wallet.allowSignVerifyMessage() && (
                   <>
-                    <BlueSpacing20 />
+                    <MalinSpacing20 />
                     <SecondButton onPress={navigateToSignVerify} testID="SignVerify" title={loc.addresses.sign_title} />
                   </>
                 )}
-                <BlueSpacing20 />
-                <BlueSpacing20 />
+                <MalinSpacing20 />
+                <MalinSpacing20 />
               </View>
-            </BlueCard>
+            </MalinCard>
           </>
         )}
       </>

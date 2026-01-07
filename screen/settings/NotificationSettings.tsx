@@ -16,7 +16,7 @@ import {
   checkNotificationPermissionStatus,
   NOTIFICATIONS_NO_AND_DONT_ASK_FLAG,
 } from '../../malin_modules/notifications';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import presentAlert from '../../components/Alert';
 import { Button } from '../../components/Button';
 import CopyToClipboardButton from '../../components/CopyToClipboardButton';
@@ -27,7 +27,7 @@ import { Divider } from '@rneui/base';
 import { openSettings } from 'react-native-permissions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
+import { MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
 import { useLocale } from '@react-navigation/native';
 
 const NotificationSettings: React.FC = () => {
@@ -206,17 +206,17 @@ const NotificationSettings: React.FC = () => {
       />
 
       <Pressable onPress={handleTap}>
-        <BlueCard>
-          <BlueText style={styles.multilineText}>{loc.settings.push_notifications_explanation}</BlueText>
-        </BlueCard>
+        <MalinCard>
+          <MalinText style={styles.multilineText}>{loc.settings.push_notifications_explanation}</MalinText>
+        </MalinCard>
       </Pressable>
 
       {tapCount >= 10 && (
         <>
           <Divider />
-          <BlueCard>
-            <BlueText>{loc.settings.groundcontrol_explanation}</BlueText>
-          </BlueCard>
+          <MalinCard>
+            <MalinText>{loc.settings.groundcontrol_explanation}</MalinText>
+          </MalinCard>
 
           <ButtonRNElements
             icon={{
@@ -224,14 +224,14 @@ const NotificationSettings: React.FC = () => {
               type: 'font-awesome',
               color: colors.foregroundColor,
             }}
-            onPress={() => Linking.openURL('https://github.com/BlueWallet/GroundControl')}
+            onPress={() => Linking.openURL('https://github.com/MalinWallet/GroundControl')}
             titleStyle={{ color: colors.buttonAlternativeTextColor }}
-            title="github.com/BlueWallet/GroundControl"
+            title="github.com/MalinWallet/GroundControl"
             color={colors.buttonTextColor}
             buttonStyle={[styles.buttonStyle, stylesWithThemeHook.buttonStyles]}
           />
 
-          <BlueCard>
+          <MalinCard>
             <View style={[styles.uri, stylesWithThemeHook.uri]}>
               <TextInput
                 placeholder={getDefaultUri()}
@@ -247,24 +247,24 @@ const NotificationSettings: React.FC = () => {
               />
             </View>
 
-            <BlueSpacing20 />
-            <BlueText style={styles.centered} onPress={() => setTapCount(tapCount + 1)}>
+            <MalinSpacing20 />
+            <MalinText style={styles.centered} onPress={() => setTapCount(tapCount + 1)}>
               ♪ Ground Control to Major Tom ♪
-            </BlueText>
-            <BlueText style={styles.centered} onPress={() => setTapCount(tapCount + 1)}>
+            </MalinText>
+            <MalinText style={styles.centered} onPress={() => setTapCount(tapCount + 1)}>
               ♪ Commencing countdown, engines on ♪
-            </BlueText>
+            </MalinText>
 
             <View>
               <CopyToClipboardButton stringToCopy={tokenInfo} displayText={tokenInfo} />
             </View>
 
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <Button onPress={save} title={loc.settings.save} />
-          </BlueCard>
+          </MalinCard>
         </>
       )}
-      <BlueSpacing40 />
+      <MalinSpacing40 />
       <ListItem title={loc.settings.privacy_system_settings} onPress={onSystemSettings} chevron />
     </SafeAreaScrollView>
   );

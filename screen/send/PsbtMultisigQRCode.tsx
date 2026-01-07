@@ -11,7 +11,7 @@ import loc from '../../loc';
 import TipBox from '../../components/TipBox';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { SendDetailsStackParamList } from '../../navigation/SendDetailsStackParamList';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 interface BarcodeScanResult {
   data?: string;
@@ -108,12 +108,12 @@ const PsbtMultisigQRCode: React.FC = () => {
         number="1"
         title={loc.multisig.provide_signature}
         description={loc.multisig.provide_signature_details}
-        additionalDescription={`${loc.multisig.provide_signature_details_bluewallet} ${loc.multisig.co_sign_transaction}`}
+        additionalDescription={`${loc.multisig.provide_signature_details_malinwallet} ${loc.multisig.co_sign_transaction}`}
       />
       <DynamicQRCode value={psbt.toHex()} ref={dynamicQRCode} />
       {!isLoading && (
         <>
-          <BlueSpacing20 />
+          <MalinSpacing20 />
           <View style={styles.divider} />
           <TipBox
             number="2"
@@ -133,7 +133,7 @@ const PsbtMultisigQRCode: React.FC = () => {
           />
         </>
       )}
-      <BlueSpacing20 />
+      <MalinSpacing20 />
 
       {isLoading ? (
         <ActivityIndicator />

@@ -3,9 +3,9 @@ import { StyleSheet, View, ViewProps } from 'react-native';
 import { Icon } from '@rneui/themed';
 import { useTheme } from './themes';
 
-interface BlueBigCheckmarkProps extends ViewProps {}
+interface MalinBigCheckmarkProps extends ViewProps {}
 
-export function BlueBigCheckmark(props: BlueBigCheckmarkProps) {
+export function MalinBigCheckmark(props: MalinBigCheckmarkProps) {
   const { colors } = useTheme();
   return (
     <View style={[styles.container, props.style]}>

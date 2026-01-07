@@ -5,16 +5,16 @@ import { NavigationContainer } from '@react-navigation/native';
 import { Header } from '../../components/Header';
 import SelfTest from '../../screen/settings/SelfTest';
 import Settings from '../../screen/settings/Settings';
-import { BlueDefaultTheme } from '../../components/themes';
+import { MalinDefaultTheme } from '../../components/themes';
 
-jest.mock('../../malin_modules/BlueElectrum', () => {
+jest.mock('../../malin_modules/MalinElectrum', () => {
   return {
     connectMain: jest.fn(),
   }
 });
 
 const Wrapper = ({ children }) => (
-  <NavigationContainer theme={BlueDefaultTheme}>{children}</NavigationContainer>
+  <NavigationContainer theme={MalinDefaultTheme}>{children}</NavigationContainer>
 )
 
 it('Header works', () => {

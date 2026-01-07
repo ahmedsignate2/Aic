@@ -19,20 +19,20 @@ if (aspectRatio > 1.6) {
  *
  * @type {React.FC<any>}
  */
-export const BlueButtonLink = forwardRef((props, ref) => {
+export const MalinButtonLink = forwardRef((props, ref) => {
   const { colors } = useTheme();
   return (
-    <Pressable accessibilityRole="button" style={({ pressed }) => [styles.blueButtonLink, pressed && styles.pressed]} {...props} ref={ref}>
+    <Pressable accessibilityRole="button" style={({ pressed }) => [styles.malinButtonLink, pressed && styles.pressed]} {...props} ref={ref}>
       <Text style={{ color: colors.foregroundColor, textAlign: 'center', fontSize: 16 }}>{props.title}</Text>
     </Pressable>
   );
 });
 
-export const BlueCard = props => {
+export const MalinCard = props => {
   return <View {...props} style={{ padding: 20 }} />;
 };
 
-export const BlueText = ({ bold = false, ...props }) => {
+export const MalinText = ({ bold = false, ...props }) => {
   const { colors } = useTheme();
   const { direction } = useLocale();
   const style = StyleSheet.compose(
@@ -46,12 +46,12 @@ export const BlueText = ({ bold = false, ...props }) => {
   return <Text {...props} style={style} />;
 };
 
-export const BlueTextCentered = props => {
+export const MalinTextCentered = props => {
   const { colors } = useTheme();
   return <Text {...props} style={{ color: colors.foregroundColor, textAlign: 'center' }} />;
 };
 
-export const BlueFormLabel = props => {
+export const MalinFormLabel = props => {
   const { colors } = useTheme();
   const { direction } = useLocale();
 
@@ -68,7 +68,7 @@ export const BlueFormLabel = props => {
   );
 };
 
-export const BlueFormMultiInput = props => {
+export const MalinFormMultiInput = props => {
   const { colors } = useTheme();
 
   return (
@@ -108,7 +108,7 @@ export class is {
   }
 }
 
-export function BlueBigCheckmark({ style = {} }) {
+export function MalinBigCheckmark({ style = {} }) {
   const defaultStyles = {
     backgroundColor: '#ccddf9',
     width: 120,
@@ -128,7 +128,7 @@ export function BlueBigCheckmark({ style = {} }) {
 }
 
 const styles = StyleSheet.create({
-  blueButtonLink: {
+  malinButtonLink: {
     minWidth: 100,
     minHeight: 36,
     justifyContent: 'center',

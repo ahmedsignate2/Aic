@@ -1,7 +1,7 @@
 import assert from 'assert';
 import fs from 'fs';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import {
   HDAezeedWallet,
   HDLegacyBreadwalletWallet,
@@ -26,13 +26,13 @@ jest.setTimeout(90 * 1000);
 
 afterAll(async () => {
   // after all tests we close socket so the test suite can actually terminate
-  BlueElectrum.forceDisconnect();
+  MalinElectrum.forceDisconnect();
 });
 
 beforeAll(async () => {
   // awaiting for Electrum to be connected. For RN Electrum would naturally connect
   // while app starts up, but for tests we need to wait for it
-  await BlueElectrum.connectMain();
+  await MalinElectrum.connectMain();
 });
 
 type THistoryItem = { action: 'progress'; data: string } | { action: 'wallet'; data: TWallet } | { action: 'password'; data: string };
@@ -152,7 +152,7 @@ describe('import procedure', () => {
   });
 
   it('can import BIP84 with passphrase', async () => {
-    const store = createStore('BlueWallet');
+    const store = createStore('MalinWallet');
     const { promise } = startImport(
       'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
       true,
@@ -445,7 +445,7 @@ describe('import procedure', () => {
   });
 
   it('can import slip39 wallet with password', async () => {
-    const store = createStore('BlueWallet');
+    const store = createStore('MalinWallet');
     // 2-of-3 slip39 wallet
     // crystal lungs academic acid corner infant satisfy spider alcohol laser golden equation fiscal epidemic infant scholar space findings tadpole belong
     // crystal lungs academic agency class payment actress avoid rebound ordinary exchange petition tendency mild mobile spine robin fancy shelter increase

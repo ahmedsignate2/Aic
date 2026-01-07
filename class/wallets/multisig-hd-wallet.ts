@@ -12,7 +12,7 @@ import { sha256 } from "@noble/hashes/sha256";
 import { ECPairFactory } from "ecpair";
 import * as mn from "electrum-mnemonic";
 
-import * as BlueElectrum from "../../malin_modules/BlueElectrum";
+import * as MalinElectrum from "../../malin_modules/MalinElectrum";
 import ecc from "../../malin_modules/noble_ecc";
 import { decodeUR } from "../../malin_modules/ur";
 import { AbstractHDElectrumWallet } from "./abstract-hd-electrum-wallet";
@@ -1262,7 +1262,7 @@ export class MultisigHDWallet extends AbstractHDElectrumWallet {
   async fetchUtxo () {
     await super.fetchUtxo()
     // now we need to fetch txhash for each input as required by PSBT
-    const txhexes = await BlueElectrum.multiGetTransactionByTxid(
+    const txhexes = await MalinElectrum.multiGetTransactionByTxid(
       this.getUtxo(true).map((x) => x.txid),
       false
     )

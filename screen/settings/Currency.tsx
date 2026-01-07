@@ -10,7 +10,7 @@ import {
   mostRecentFetchedRate,
   setPreferredCurrency,
 } from '../../malin_modules/currency';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import presentAlert from '../../components/Alert';
 import ListItem from '../../components/ListItem';
 import { useTheme } from '../../components/themes';
@@ -19,7 +19,7 @@ import loc from '../../loc';
 import { FiatUnit, FiatUnitSource, FiatUnitType, getFiatRate } from '../../models/fiatUnit';
 import { useSettings } from '../../hooks/context/useSettings';
 import SafeAreaFlatList from '../../components/SafeAreaFlatList';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
 
 dayjs.extend(calendar);
 
@@ -149,20 +149,20 @@ const Currency: React.FC = () => {
     if (isSearchFocused && !selectedCurrencyVisible) return null;
 
     return (
-      <BlueCard>
-        <BlueText>
+      <MalinCard>
+        <MalinText>
           {loc.settings.currency_source} {selectedCurrency?.source ?? FiatUnitSource.CoinDesk}
-        </BlueText>
-        <BlueSpacing10 />
-        <BlueText>
+        </MalinText>
+        <MalinSpacing10 />
+        <MalinText>
           {loc.settings.rate}: {currencyRate.Rate ?? loc._.never}
-        </BlueText>
-        <BlueSpacing10 />
-        <BlueText>
+        </MalinText>
+        <MalinSpacing10 />
+        <MalinText>
           {loc.settings.last_updated}: {dayjs(currencyRate.LastUpdated).calendar() ?? loc._.never}
-        </BlueText>
-        <BlueSpacing20 />
-      </BlueCard>
+        </MalinText>
+        <MalinSpacing20 />
+      </MalinCard>
     );
   }, [isSearchFocused, selectedCurrencyVisible, selectedCurrency?.source, currencyRate]);
 

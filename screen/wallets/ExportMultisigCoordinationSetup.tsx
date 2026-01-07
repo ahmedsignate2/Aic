@@ -1,7 +1,7 @@
 import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useMemo, useReducer, useRef } from 'react';
 import { ActivityIndicator, InteractionManager, ScrollView, StyleSheet, Text, View } from 'react-native';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import { TWallet } from '../../class/wallets/types';
 import { DynamicQRCode } from '../../components/DynamicQRCode';
 import SaveFileButton from '../../components/SaveFileButton';
@@ -13,7 +13,7 @@ import { ExportMultisigCoordinationSetupStackRootParamList } from '../../navigat
 import { useSettings } from '../../hooks/context/useSettings';
 import { useScreenProtect } from '../../hooks/useScreenProtect';
 import SafeArea from '../../components/SafeArea';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 const enum ActionType {
   SET_LOADING = 'SET_LOADING',
@@ -166,11 +166,11 @@ const ExportMultisigCoordinationSetup: React.FC = () => {
   const renderView = wallet ? (
     <SafeArea style={[styles.scrollViewContent, stylesHook.scrollViewContent]}>
       <View>
-        <BlueText style={[styles.type, stylesHook.type]}>{label}</BlueText>
+        <MalinText style={[styles.type, stylesHook.type]}>{label}</MalinText>
       </View>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       {qrCodeContents && <DynamicQRCode value={qrCodeContents} ref={dynamicQRCode} />}
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       {isShareButtonTapped ? (
         <ActivityIndicator />
       ) : (
@@ -188,7 +188,7 @@ const ExportMultisigCoordinationSetup: React.FC = () => {
         )
       )}
 
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <Text selectable style={[styles.secret, stylesHook.secret]}>
         {xpub}
       </Text>

@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BlueFormLabel, BlueFormMultiInput } from '../../BlueComponents';
+import { MalinFormLabel, MalinFormMultiInput } from '../../MalinComponents';
 import { HDSegwitBech32Wallet, WatchOnlyWallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
@@ -10,7 +10,7 @@ import SafeArea from '../../components/SafeArea';
 import { useTheme } from '../../components/themes';
 import { useStorage } from '../../hooks/context/useStorage';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type NavigationProp = NativeStackNavigationProp<AddWalletStackParamList, 'ImportSpeed'>;
 
@@ -85,15 +85,15 @@ const ImportSpeed = () => {
 
   return (
     <SafeArea style={styles.root}>
-      <BlueSpacing20 />
-      <BlueFormLabel>Mnemonic</BlueFormLabel>
-      <BlueSpacing20 />
-      <BlueFormMultiInput testID="SpeedMnemonicInput" value={importText} onChangeText={setImportText} />
-      <BlueFormLabel>Wallet type</BlueFormLabel>
+      <MalinSpacing20 />
+      <MalinFormLabel>Mnemonic</MalinFormLabel>
+      <MalinSpacing20 />
+      <MalinFormMultiInput testID="SpeedMnemonicInput" value={importText} onChangeText={setImportText} />
+      <MalinFormLabel>Wallet type</MalinFormLabel>
       <TextInput testID="SpeedWalletTypeInput" value={walletType} style={styles.pathInput} onChangeText={setWalletType} />
-      <BlueFormLabel>Passphrase</BlueFormLabel>
+      <MalinFormLabel>Passphrase</MalinFormLabel>
       <TextInput testID="SpeedPassphraseInput" value={passphrase} style={styles.pathInput} onChangeText={setPassphrase} />
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <View style={styles.center}>
         <Button testID="SpeedDoImport" title="Import" onPress={importMnemonic} />
         {loading && <ActivityIndicator />}

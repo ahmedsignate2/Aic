@@ -11,7 +11,7 @@ import loc from '../../loc';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type NavigationProps = NativeStackNavigationProp<AddWalletStackParamList, 'WalletsAddMultisig'>;
 type RouteProps = RouteProp<AddWalletStackParamList, 'WalletsAddMultisig'>;
@@ -102,7 +102,7 @@ const WalletsAddMultisig: React.FC = () => {
         <View style={styles.imageWrapper}>
           <LottieView source={require('../../img/msvault.json')} style={styles.lottie} autoPlay loop={false} />
         </View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Text style={[styles.textdesc, stylesHook.textdesc]}>
           {loc.multisig.what_is_vault}
           <Text style={[styles.textdescBold, stylesHook.textdesc]}>
@@ -111,7 +111,7 @@ const WalletsAddMultisig: React.FC = () => {
           <Text style={[styles.textdesc, stylesHook.textdesc]}>{loc.multisig.what_is_vault_wallet}</Text>
         </Text>
 
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
         <Text style={[styles.textdesc, stylesHook.textdesc]}>
           {loc.multisig.needs}

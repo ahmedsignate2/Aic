@@ -29,7 +29,7 @@ import * as NavigationService from '../../NavigationService';
 import { useStorage } from '../../hooks/context/useStorage';
 import { DismissKeyboardInputAccessory, DismissKeyboardInputAccessoryViewID } from '../../components/DismissKeyboardInputAccessory';
 import { majorTomToGroundControl, tryToObtainPermissions } from '../../malin_modules/notifications';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinLoading } from '../../components/MalinLoading';
 
 const LNDCreateInvoice = () => {
   const { wallets, saveToDisk } = useStorage();
@@ -383,7 +383,7 @@ const LNDCreateInvoice = () => {
   if (!wallet.current) {
     return (
       <View style={[styles.root, styleHooks.root]}>
-        <BlueLoading />
+        <MalinLoading />
       </View>
     );
   }

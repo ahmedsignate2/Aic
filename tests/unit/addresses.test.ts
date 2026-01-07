@@ -13,7 +13,7 @@ jest.mock('../../malin_modules/currency', () => {
   }
 });
 
-jest.mock('../../malin_modules/BlueElectrum', () => {
+jest.mock('../../malin_modules/MalinElectrum', () => {
   return {
     connectMain: jest.fn(),
   }

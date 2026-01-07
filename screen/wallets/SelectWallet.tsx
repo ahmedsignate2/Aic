@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from 'react';
 import { useNavigationState, useRoute, RouteProp } from '@react-navigation/native';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import SafeArea from '../../components/SafeArea';
 import { useTheme } from '../../components/themes';
 import loc from '../../loc';
@@ -14,7 +14,7 @@ import { TWallet } from '../../class/wallets/types';
 import { pop } from '../../NavigationService';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { SendDetailsStackParamList } from '../../navigation/SendDetailsStackParamList';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type NavigationProps = NativeStackNavigationProp<SendDetailsStackParamList, 'SelectWallet'>;
 
@@ -128,9 +128,9 @@ const SelectWallet: React.FC = () => {
     return (
       <SafeArea>
         <View style={styles.noWallets}>
-          <BlueText style={styles.center}>{loc.wallets.select_no_bitcoin}</BlueText>
-          <BlueSpacing20 />
-          <BlueText style={styles.center}>{noWalletExplanationText || loc.wallets.select_no_bitcoin_exp}</BlueText>
+          <MalinText style={styles.center}>{loc.wallets.select_no_bitcoin}</MalinText>
+          <MalinSpacing20 />
+          <MalinText style={styles.center}>{noWalletExplanationText || loc.wallets.select_no_bitcoin_exp}</MalinText>
         </View>
       </SafeArea>
     );

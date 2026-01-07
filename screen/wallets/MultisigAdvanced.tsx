@@ -11,7 +11,7 @@ import loc from '../../loc';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
 import HeaderRightButton from '../../components/HeaderRightButton';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type NavigationProps = NativeStackNavigationProp<AddWalletStackParamList, 'MultisigAdvanced'>;
 type RouteProps = RouteProp<AddWalletStackParamList, 'MultisigAdvanced'>;
@@ -221,10 +221,10 @@ const MultisigAdvanced: React.FC = () => {
         <Text style={[styles.textSubtitle, stylesHook.textSubtitle]}>{loc.multisig.required_keys_out_of_total}</Text>
         <QuorumSelector m={currentM} n={currentN} onMChange={setCurrentM} onNChange={setCurrentN} colors={colors} />
 
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
         <Text style={[styles.textHeader, stylesHook.textHeader]}>{loc.multisig.wallet_type}</Text>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <FormatSelector format={currentFormat} onFormatChange={setCurrentFormat} colors={colors} />
       </View>
     </SafeArea>

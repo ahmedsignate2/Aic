@@ -3,7 +3,7 @@ import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { FlatList, StyleSheet, TextInput, View } from 'react-native';
 import debounce from '../../malin_modules/debounce';
-import { BlueFormLabel, BlueTextCentered } from '../../BlueComponents';
+import { MalinFormLabel, MalinTextCentered } from '../../MalinComponents';
 import { HDLegacyP2PKHWallet, HDSegwitBech32Wallet, HDSegwitP2SHWallet, HDTaprootWallet } from '../../class';
 import { validateBip32 } from '../../class/wallet-import';
 import { TWallet } from '../../class/wallets/types';
@@ -15,12 +15,12 @@ import { useStorage } from '../../hooks/context/useStorage';
 import loc from '../../loc';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
 import { useSettings } from '../../hooks/context/useSettings';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type RouteProps = RouteProp<AddWalletStackParamList, 'ImportCustomDerivationPath'>;
 type NavigationProp = NativeStackNavigationProp<AddWalletStackParamList, 'ImportCustomDerivationPath'>;
 
-const ListEmptyComponent: React.FC = () => <BlueTextCentered>{loc.wallets.import_wrong_path}</BlueTextCentered>;
+const ListEmptyComponent: React.FC = () => <MalinTextCentered>{loc.wallets.import_wrong_path}</MalinTextCentered>;
 
 const WRONG_PATH = 'WRONG_PATH';
 enum STATUS {
@@ -154,9 +154,9 @@ const ImportCustomDerivationPath: React.FC = () => {
 
   return (
     <SafeArea style={[styles.root, stylesHook.root]}>
-      <BlueSpacing20 />
-      <BlueFormLabel>{loc.wallets.import_derivation_subtitle}</BlueFormLabel>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
+      <MalinFormLabel>{loc.wallets.import_derivation_subtitle}</MalinFormLabel>
+      <MalinSpacing20 />
       <TextInput
         testID="DerivationPathInput"
         placeholder={loc.send.details_note_placeholder}

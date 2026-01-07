@@ -1,11 +1,11 @@
 import { Platform } from 'react-native';
 
-import { BlueApp as BlueAppClass } from '../class/';
+import { MalinApp as MalinAppClass } from '../class/';
 import prompt from '../helpers/prompt';
 import { showKeychainWipeAlert } from '../hooks/useBiometrics';
 import loc from '../loc';
 
-const BlueApp = BlueAppClass.getInstance();
+const MalinApp = MalinAppClass.getInstance();
 // If attempt reaches 10, a wipe keychain option will be provided to the user.
 let unlockAttempt = 0;
 
@@ -13,12 +13,12 @@ type PasswordPromptCallback = () => Promise<string | undefined>;
 
 export const startAndDecrypt = async (retry?: boolean, passwordPrompt?: PasswordPromptCallback): Promise<boolean> => {
   // If wallets are already loaded, no need to migrate, decrypt, or load from disk.
-  if (BlueApp.getWallets().length > 0) {
+  if (MalinApp.getWallets().length > 0) {
     return true;
   }
-  await BlueApp.migrateKeys();
+  await MalinApp.migrateKeys();
   let password: undefined | string;
-  if (await BlueApp.storageIsEncrypted()) {
+  if (await MalinApp.storageIsEncrypted()) {
     if (passwordPrompt) {
       password = await passwordPrompt();
     } else {
@@ -30,7 +30,7 @@ export const startAndDecrypt = async (retry?: boolean, passwordPrompt?: Password
   let success = false;
   let wasException = false;
   try {
-    success = await BlueApp.loadFromDisk(password);
+    success = await MalinApp.loadFromDisk(password);
   } catch (error) {
     // in case of exception reading from keystore, lets retry instead of assuming there is no storage and
     // proceeding with no wallets
@@ -42,7 +42,7 @@ export const startAndDecrypt = async (retry?: boolean, passwordPrompt?: Password
     // retrying, but only once
     try {
       await new Promise(resolve => setTimeout(resolve, 3000)); // sleep
-      success = await BlueApp.loadFromDisk(password);
+      success = await MalinApp.loadFromDisk(password);
     } catch (error) {
       console.warn('second exception loading from disk:', error);
     }
@@ -72,4 +72,4 @@ export const startAndDecrypt = async (retry?: boolean, passwordPrompt?: Password
   }
 };
 
-export default BlueApp;
+export default MalinApp;

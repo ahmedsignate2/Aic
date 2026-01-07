@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { Keyboard, StyleSheet, TextInput, View } from 'react-native';
 
 import { generateChecksumWords } from '../../malin_modules/checksumWords';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import { randomBytes } from '../../class/rng';
 import Button from '../../components/Button';
 import loc from '../../loc';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
 
 const GenerateWord = () => {
   const { colors } = useTheme();
@@ -55,14 +55,14 @@ const GenerateWord = () => {
 
   return (
     <SafeAreaScrollView
-      style={styles.blueArea}
+      style={styles.malinArea}
       keyboardShouldPersistTaps="handled"
       automaticallyAdjustContentInsets
       automaticallyAdjustKeyboardInsets
       contentInsetAdjustmentBehavior="automatic"
     >
       <View style={styles.wrapper}>
-        <BlueCard style={styles.mainCard}>
+        <MalinCard style={styles.mainCard}>
           <View style={[styles.input, stylesHooks.input]}>
             <TextInput
               style={styles.text}
@@ -80,13 +80,13 @@ const GenerateWord = () => {
             />
           </View>
 
-          <BlueSpacing10 />
+          <MalinSpacing10 />
           <Button title={loc.send.input_clear} onPress={clearMnemonicInput} />
-          <BlueSpacing20 />
-          <BlueText style={styles.center} testID="Result">
+          <MalinSpacing20 />
+          <MalinText style={styles.center} testID="Result">
             {result}
-          </BlueText>
-          <BlueSpacing20 />
+          </MalinText>
+          <MalinSpacing20 />
           <View>
             <Button
               disabled={mnemonic.trim().length === 0}
@@ -95,8 +95,8 @@ const GenerateWord = () => {
               testID="GenerateWord"
             />
           </View>
-          <BlueSpacing20 />
-        </BlueCard>
+          <MalinSpacing20 />
+        </MalinCard>
       </View>
     </SafeAreaScrollView>
   );
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
-  blueArea: {
+  malinArea: {
     paddingTop: 19,
   },
   mainCard: {

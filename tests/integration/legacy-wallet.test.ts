@@ -1,19 +1,19 @@
 import assert from 'assert';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { LegacyWallet, SegwitBech32Wallet, SegwitP2SHWallet } from '../../class';
 
 jest.setTimeout(30 * 1000);
 
 afterAll(async () => {
   // after all tests we close socket so the test suite can actually terminate
-  BlueElectrum.forceDisconnect();
+  MalinElectrum.forceDisconnect();
 });
 
 beforeAll(async () => {
   // awaiting for Electrum to be connected. For RN Electrum would naturally connect
   // while app starts up, but for tests we need to wait for it
-  await BlueElectrum.connectMain();
+  await MalinElectrum.connectMain();
 });
 
 describe('LegacyWallet', function () {
@@ -74,7 +74,7 @@ describe('LegacyWallet', function () {
   const cases = [
     // Transaction with missing address output https://www.blockchain.com/btc/tx/d45818ae11a584357f7b74da26012d2becf4ef064db015a45bdfcd9cb438929d
     ['addresses for vout missing', '1PVfrmbn1vSMoFZB2Ga7nDuXLFDyJZHrHK'],
-    // ['txdatas were coming back null from BlueElectrum because of high batchsize', '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo'],
+    // ['txdatas were coming back null from MalinElectrum because of high batchsize', '34xp4vRoCGJym3xR7yCVPFHoCNxv4Twseo'],
     // skipped because its slow and flaky if being run in pack with other electrum tests. uncomment and run single
     // if you need to debug huge electrum batches
   ];

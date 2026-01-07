@@ -11,11 +11,11 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 import PropTypes from 'prop-types';
 import { Text } from '@rneui/themed';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import triggerHapticFeedback, {
   HapticFeedbackTypes
 } from '../../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import { HDSegwitBech32Transaction, HDSegwitBech32Wallet } from '../../class';
 import presentAlert, { AlertType } from '../../components/Alert';
 import Button from '../../components/Button';
@@ -25,7 +25,7 @@ import loc from '../../loc';
 import { StorageContext } from '../../components/Context/StorageProvider';
 import ReplaceFeeSuggestions from '../../components/ReplaceFeeSuggestions';
 import { majorTomToGroundControl } from '../../malin_modules/notifications';
-import { BlueSpacing, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing, MalinSpacing20 } from '../../components/MalinSpacing';
 
 const styles = StyleSheet.create({
   root: {
@@ -87,8 +87,8 @@ export default class CPFP extends Component {
   broadcast = () => {
     this.setState({ isLoading: true }, async () => {
       try {
-        await BlueElectrum.ping();
-        await BlueElectrum.waitTillConnected();
+        await MalinElectrum.ping();
+        await MalinElectrum.waitTillConnected();
         const result = await this.state.wallet.broadcastTx(this.state.txhex);
         if (result) {
           this.onSuccessBroadcast();
@@ -184,21 +184,21 @@ export default class CPFP extends Component {
   renderStage1(text) {
     return (
       <SafeArea style={styles.root}>
-        <BlueSpacing />
-        <BlueCard style={styles.center}>
-          <BlueText>{text}</BlueText>
-          <BlueSpacing20 />
+        <MalinSpacing />
+        <MalinCard style={styles.center}>
+          <MalinText>{text}</MalinText>
+          <MalinSpacing20 />
           <ReplaceFeeSuggestions
             onFeeSelected={(fee) => this.setState({ newFeeRate: fee })}
             transactionMinimum={this.state.feeRate}
           />
-          <BlueSpacing />
+          <MalinSpacing />
           <Button
             disabled={this.state.newFeeRate <= this.state.feeRate}
             onPress={() => this.createTransaction()}
             title={loc.transactions.cpfp_create}
           />
-        </BlueCard>
+        </MalinCard>
       </SafeArea>
     );
   }
@@ -206,8 +206,8 @@ export default class CPFP extends Component {
   renderStage2() {
     return (
       <View style={styles.root}>
-        <BlueCard style={styles.center}>
-          <BlueText style={styles.hex}>{loc.send.create_this_is_hex}</BlueText>
+        <MalinCard style={styles.center}>
+          <MalinText style={styles.hex}>{loc.send.create_this_is_hex}</MalinText>
           <TextInput
             style={styles.hexInput}
             height={112}
@@ -236,7 +236,7 @@ export default class CPFP extends Component {
             onPress={this.broadcast}
             title={loc.send.confirm_sendNow}
           />
-        </BlueCard>
+        </MalinCard>
       </View>
     );
   }
@@ -257,13 +257,13 @@ export default class CPFP extends Component {
     if (this.state.nonReplaceable) {
       return (
         <SafeArea style={styles.root}>
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
 
-          <BlueText h4>{loc.transactions.cpfp_no_bump}</BlueText>
+          <MalinText h4>{loc.transactions.cpfp_no_bump}</MalinText>
         </SafeArea>
       );
     }

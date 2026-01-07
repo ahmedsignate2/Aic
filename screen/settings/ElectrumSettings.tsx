@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Alert, Keyboard, LayoutAnimation, Platform, StyleSheet, Switch, TextInput, View } from 'react-native';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import triggerHapticFeedback, { HapticFeedbackTypes, triggerSelectionHapticFeedback } from '../../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
@@ -26,9 +26,9 @@ import { Action } from '../../components/types';
 import ListItem, { PressableWrapper } from '../../components/ListItem';
 import HeaderMenuButton from '../../components/HeaderMenuButton';
 import { useSettings } from '../../hooks/context/useSettings';
-import { suggestedServers, hardcodedPeers, presentResetToDefaultsAlert } from '../../malin_modules/BlueElectrum';
+import { suggestedServers, hardcodedPeers, presentResetToDefaultsAlert } from '../../malin_modules/MalinElectrum';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
 
 type RouteProps = RouteProp<DetailViewStackParamList, 'ElectrumSettings'>;
 
@@ -92,11 +92,11 @@ const ElectrumSettings: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     console.log('Fetching data...');
-    const preferredServer = await BlueElectrum.getPreferredServer();
+    const preferredServer = await MalinElectrum.getPreferredServer();
     const savedHost = preferredServer?.host;
     const savedPort = preferredServer?.tcp ? Number(preferredServer.tcp) : undefined;
     const savedSslPort = preferredServer?.ssl ? Number(preferredServer.ssl) : undefined;
-    const serverHistoryStr = (await DefaultPreference.get(BlueElectrum.ELECTRUM_SERVER_HISTORY)) as string;
+    const serverHistoryStr = (await DefaultPreference.get(MalinElectrum.ELECTRUM_SERVER_HISTORY)) as string;
 
     console.log('Preferred server:', preferredServer);
     console.log('Server history string:', serverHistoryStr);
@@ -129,9 +129,9 @@ const ElectrumSettings: React.FC = () => {
     setSslPort(savedSslPort);
     setServerHistory(filteredServerHistory);
 
-    setConfig(await BlueElectrum.getConfig());
+    setConfig(await MalinElectrum.getConfig());
     configIntervalRef.current = setInterval(async () => {
-      setConfig(await BlueElectrum.getConfig());
+      setConfig(await MalinElectrum.getConfig());
     }, 500);
 
     setSavedServer({
@@ -186,7 +186,7 @@ const ElectrumSettings: React.FC = () => {
         const serverSslPort = v?.ssl ? v.ssl.toString() : sslPort?.toString() || '';
 
         if (serverHost && (serverPort || serverSslPort)) {
-          const testConnect = await BlueElectrum.testConnection(serverHost, Number(serverPort), Number(serverSslPort));
+          const testConnect = await MalinElectrum.testConnection(serverHost, Number(serverPort), Number(serverSslPort));
           if (!testConnect) {
             return presentAlert({
               message: serverHost.endsWith('.onion') ? loc.settings.electrum_error_connect_tor : loc.settings.electrum_error_connect,
@@ -196,15 +196,15 @@ const ElectrumSettings: React.FC = () => {
 
           // Clear current data for the preferred host
           console.log('Clearing current data for the preferred host');
-          await DefaultPreference.clear(BlueElectrum.ELECTRUM_HOST);
-          await DefaultPreference.clear(BlueElectrum.ELECTRUM_TCP_PORT);
-          await DefaultPreference.clear(BlueElectrum.ELECTRUM_SSL_PORT);
+          await DefaultPreference.clear(MalinElectrum.ELECTRUM_HOST);
+          await DefaultPreference.clear(MalinElectrum.ELECTRUM_TCP_PORT);
+          await DefaultPreference.clear(MalinElectrum.ELECTRUM_SSL_PORT);
 
           // Save the new preferred host
           console.log('Saving new preferred host');
-          await DefaultPreference.set(BlueElectrum.ELECTRUM_HOST, serverHost);
-          await DefaultPreference.set(BlueElectrum.ELECTRUM_TCP_PORT, serverPort);
-          await DefaultPreference.set(BlueElectrum.ELECTRUM_SSL_PORT, serverSslPort);
+          await DefaultPreference.set(MalinElectrum.ELECTRUM_HOST, serverHost);
+          await DefaultPreference.set(MalinElectrum.ELECTRUM_TCP_PORT, serverPort);
+          await DefaultPreference.set(MalinElectrum.ELECTRUM_SSL_PORT, serverSslPort);
 
           const serverExistsInHistory = Array.from(serverHistory).some(
             s => s.host === serverHost && s.tcp === Number(serverPort) && s.ssl === Number(serverSslPort),
@@ -213,7 +213,7 @@ const ElectrumSettings: React.FC = () => {
           if (!serverExistsInHistory && (serverPort || serverSslPort) && !hardcodedPeers.some(peer => peer.host === serverHost)) {
             const newServerHistory = new Set(serverHistory);
             newServerHistory.add({ host: serverHost, tcp: Number(serverPort), ssl: Number(serverSslPort) });
-            await DefaultPreference.set(BlueElectrum.ELECTRUM_SERVER_HISTORY, JSON.stringify(Array.from(newServerHistory)));
+            await DefaultPreference.set(MalinElectrum.ELECTRUM_SERVER_HISTORY, JSON.stringify(Array.from(newServerHistory)));
             setServerHistory(newServerHistory);
           }
         } else {
@@ -411,7 +411,7 @@ const ElectrumSettings: React.FC = () => {
   const checkServer = async () => {
     setIsLoading(true);
     try {
-      const features = await BlueElectrum.serverFeatures();
+      const features = await MalinElectrum.serverFeatures();
       triggerHapticFeedback(HapticFeedbackTypes.NotificationWarning);
       presentAlert({ message: JSON.stringify(features, null, 2) });
     } catch (error) {
@@ -462,7 +462,7 @@ const ElectrumSettings: React.FC = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     try {
       triggerSelectionHapticFeedback();
-      await BlueElectrum.setDisabled(value);
+      await MalinElectrum.setDisabled(value);
       setIsElectrumDisabled(value);
     } catch (error) {
       triggerHapticFeedback(HapticFeedbackTypes.NotificationError);
@@ -481,35 +481,35 @@ const ElectrumSettings: React.FC = () => {
     return (
       <>
         <Divider />
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Header leftText={loc.settings.electrum_status} />
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
-        <BlueCard>
+        <MalinCard>
           <View style={styles.connectWrap}>
             <View style={[styles.container, config.connected === 1 ? stylesHook.containerConnected : stylesHook.containerDisconnected]}>
-              <BlueText
+              <MalinText
                 style={[styles.textConnectionStatus, config.connected === 1 ? stylesHook.textConnected : stylesHook.textDisconnected]}
               >
                 {config.connected === 1 ? loc.settings.electrum_connected : loc.settings.electrum_connected_not}
-              </BlueText>
+              </MalinText>
             </View>
           </View>
-          <BlueSpacing10 />
-          <BlueText style={[styles.hostname, stylesHook.hostname]} onPress={checkServer} selectable>
+          <MalinSpacing10 />
+          <MalinText style={[styles.hostname, stylesHook.hostname]} onPress={checkServer} selectable>
             {config.host}:{config.port}
-          </BlueText>
-        </BlueCard>
-        <BlueSpacing20 />
+          </MalinText>
+        </MalinCard>
+        <MalinSpacing20 />
 
         <Divider />
-        <BlueSpacing10 />
-        <BlueSpacing20 />
+        <MalinSpacing10 />
+        <MalinSpacing20 />
 
         <Header leftText={loc.settings.electrum_preferred_server} />
-        <BlueCard>
-          <BlueText>{loc.settings.electrum_preferred_server_description}</BlueText>
-          <BlueSpacing20 />
+        <MalinCard>
+          <MalinText>{loc.settings.electrum_preferred_server_description}</MalinText>
+          <MalinSpacing20 />
           <AddressInput
             testID="HostInput"
             placeholder={loc.formatString(loc.settings.electrum_host, { example: '10.20.30.40' })}
@@ -522,7 +522,7 @@ const ElectrumSettings: React.FC = () => {
             inputAccessoryViewID={DoneAndDismissKeyboardInputAccessoryViewID}
             isLoading={isLoading}
           />
-          <BlueSpacing20 />
+          <MalinSpacing20 />
           <View style={styles.portWrap}>
             <View style={[styles.inputWrap, stylesHook.inputWrap]}>
               <TextInput
@@ -551,7 +551,7 @@ const ElectrumSettings: React.FC = () => {
                 onBlur={() => setIsAndroidNumericKeyboardFocused(false)}
               />
             </View>
-            <BlueText style={[styles.usePort, stylesHook.usePort]}>{loc.settings.use_ssl}</BlueText>
+            <MalinText style={[styles.usePort, stylesHook.usePort]}>{loc.settings.use_ssl}</MalinText>
             <Switch
               testID="SSLPortInput"
               value={sslPort !== undefined}
@@ -559,11 +559,11 @@ const ElectrumSettings: React.FC = () => {
               disabled={host?.endsWith('.onion') || isLoading || host === '' || (port === undefined && sslPort === undefined)}
             />
           </View>
-        </BlueCard>
-        <BlueCard>
-          <BlueSpacing20 />
+        </MalinCard>
+        <MalinCard>
+          <MalinSpacing20 />
           <Button disabled={saveDisabled} testID="Save" onPress={save} title={loc.settings.save} />
-        </BlueCard>
+        </MalinCard>
 
         {Platform.select({
           ios: <DismissKeyboardInputAccessory />,

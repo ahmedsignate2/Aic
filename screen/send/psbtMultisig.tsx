@@ -17,7 +17,7 @@ import {
 import { Icon } from '@rneui/themed';
 
 import { satoshiToBTC, satoshiToLocalCurrency } from '../../malin_modules/currency';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
 import SafeArea from '../../components/SafeArea';
@@ -293,22 +293,22 @@ const PsbtMultisig = () => {
     <View style={stylesHook.root}>
       <View style={styles.containerText}>
         <TouchableOpacity onPress={handleToggleFilter}>
-          <BlueText selectable style={[styles.textBtc, stylesHook.textBtc]}>
+          <MalinText selectable style={[styles.textBtc, stylesHook.textBtc]}>
             {displayTotalBtc}
-          </BlueText>
+          </MalinText>
         </TouchableOpacity>
         <View style={styles.textBtcUnit}>
-          <BlueText selectable style={stylesHook.textBtcUnitValue}>
+          <MalinText selectable style={stylesHook.textBtcUnitValue}>
             {' '}
             {BitcoinUnit.BTC}
-          </BlueText>
+          </MalinText>
         </View>
       </View>
       <View style={styles.containerText}>
         <TouchableOpacity onPress={handleToggleFilter}>
-          <BlueText selectable style={[styles.textFiat, stylesHook.textFiat]}>
+          <MalinText selectable style={[styles.textFiat, stylesHook.textFiat]}>
             {displayTotalFiat}
-          </BlueText>
+          </MalinText>
         </TouchableOpacity>
       </View>
       <View>{destinationAddress(isFiltered)}</View>
@@ -332,7 +332,7 @@ const PsbtMultisig = () => {
                 <View style={[styles.msleft, { height: flatListHeight - 260 }]} />
               </View>
               <View style={styles.msright}>
-                <BlueCard>
+                <MalinCard>
                   <FlatList
                     data={data}
                     renderItem={_renderItem}
@@ -358,7 +358,7 @@ const PsbtMultisig = () => {
                       </TouchableOpacity>
                     </View>
                   )}
-                </BlueCard>
+                </MalinCard>
               </View>
             </View>
           </View>
@@ -367,10 +367,10 @@ const PsbtMultisig = () => {
           <View style={styles.feeContainer}>
             <View style={styles.bottomWrapper}>
               <View style={styles.bottomFeesWrapper}>
-                <BlueText selectable style={stylesHook.feeFiatText}>
+                <MalinText selectable style={stylesHook.feeFiatText}>
                   {loc.formatString(loc.multisig.fee, { number: satoshiToLocalCurrency(getFee()) })} -{' '}
-                </BlueText>
-                <BlueText selectable>{loc.formatString(loc.multisig.fee_btc, { number: satoshiToBTC(getFee()) })}</BlueText>
+                </MalinText>
+                <MalinText selectable>{loc.formatString(loc.multisig.fee_btc, { number: satoshiToBTC(getFee()) })}</MalinText>
               </View>
             </View>
           </View>

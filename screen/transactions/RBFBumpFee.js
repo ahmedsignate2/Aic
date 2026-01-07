@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import { HDSegwitBech32Transaction, HDSegwitBech32Wallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import SafeArea from '../../components/SafeArea';
 import loc from '../../loc';
 import CPFP from './CPFP';
 import { StorageContext } from '../../components/Context/StorageProvider';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 const styles = StyleSheet.create({
   root: {
@@ -87,13 +87,13 @@ export default class RBFBumpFee extends CPFP {
     if (this.state.nonReplaceable) {
       return (
         <SafeArea style={styles.root}>
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
-          <BlueSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
+          <MalinSpacing20 />
 
-          <BlueText h4>{loc.transactions.cpfp_no_bump}</BlueText>
+          <MalinText h4>{loc.transactions.cpfp_no_bump}</MalinText>
         </SafeArea>
       );
     }

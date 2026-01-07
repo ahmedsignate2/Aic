@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Image, Linking, ScrollView, StyleSheet, View } from 'react-native';
-import { BlueButtonLink, BlueCard, BlueText } from '../../BlueComponents';
+import { MalinButtonLink, MalinCard, MalinText } from '../../MalinComponents';
 import Lnurl from '../../class/lnurl';
 import Button from '../../components/Button';
 import SafeArea from '../../components/SafeArea';
@@ -12,8 +12,8 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { DetailViewStackParamList } from '../../navigation/DetailViewStackParamList';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation.ts';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading.tsx';
+import { MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading.tsx';
 
 type LnurlPaySuccessRouteProp = RouteProp<DetailViewStackParamList, 'LnurlPaySuccess'>;
 type LnurlPaySuccessNavigationProp = NativeStackNavigationProp<DetailViewStackParamList, 'LnurlPaySuccess'>;
@@ -69,7 +69,7 @@ const LnurlPaySuccess: React.FC = () => {
   }, [paymentHash]);
 
   if (isLoading || !LN) {
-    return <BlueLoading />;
+    return <MalinLoading />;
   }
 
   const domain = LN.getDomain();
@@ -83,31 +83,31 @@ const LnurlPaySuccess: React.FC = () => {
       <ScrollView style={styles.container}>
         {justPaid && <SuccessView />}
 
-        <BlueSpacing40 />
-        <BlueText style={styles.alignSelfCenter}>{domain}</BlueText>
-        <BlueText style={[styles.alignSelfCenter, styles.description]}>{description}</BlueText>
+        <MalinSpacing40 />
+        <MalinText style={styles.alignSelfCenter}>{domain}</MalinText>
+        <MalinText style={[styles.alignSelfCenter, styles.description]}>{description}</MalinText>
         {image && <Image style={styles.img} source={{ uri: image }} />}
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
         {(preamble || url || message) && (
-          <BlueCard>
+          <MalinCard>
             <View style={styles.successContainer}>
-              <BlueText style={styles.successText}>{preamble}</BlueText>
+              <MalinText style={styles.successText}>{preamble}</MalinText>
               {url ? (
-                <BlueButtonLink
+                <MalinButtonLink
                   title={url}
                   onPress={() => {
                     Linking.openURL(url);
                   }}
                 />
               ) : (
-                <BlueText selectable>{message}</BlueText>
+                <MalinText selectable>{message}</MalinText>
               )}
             </View>
-          </BlueCard>
+          </MalinCard>
         )}
 
-        <BlueCard>
+        <MalinCard>
           {repeatable ? (
             <Button
               onPress={() => {
@@ -131,7 +131,7 @@ const LnurlPaySuccess: React.FC = () => {
               title={loc.send.success_done}
             />
           )}
-        </BlueCard>
+        </MalinCard>
       </ScrollView>
     </SafeArea>
   );

@@ -18,11 +18,11 @@ const WalletToImport: React.FC<WalletToImportProp> = ({ title, subtitle, active,
 
   const stylesHooks = StyleSheet.create({
     root: {
-      borderColor: active ? colors.newBlue : colors.buttonDisabledBackgroundColor,
+      borderColor: active ? colors.newMalin : colors.buttonDisabledBackgroundColor,
       backgroundColor: colors.buttonDisabledBackgroundColor,
     },
     title: {
-      color: colors.newBlue,
+      color: colors.newMalin,
       writingDirection: direction,
     },
     subtitle: {

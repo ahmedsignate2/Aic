@@ -22,7 +22,7 @@ import assert from 'assert';
 import triggerHapticFeedback, {
   HapticFeedbackTypes
 } from '../../malin_modules/hapticFeedback';
-import { BlueButtonLink, BlueFormLabel, BlueText } from '../../BlueComponents';
+import { MalinButtonLink, MalinFormLabel, MalinText } from '../../MalinComponents';
 import {
   HDSegwitBech32Wallet,
   HDTaprootWallet,
@@ -47,7 +47,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AddWalletStackParamList } from '../../navigation/AddWalletStack';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
+import { MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
 import {
   hexToUint8Array,
   uint8ArrayToHex
@@ -582,8 +582,8 @@ const WalletsAdd: React.FC = () => {
       automaticallyAdjustContentInsets
       automaticallyAdjustsScrollIndicatorInsets
     >
-      <BlueSpacing20 />
-      <BlueFormLabel>{loc.wallets.add_wallet_name}</BlueFormLabel>
+      <MalinSpacing20 />
+      <MalinFormLabel>{loc.wallets.add_wallet_name}</MalinFormLabel>
       <View style={[styles.label, stylesHook.label]}>
         <TextInput
           testID="WalletNameInput"
@@ -596,7 +596,7 @@ const WalletsAdd: React.FC = () => {
           underlineColorAndroid="transparent"
         />
       </View>
-      <BlueFormLabel>{loc.wallets.add_wallet_type}</BlueFormLabel>
+      <MalinFormLabel>{loc.wallets.add_wallet_type}</MalinFormLabel>
       <View style={styles.buttons}>
         <WalletButton
           buttonType="Bitcoin"
@@ -640,10 +640,10 @@ const WalletsAdd: React.FC = () => {
       <View style={styles.advanced}>
         {selectedWalletType === ButtonSelected.OFFCHAIN && (
           <>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <View style={styles.lndhubTitle}>
-              <BlueText>{loc.wallets.add_lndhub}</BlueText>
-              <BlueButtonLink
+              <MalinText>{loc.wallets.add_lndhub}</MalinText>
+              <MalinButtonLink
                 title={loc.wallets.learn_more}
                 onPress={onLearnMorePressed}
               />
@@ -668,7 +668,7 @@ const WalletsAdd: React.FC = () => {
           </>
         )}
 
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         {!isLoading ? (
   <>
             <Button
@@ -682,13 +682,13 @@ const WalletsAdd: React.FC = () => {
       onPress={createWallet}
     />
 
-            <BlueButtonLink
+            <MalinButtonLink
       testID="ImportWallet"
       style={styles.import}
       title={loc.wallets.add_import_wallet}
       onPress={navigateToImportWallet}
     />
-            <BlueSpacing40 />
+            <MalinSpacing40 />
           </>
             ) : (
           <ActivityIndicator />

@@ -113,7 +113,7 @@ export class EthereumWallet extends AbstractWallet {
     return ethers.isAddress(address);
   }
 
-  // Properties accessed by blue-app.ts but not present in AbstractWallet
+  // Properties accessed by malin-app.ts but not present in AbstractWallet
   _txs_by_external_index: any = {};
   _txs_by_internal_index: any = {};
 

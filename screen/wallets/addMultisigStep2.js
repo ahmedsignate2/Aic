@@ -15,7 +15,7 @@ import {
 import { Icon } from '@rneui/themed';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
 import { encodeUR } from '../../malin_modules/ur';
-import { BlueFormMultiInput, BlueTextCentered } from '../../BlueComponents';
+import { MalinFormMultiInput, MalinTextCentered } from '../../MalinComponents';
 import { HDSegwitBech32Wallet, MultisigCosigner, MultisigHDWallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import BottomModal from '../../components/BottomModal';
@@ -42,7 +42,7 @@ import MultipleStepsListItem, {
 } from '../../components/MultipleStepsListItem';
 import { AddressInputScanButton } from '../../components/AddressInputScanButton';
 import { useScreenProtect } from '../../hooks/useScreenProtect';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
 
 const staticCache = {};
 
@@ -628,13 +628,13 @@ const WalletsAddMultisigStep2 = () => {
             </Text>
           </View>
         </View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Text style={[styles.headerText, stylesHook.textDestination]}>{loc.multisig.wallet_key_created}</Text>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Text style={[styles.textDestination, stylesHook.textDestination]}>{loc._.seed}</Text>
-        <BlueSpacing10 />
+        <MalinSpacing10 />
         <View style={[styles.secretContainer, stylesHook.secretContainer]}>{renderSecret(vaultKeyData.seed.split(' '))}</View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
       </BottomModal>
     );
   };
@@ -703,10 +703,10 @@ const WalletsAddMultisigStep2 = () => {
           </ToolTipMenu>
         }
       >
-        <BlueTextCentered>{loc.multisig.type_your_mnemonics}</BlueTextCentered>
-        <BlueSpacing20 />
+        <MalinTextCentered>{loc.multisig.type_your_mnemonics}</MalinTextCentered>
+        <MalinSpacing20 />
         <View style={styles.multiLineTextInput}>
-          <BlueFormMultiInput
+          <MalinFormMultiInput
             value={importText}
             onChangeText={setImportText}
             inputAccessoryViewID={DoneAndDismissKeyboardInputAccessoryViewID}
@@ -723,7 +723,7 @@ const WalletsAddMultisigStep2 = () => {
             ),
           })}
 
-          <BlueSpacing20 />
+          <MalinSpacing20 />
         </View>
       </BottomModal>
     );
@@ -748,11 +748,11 @@ const WalletsAddMultisigStep2 = () => {
         <Text style={[styles.headerText, stylesHook.textDestination]}>
           {loc.multisig.this_is_cosigners_xpub} {Platform.OS === 'ios' ? loc.multisig.this_is_cosigners_xpub_airdrop : ''}
         </Text>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <View style={styles.qrContainer}>
           <QRCodeComponent value={cosignerXpubURv2} size={260} />
         </View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
       </BottomModal>
     );
   };
@@ -796,7 +796,7 @@ const WalletsAddMultisigStep2 = () => {
 
       {renderCosignersXpubModal()}
       {footer}
-      <BlueSpacing20 />
+      <MalinSpacing20 />
     </View>
   );
 };

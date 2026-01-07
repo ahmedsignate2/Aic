@@ -3,7 +3,7 @@ import { RouteProp, useRoute, useLocale } from '@react-navigation/native';
 import { Alert, Linking, StyleSheet } from 'react-native';
 import { Button as ButtonRNElements } from '@rneui/themed';
 import DefaultPreference from 'react-native-default-preference';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
 import { LightningCustodianWallet } from '../../class/wallets/lightning-custodian-wallet';
 import presentAlert, { AlertType } from '../../components/Alert';
@@ -19,8 +19,8 @@ import { DetailViewStackParamList } from '../../navigation/DetailViewStackParamL
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import AddressInput from '../../components/AddressInput';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing40 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinSpacing40 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
 
 type LightingSettingsRouteProps = RouteProp<
   DetailViewStackParamList,
@@ -136,9 +136,9 @@ const LightningSettings: React.FC = () => {
       automaticallyAdjustContentInsets
       contentInsetAdjustmentBehavior='automatic'
     >
-      <BlueCard>
-        <BlueText>{loc.settings.lightning_settings_explain}</BlueText>
-      </BlueCard>
+      <MalinCard>
+        <MalinText>{loc.settings.lightning_settings_explain}</MalinText>
+      </MalinCard>
 
       <ButtonRNElements
         icon={{
@@ -146,15 +146,15 @@ const LightningSettings: React.FC = () => {
           type: 'font-awesome',
           color: colors.foregroundColor,
         }}
-        onPress={() => Linking.openURL('https://github.com/BlueWallet/LndHub')}
+        onPress={() => Linking.openURL('https://github.com/MalinWallet/LndHub')}
         titleStyle={{ color: colors.buttonAlternativeTextColor }}
-        title="github.com/BlueWallet/LndHub"
+        title="github.com/MalinWallet/LndHub"
         // TODO: looks like there's no `color` prop on `Button`, does this make any sense?
         // color={colors.buttonTextColor}
         buttonStyle={stylesHook.buttonStyle}
       />
 
-      <BlueCard>
+      <MalinCard>
         <AddressInput
           isLoading={isLoading}
           address={URI}
@@ -165,15 +165,15 @@ const LightningSettings: React.FC = () => {
           testID="URIInput"
           editable={!isLoading}
         />
-        <BlueSpacing40 />
+        <MalinSpacing40 />
         {isLoading
 ? (
-          <BlueLoading />
+          <MalinLoading />
         )
 : (
               <Button testID='Save' onPress={save} title={loc.settings.save} />
         )}
-      </BlueCard>
+      </MalinCard>
     </SafeAreaScrollView>
   );
 }

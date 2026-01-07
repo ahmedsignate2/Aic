@@ -28,7 +28,7 @@ import RNFS from 'react-native-fs';
 import { btcToSatoshi, fiatToBTC } from '../../malin_modules/currency';
 import * as fs from '../../malin_modules/fs';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import { HDSegwitBech32Wallet, MultisigHDWallet, WatchOnlyWallet } from '../../class';
 import { ContactList } from '../../class/contact-list';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
@@ -1403,9 +1403,9 @@ const SendDetails = () => {
             style={({ pressed }) => [pressed && styles.pressed, styles.frozenContainer]}
             onPress={handleCoinControl}
           >
-            <BlueText>
+            <MalinText>
               {loc.formatString(loc.send.details_frozen, { amount: formatBalanceWithoutSuffix(frozenBalance, BitcoinUnit.BTC, true) })}
-            </BlueText>
+            </MalinText>
           </Pressable>
         )}
 

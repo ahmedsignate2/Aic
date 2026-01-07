@@ -5,7 +5,7 @@ import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import { Icon } from '@rneui/themed';
 import { btcToSatoshi, fiatToBTC, satoshiToBTC, satoshiToLocalCurrency } from '../../malin_modules/currency';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import Lnurl from '../../class/lnurl';
 import presentAlert from '../../components/Alert';
 import * as AmountInput from '../../components/AmountInput';
@@ -22,8 +22,8 @@ import { DismissKeyboardInputAccessory, DismissKeyboardInputAccessoryViewID } fr
 import { LightningCustodianWallet } from '../../class/wallets/lightning-custodian-wallet';
 import { TWallet } from '../../class/wallets/types';
 import { pop } from '../../NavigationService';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
 
 type RouteParams = {
   walletID: string;
@@ -202,7 +202,7 @@ const LnurlPay: React.FC = () => {
     return (
       <SafeArea>
         <ScrollView contentContainerStyle={styles.scrollviewContainer}>
-          <BlueCard>
+          <MalinCard>
             <AmountInput.AmountInput
               isLoading={isLoading}
               amount={amount}
@@ -213,25 +213,25 @@ const LnurlPay: React.FC = () => {
               inputAccessoryViewID={DismissKeyboardInputAccessoryViewID}
             />
             <DismissKeyboardInputAccessory />
-            <BlueText style={styles.alignSelfCenter}>
+            <MalinText style={styles.alignSelfCenter}>
               {loc.formatString(loc.lndViewInvoice.please_pay_between_and, {
                 min: formatBalance(payload?.min, unit),
                 max: formatBalance(payload?.max, unit),
               })}
-            </BlueText>
-            <BlueSpacing20 />
+            </MalinText>
+            <MalinSpacing20 />
             {payload?.image && (
               <>
                 <Image style={styles.img} source={{ uri: payload?.image }} />
-                <BlueSpacing20 />
+                <MalinSpacing20 />
               </>
             )}
-            <BlueText style={styles.alignSelfCenter}>{payload?.description}</BlueText>
-            <BlueText style={styles.alignSelfCenter}>{payload?.domain}</BlueText>
-            <BlueSpacing20 />
-            {payButtonDisabled ? <BlueLoading /> : <Button title={loc.lnd.payButton} onPress={pay} />}
-            <BlueSpacing20 />
-          </BlueCard>
+            <MalinText style={styles.alignSelfCenter}>{payload?.description}</MalinText>
+            <MalinText style={styles.alignSelfCenter}>{payload?.domain}</MalinText>
+            <MalinSpacing20 />
+            {payButtonDisabled ? <MalinLoading /> : <Button title={loc.lnd.payButton} onPress={pay} />}
+            <MalinSpacing20 />
+          </MalinCard>
         </ScrollView>
         {renderWalletSelectionButton}
       </SafeArea>
@@ -240,7 +240,7 @@ const LnurlPay: React.FC = () => {
 
   return isLoading || !wallet || amount === undefined ? (
     <View style={[styles.root, stylesHook.root]}>
-      <BlueLoading />
+      <MalinLoading />
     </View>
   ) : (
     renderGotPayload()

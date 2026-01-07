@@ -12,7 +12,7 @@ const dirsToInterate = [
   'navigation',
   'typings',
 ]
-const addFiles = ['BlueComponents.js', 'App.tsx', 'navigation/index.tsx'];
+const addFiles = ['MalinComponents.js', 'App.tsx', 'navigation/index.tsx'];
 const allowedLocPrefixes = ['loc.lnurl_auth', 'loc.units'];
 
 const allLocKeysHashmap = {}; // loc key -> used or not

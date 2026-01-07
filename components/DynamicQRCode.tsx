@@ -12,7 +12,7 @@ import { encodeUR } from '../malin_modules/ur';
 import { MalinCurrentTheme } from '../components/themes';
 import loc from '../loc';
 import QRCodeComponent from './QRCodeComponent';
-import { BlueSpacing20 } from './BlueSpacing';
+import { MalinSpacing20 } from './MalinSpacing';
 
 const { height, width } = Dimensions.get('window');
 
@@ -157,7 +157,7 @@ export class DynamicQRCode extends Component<
 
         {!this.state.hideControls && (
           <View style={animatedQRCodeStyle.container}>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <View>
               <Text style={animatedQRCodeStyle.text}>
                 {loc.formatString(loc._.of, {
@@ -166,7 +166,7 @@ export class DynamicQRCode extends Component<
                 })}
               </Text>
             </View>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <View style={animatedQRCodeStyle.controller}>
               <TouchableOpacity
                 accessibilityRole="button"

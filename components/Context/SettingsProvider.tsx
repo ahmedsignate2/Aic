@@ -3,7 +3,7 @@ import DefaultPreference from 'react-native-default-preference';
 import { isReadClipboardAllowed, setReadClipboardAllowed } from '../../malin_modules/clipboard';
 import { getPreferredCurrency, GROUP_IO_MALINWALLET, initCurrencyDaemon, setPreferredCurrency } from '../../malin_modules/currency';
 import { clearUseURv1, isURv1Enabled, setUseURv1 } from '../../malin_modules/ur';
-import { BlueApp } from '../../class';
+import { MalinApp } from '../../class';
 import { saveLanguage, STORAGE_KEY } from '../../loc';
 import { FiatUnit, TFiatUnit } from '../../models/fiatUnit';
 import {
@@ -15,14 +15,14 @@ import { useStorage } from '../../hooks/context/useStorage';
 import { BitcoinUnit } from '../../models/bitcoinUnits';
 import { TotalWalletsBalanceKey, TotalWalletsBalancePreferredUnit } from '../TotalWalletsBalance';
 import { BLOCK_EXPLORERS, getBlockExplorerUrl, saveBlockExplorer, BlockExplorer, normalizeUrl } from '../../models/blockExplorer';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { isBalanceDisplayAllowed, setBalanceDisplayAllowed } from '../../hooks/useWidgetCommunication';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getDoNotTrackStorage = async (): Promise<boolean> => {
   try {
     await DefaultPreference.setName(GROUP_IO_MALINWALLET);
-    const doNotTrack = await DefaultPreference.get(BlueApp.DO_NOT_TRACK);
+    const doNotTrack = await DefaultPreference.get(MalinApp.DO_NOT_TRACK);
     return doNotTrack === '1';
   } catch {
     console.error('Error getting DoNotTrack');
@@ -158,7 +158,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = React.m
       }
 
       const promises: Promise<void>[] = [
-        BlueElectrum.isDisabled().then(disabled => {
+        MalinElectrum.isDisabled().then(disabled => {
           setIsElectrumDisabled(disabled);
         }),
         getIsHandOffUseEnabled().then(handOff => {
@@ -220,7 +220,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = React.m
 
   useEffect(() => {
     if (walletsInitialized) {
-      isElectrumDisabled ? BlueElectrum.forceDisconnect() : BlueElectrum.connectMain();
+      isElectrumDisabled ? MalinElectrum.forceDisconnect() : MalinElectrum.connectMain();
     }
   }, [isElectrumDisabled, walletsInitialized]);
 
@@ -246,9 +246,9 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = React.m
     try {
       await DefaultPreference.setName(GROUP_IO_MALINWALLET);
       if (value) {
-        await DefaultPreference.set(BlueApp.DO_NOT_TRACK, '1');
+        await DefaultPreference.set(MalinApp.DO_NOT_TRACK, '1');
       } else {
-        await DefaultPreference.clear(BlueApp.DO_NOT_TRACK);
+        await DefaultPreference.clear(MalinApp.DO_NOT_TRACK);
       }
       setIsDoNotTrackEnabled(value);
     } catch (e) {

@@ -26,7 +26,7 @@ import { useStorage } from '../hooks/context/useStorage';
 import { WalletTransactionsStatus } from './Context/StorageProvider';
 import { Transaction, TWallet } from '../class/wallets/types';
 import HighlightedText from './HighlightedText';
-import { BlueSpacing10 } from './BlueSpacing';
+import { MalinSpacing10 } from './MalinSpacing';
 import { useLocale } from '@react-navigation/native';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
@@ -373,7 +373,7 @@ export const WalletCarouselItem: React.FC<WalletCarouselItemProps> = React.memo(
                   <View style={iStyles.balanceContainer}>
                     {item.hideBalance ? (
                       <>
-                        <BlueSpacing10 />
+                        <MalinSpacing10 />
                         <BlurredBalanceView />
                       </>
                     ) : (

@@ -10,7 +10,7 @@ import { useStorage } from '../../hooks/context/useStorage';
 import { useSettings } from '../../hooks/context/useSettings';
 import { isDesktop } from '../../malin_modules/environment';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 enum SettingsPrivacySection {
   None,
@@ -185,7 +185,7 @@ const SettingsPrivacy: React.FC = () => {
 
       {Platform.OS === 'ios' && (
         <>
-          <BlueSpacing20 />
+          <MalinSpacing20 />
           <Header leftText={loc.settings.widgets} />
           <ListItem
             title={loc.settings.total_balance}

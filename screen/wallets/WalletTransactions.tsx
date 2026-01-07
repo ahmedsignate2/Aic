@@ -15,7 +15,7 @@ import {
   RefreshControl,
 } from 'react-native';
 import { Icon } from '@rneui/themed';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { isDesktop } from '../../malin_modules/environment';
 import * as fs from '../../malin_modules/fs';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
@@ -171,7 +171,7 @@ const WalletTransactions: React.FC<WalletTransactionsProps> = ({ route }: { rout
 
       let smthChanged = false;
       try {
-        await BlueElectrum.waitTillConnected();
+        await MalinElectrum.waitTillConnected();
         if (wallet.allowBIP47() && wallet.isBIP47Enabled() && 'fetchBIP47SenderPaymentCodes' in wallet) {
           await wallet.fetchBIP47SenderPaymentCodes();
         }

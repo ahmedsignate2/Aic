@@ -45,7 +45,7 @@ beforeAll(async () => {
   await sleep(15000);
 }, 1200_000);
 
-describe('BlueWallet UI Tests - import BIP84 wallet', () => {
+describe('MalinWallet UI Tests - import BIP84 wallet', () => {
   it('can create a transaction; can scanQR with bip21; can switch units', async () => {
     const lockFile = '/tmp/travislock.' + hashIt('t21');
     if (process.env.TRAVIS) {
@@ -111,7 +111,7 @@ describe('BlueWallet UI Tests - import BIP84 wallet', () => {
     await device.pressBack();
     await device.pressBack();
     await element(by.id('changeAmountUnitButton')).tap(); // switched to SATS
-    await element(by.id('BlueAddressInputScanQrButton')).tap();
+    await element(by.id('MalinAddressInputScanQrButton')).tap();
 
     await scanText('bitcoin:bc1qnapskphjnwzw2w3dk4anpxntunc77v6qrua0f7?amount=0.00015&pj=https://btc.donate.kukks.org/BTC/pj');
 
@@ -135,7 +135,7 @@ describe('BlueWallet UI Tests - import BIP84 wallet', () => {
     await element(by.id('changeAmountUnitButton')).tap(); // switched to SATS
     await element(by.id('changeAmountUnitButton')).tap(); // switched to FIAT
     await element(by.id('BitcoinAmountInput')).replaceText('1.1');
-    await element(by.id('BlueAddressInputScanQrButton')).tap();
+    await element(by.id('MalinAddressInputScanQrButton')).tap();
 
     await scanText('bc1qnapskphjnwzw2w3dk4anpxntunc77v6qrua0f7');
 

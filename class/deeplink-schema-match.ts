@@ -241,7 +241,7 @@ class DeeplinkSchemaMatch {
         if (
           urlObject.protocol === "malinwallet:" ||
           urlObject.protocol === "lapp:" ||
-          urlObject.protocol === "blue:"
+          urlObject.protocol === "malin:"
         ) {
           switch (urlObject.host) {
             case "setelectrumserver":

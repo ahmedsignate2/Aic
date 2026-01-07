@@ -5,7 +5,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import assert from 'assert';
 import { sha256 } from '@noble/hashes/sha256';
 import { SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { satoshiToLocalCurrency } from '../../malin_modules/currency';
 import { HDSegwitBech32Wallet } from '../../class';
 import { ContactList } from '../../class/contact-list';
@@ -23,7 +23,7 @@ import SafeArea from '../../components/SafeArea';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { useStorage } from '../../hooks/context/useStorage';
 import { DetailViewStackParamList } from '../../navigation/DetailViewStackParamList';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinLoading } from '../../components/MalinLoading';
 
 interface DataSection {
   title: string;
@@ -314,7 +314,7 @@ export default function PaymentCodesList() {
     setLoadingText('Fetching UTXO...');
     await foundWallet.fetchUtxo();
     setLoadingText('Fetching fees...');
-    const fees = await BlueElectrum.estimateFees();
+    const fees = await MalinElectrum.estimateFees();
     setLoadingText('Fetching change address...');
     const changeAddress = await foundWallet.getChangeAddressAsync();
     setLoadingText('Crafting notification transaction...');
@@ -355,7 +355,7 @@ export default function PaymentCodesList() {
   if (isLoading) {
     return (
       <View style={styles.container}>
-        <BlueLoading />
+        <MalinLoading />
         <Text>{loadingText}</Text>
       </View>
     );

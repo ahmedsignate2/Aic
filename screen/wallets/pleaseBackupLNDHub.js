@@ -1,7 +1,7 @@
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
-import { BlueTextCentered } from '../../BlueComponents';
+import { MalinTextCentered } from '../../MalinComponents';
 import Button from '../../components/Button';
 import CopyTextToClipboard from '../../components/CopyTextToClipboard';
 import QRCodeComponent from '../../components/QRCodeComponent';
@@ -11,7 +11,7 @@ import loc from '../../loc';
 import { useStorage } from '../../hooks/context/useStorage';
 import { useSettings } from '../../hooks/context/useSettings';
 import { useScreenProtect } from '../../hooks/useScreenProtect';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 const PleaseBackupLNDHub = () => {
   const { wallets } = useStorage();
@@ -62,13 +62,13 @@ const PleaseBackupLNDHub = () => {
   return (
     <SafeAreaScrollView style={styles.root} contentContainerStyle={styles.scrollViewContent} centerContent onLayout={onLayout}>
       <View>
-        <BlueTextCentered>{loc.pleasebackup.text_lnd}</BlueTextCentered>
-        <BlueSpacing20 />
+        <MalinTextCentered>{loc.pleasebackup.text_lnd}</MalinTextCentered>
+        <MalinSpacing20 />
       </View>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <QRCodeComponent value={wallet.getSecret()} size={qrCodeSize} />
       <CopyTextToClipboard text={wallet.getSecret()} />
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <Button onPress={dismiss} title={loc.pleasebackup.ok_lnd} />
     </SafeAreaScrollView>
   );

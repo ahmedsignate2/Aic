@@ -7,7 +7,7 @@ git_url(ENV["GIT_URL"])
 # Default to "appstore" but can be overridden
 type(ENV["MATCH_TYPE"] || "appstore")
 
-# App identifiers for all BlueWallet apps
+# App identifiers for all MalinWallet apps
 app_identifier([
   "com.malinwallet.app", 
   "com.malinwallet.app.watch", 

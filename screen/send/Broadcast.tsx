@@ -2,9 +2,9 @@ import React, { useCallback, useState } from 'react';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ActivityIndicator, Keyboard, Linking, StyleSheet, TextInput, View } from 'react-native';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueButtonLink, BlueCard, BlueFormLabel, BlueTextCentered } from '../../BlueComponents';
+import { MalinButtonLink, MalinCard, MalinFormLabel, MalinTextCentered } from '../../MalinComponents';
 import { HDSegwitBech32Wallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
@@ -14,8 +14,8 @@ import loc from '../../loc';
 import { useSettings } from '../../hooks/context/useSettings';
 import { majorTomToGroundControl } from '../../malin_modules/notifications';
 import { scanQrHelper } from '../../helpers/scan-qr.ts';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
-import { BlueBigCheckmark } from '../../components/BlueBigCheckmark.tsx';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
+import { MalinBigCheckmark } from '../../components/MalinBigCheckmark.tsx';
 
 const BROADCAST_RESULT = Object.freeze({
   none: 'Input transaction hex',
@@ -58,8 +58,8 @@ const Broadcast: React.FC = () => {
     Keyboard.dismiss();
     setBroadcastResult(BROADCAST_RESULT.pending);
     try {
-      await BlueElectrum.ping();
-      await BlueElectrum.waitTillConnected();
+      await MalinElectrum.ping();
+      await MalinElectrum.waitTillConnected();
       const walletObj = new HDSegwitBech32Wallet();
       if (txHex) {
         const result = await walletObj.broadcastTx(txHex);
@@ -111,9 +111,9 @@ const Broadcast: React.FC = () => {
     <SafeArea>
       <View style={styles.wrapper} testID="BroadcastView">
         {BROADCAST_RESULT.success !== broadcastResult && (
-          <BlueCard style={styles.mainCard}>
+          <MalinCard style={styles.mainCard}>
             <View style={styles.topFormRow}>
-              <BlueFormLabel>{status}</BlueFormLabel>
+              <MalinFormLabel>{status}</MalinFormLabel>
               {BROADCAST_RESULT.pending === broadcastResult && <ActivityIndicator size="small" />}
             </View>
 
@@ -129,10 +129,10 @@ const Broadcast: React.FC = () => {
                 testID="TxHex"
               />
             </View>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
 
             <Button title={loc.multisig.scan_or_open_file} onPress={handleQRScan} />
-            <BlueSpacing20 />
+            <MalinSpacing20 />
 
             <Button
               title={loc.send.broadcastButton}
@@ -140,8 +140,8 @@ const Broadcast: React.FC = () => {
               disabled={broadcastResult === BROADCAST_RESULT.pending || txHex?.length === 0 || txHex === undefined}
               testID="BroadcastButton"
             />
-            <BlueSpacing20 />
-          </BlueCard>
+            <MalinSpacing20 />
+          </MalinCard>
         )}
         {BROADCAST_RESULT.success === broadcastResult && tx && <SuccessScreen tx={tx} url={`${selectedBlockExplorer.url}/tx/${tx}`} />}
       </View>
@@ -156,15 +156,15 @@ const SuccessScreen: React.FC<{ tx: string; url: string }> = ({ tx, url }) => {
 
   return (
     <View style={styles.wrapper}>
-      <BlueCard>
+      <MalinCard>
         <View style={styles.broadcastResultWrapper}>
-          <BlueBigCheckmark />
-          <BlueSpacing20 />
-          <BlueTextCentered>{loc.settings.success_transaction_broadcasted}</BlueTextCentered>
-          <BlueSpacing10 />
-          <BlueButtonLink title={loc.settings.open_link_in_explorer} onPress={() => Linking.openURL(url)} />
+          <MalinBigCheckmark />
+          <MalinSpacing20 />
+          <MalinTextCentered>{loc.settings.success_transaction_broadcasted}</MalinTextCentered>
+          <MalinSpacing10 />
+          <MalinButtonLink title={loc.settings.open_link_in_explorer} onPress={() => Linking.openURL(url)} />
         </View>
-      </BlueCard>
+      </MalinCard>
     </View>
   );
 };

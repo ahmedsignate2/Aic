@@ -2,9 +2,9 @@ import React from 'react';
 import { ActivityIndicator, View, ViewProps, ActivityIndicatorProps, StyleSheet } from 'react-native';
 import { useTheme } from './themes';
 
-interface BlueLoadingProps extends ViewProps, Pick<ActivityIndicatorProps, 'size' | 'color'> {}
+interface MalinLoadingProps extends ViewProps, Pick<ActivityIndicatorProps, 'size' | 'color'> {}
 
-export const BlueLoading: React.FC<BlueLoadingProps> = props => {
+export const MalinLoading: React.FC<MalinLoadingProps> = props => {
   const { color, size, ...otherProps } = props;
   const { colors } = useTheme();
 

@@ -3,9 +3,9 @@ import { StackActions, useIsFocused, useRoute } from '@react-navigation/native';
 import * as bitcoin from 'bitcoinjs-lib';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Linking, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../../BlueComponents';
+import { MalinCard, MalinText } from '../../MalinComponents';
 import presentAlert from '../../components/Alert';
 import CopyToClipboardButton from '../../components/CopyToClipboardButton';
 import { DynamicQRCode } from '../../components/DynamicQRCode';
@@ -19,7 +19,7 @@ import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { useSettings } from '../../hooks/context/useSettings';
 import { majorTomToGroundControl } from '../../malin_modules/notifications';
 import { openSignedTransactionRaw } from '../../malin_modules/fs';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 const PsbtWithHardwareWallet = () => {
   const { txMetadata, fetchAndSaveWalletTransactions, wallets } = useStorage();
@@ -137,8 +137,8 @@ const PsbtWithHardwareWallet = () => {
       }
     }
     try {
-      await BlueElectrum.ping();
-      await BlueElectrum.waitTillConnected();
+      await MalinElectrum.ping();
+      await MalinElectrum.waitTillConnected();
       const result = await wallet.broadcastTx(txHex);
       if (result) {
         setIsLoading(false);
@@ -175,8 +175,8 @@ const PsbtWithHardwareWallet = () => {
   const _renderBroadcastHex = () => {
     return (
       <View style={[styles.rootPadding, stylesHook.rootPadding]}>
-        <BlueCard style={[styles.hexWrap, stylesHook.hexWrap]}>
-          <BlueText style={[styles.hexLabel, stylesHook.hexLabel]}>{loc.send.create_this_is_hex}</BlueText>
+        <MalinCard style={[styles.hexWrap, stylesHook.hexWrap]}>
+          <MalinText style={[styles.hexLabel, stylesHook.hexLabel]}>{loc.send.create_this_is_hex}</MalinText>
           <TextInput style={[styles.hexInput, stylesHook.hexInput]} height={112} multiline editable value={txHex} />
 
           <TouchableOpacity accessibilityRole="button" style={styles.hexTouch} onPress={copyHexToClipboard}>
@@ -185,14 +185,14 @@ const PsbtWithHardwareWallet = () => {
           <TouchableOpacity accessibilityRole="button" style={styles.hexTouch} onPress={handleOnVerifyPressed}>
             <Text style={[styles.hexText, stylesHook.hexText]}>{loc.send.create_verify}</Text>
           </TouchableOpacity>
-          <BlueSpacing20 />
+          <MalinSpacing20 />
           <SecondButton
             disabled={isElectrumDisabled}
             onPress={broadcast}
             title={loc.send.confirm_sendNow}
             testID="PsbtWithHardwareWalletBroadcastTransactionButton"
           />
-        </BlueCard>
+        </MalinCard>
       </View>
     );
   };
@@ -230,14 +230,14 @@ const PsbtWithHardwareWallet = () => {
     <ActivityIndicator />
   ) : (
     <View style={styles.container}>
-      <BlueCard>
-        <BlueText testID="TextHelperForPSBT">{loc.send.psbt_this_is_psbt}</BlueText>
-        <BlueSpacing20 />
+      <MalinCard>
+        <MalinText testID="TextHelperForPSBT">{loc.send.psbt_this_is_psbt}</MalinText>
+        <MalinSpacing20 />
         <Text testID="PSBTHex" style={styles.hidden}>
           {psbt.toHex()}
         </Text>
         <DynamicQRCode value={psbt.toHex()} ref={dynamicQRCode} />
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <SecondButton
           testID="PsbtTxScanButton"
           icon={{
@@ -249,7 +249,7 @@ const PsbtWithHardwareWallet = () => {
           ref={openScannerButton}
           title={loc.send.psbt_tx_scan}
         />
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <SecondButton
           icon={{
             name: 'login',
@@ -259,7 +259,7 @@ const PsbtWithHardwareWallet = () => {
           onPress={onOpenSignedTransaction}
           title={loc.send.psbt_tx_open}
         />
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <SaveFileButton
           fileName={`${Date.now()}.psbt`}
           fileContent={typeof psbt === 'string' ? psbt : psbt.toBase64()}
@@ -276,11 +276,11 @@ const PsbtWithHardwareWallet = () => {
             title={loc.send.psbt_tx_export}
           />
         </SaveFileButton>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <View style={styles.copyToClipboard}>
           <CopyToClipboardButton stringToCopy={typeof psbt === 'string' ? psbt : psbt.toBase64()} displayText={loc.send.psbt_clipboard} />
         </View>
-      </BlueCard>
+      </MalinCard>
     </View>
   );
 

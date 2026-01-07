@@ -35,7 +35,7 @@ import { CommonToolTipActions } from '../../typings/CommonToolTipActions';
 import { useKeyboard } from '../../hooks/useKeyboard';
 import TipBox from '../../components/TipBox';
 import SafeAreaFlatList from '../../components/SafeAreaFlatList';
-import { BlueSpacing10, BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20 } from '../../components/MalinSpacing';
 
 type NavigationProps = NativeStackNavigationProp<SendDetailsStackParamList, 'CoinControl'>;
 type RouteProps = RouteProp<SendDetailsStackParamList, 'CoinControl'>;
@@ -171,11 +171,11 @@ const OutputModal: React.FC<TOutputModalProps> = ({
         {memo ? (
           <>
             <RNElementsListItem.Subtitle style={oStyles.memo}>{memo}</RNElementsListItem.Subtitle>
-            <BlueSpacing10 />
+            <MalinSpacing10 />
           </>
         ) : null}
         <RNElementsListItem.Subtitle style={oStyles.memo}>{address}</RNElementsListItem.Subtitle>
-        <BlueSpacing10 />
+        <MalinSpacing10 />
         <RNElementsListItem.Subtitle style={oStyles.memo}>{fullId}</RNElementsListItem.Subtitle>
       </RNElementsListItem.Content>
     </RNElementsListItem>
@@ -233,7 +233,7 @@ const OutputModalContent: React.FC<TOutputModalContentProps> = ({ output, wallet
   return (
     <View>
       <OutputModal item={output} balanceUnit={wallet.getPreferredBalanceUnit()} />
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <TextInput
         testID="OutputMemo"
         placeholder={loc.send.details_note_placeholder}
@@ -255,7 +255,7 @@ const OutputModalContent: React.FC<TOutputModalContentProps> = ({ output, wallet
         Component={TouchableWithoutFeedback}
         switch={switchValue}
       />
-      <BlueSpacing20 />
+      <MalinSpacing20 />
     </View>
   );
 };

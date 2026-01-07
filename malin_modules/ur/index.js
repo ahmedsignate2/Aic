@@ -154,7 +154,7 @@ function decodeUR(arg) {
   }
 
   if (!decoder.isComplete()) {
-    throw new Error("decodeUR func can't work with multimart BC-UR data. Prease use BlueURDecoder instead.");
+    throw new Error("decodeUR func can't work with multimart BC-UR data. Prease use MalinURDecoder instead.");
   }
 
   if (!decoder.isSuccess()) {
@@ -211,7 +211,7 @@ function decodeUR(arg) {
   return Buffer.from(str, 'ascii').toString('hex'); // we are expected to return hex-encoded string
 }
 
-class BlueURDecoder extends URDecoder {
+class MalinURDecoder extends URDecoder {
   toString() {
     const decoded = this.resultUR();
 
@@ -291,4 +291,4 @@ class BlueURDecoder extends URDecoder {
   }
 }
 
-export { decodeUR, encodeUR, extractSingleWorkload, BlueURDecoder, isURv1Enabled, setUseURv1, clearUseURv1 };
+export { decodeUR, encodeUR, extractSingleWorkload, MalinURDecoder, isURv1Enabled, setUseURv1, clearUseURv1 };

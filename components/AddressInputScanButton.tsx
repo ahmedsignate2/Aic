@@ -23,7 +23,7 @@ export const AddressInputScanButton = ({
   isLoading,
   onChangeText,
   type = 'default',
-  testID = 'BlueAddressInputScanQrButton',
+  testID = 'MalinAddressInputScanQrButton',
   beforePress,
 }: AddressInputScanButtonProps) => {
   const { colors } = useTheme();

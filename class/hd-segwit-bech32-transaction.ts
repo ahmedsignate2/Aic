@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import * as bitcoin from 'bitcoinjs-lib';
 import assert from 'assert';
 
-import * as BlueElectrum from '../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../malin_modules/MalinElectrum';
 import { HDSegwitBech32Wallet } from './wallets/hd-segwit-bech32-wallet';
 import { SegwitBech32Wallet } from './wallets/segwit-bech32-wallet';
 import { CreateTransactionUtxo } from './wallets/types.ts';
@@ -51,7 +51,7 @@ export class HDSegwitBech32Transaction {
    */
   async _fetchTxhexAndDecode() {
     assert(this._txid, 'this._txid must be a string');
-    const hexes = await BlueElectrum.multiGetTransactionByTxid([this._txid], false, 10);
+    const hexes = await MalinElectrum.multiGetTransactionByTxid([this._txid], false, 10);
     this._txhex = hexes[this._txid];
     if (!this._txhex) throw new Error("Transaction can't be found in mempool");
     this._txDecoded = bitcoin.Transaction.fromHex(this._txhex);
@@ -93,7 +93,7 @@ export class HDSegwitBech32Transaction {
    * @private
    */
   async _fetchRemoteTx() {
-    const result = await BlueElectrum.multiGetTransactionByTxid([this._txid || this._txDecoded!.getId()], true);
+    const result = await MalinElectrum.multiGetTransactionByTxid([this._txid || this._txDecoded!.getId()], true);
     this._remoteTx = Object.values(result)[0];
   }
 
@@ -166,7 +166,7 @@ export class HDSegwitBech32Transaction {
       prevInputs.push(uint8ArrayToHex(new Uint8Array(inp.hash).reverse()));
     }
 
-    const prevTransactions = await BlueElectrum.multiGetTransactionByTxid(prevInputs, true);
+    const prevTransactions = await MalinElectrum.multiGetTransactionByTxid(prevInputs, true);
 
     // fetched, now lets count how much satoshis went in
     let wentIn = 0;

@@ -1,6 +1,6 @@
 import React, { useReducer, useRef } from 'react';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../malin_modules/hapticFeedback';
-import { BlueCard, BlueText } from '../BlueComponents';
+import { MalinCard, MalinText } from '../MalinComponents';
 import presentAlert from '../components/Alert';
 import Button from '../components/Button';
 import loc from '../loc';
@@ -12,8 +12,8 @@ import PromptPasswordConfirmationModal, {
 import { useExtendedNavigation } from '../hooks/useExtendedNavigation';
 import { StackActions } from '@react-navigation/native';
 import SafeAreaScrollView from '../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../components/BlueSpacing';
-import { BlueLoading } from '../components/BlueLoading';
+import { MalinSpacing20 } from '../components/MalinSpacing';
+import { MalinLoading } from '../components/MalinLoading';
 
 // Action Types
 const SET_LOADING = 'SET_LOADING';
@@ -95,20 +95,20 @@ const PlausibleDeniability: React.FC = () => {
   return (
     <SafeAreaScrollView centerContent={state.isLoading}>
       {state.isLoading ? (
-        <BlueLoading />
+        <MalinLoading />
       ) : (
-        <BlueCard>
-          <BlueText>{loc.plausibledeniability.help}</BlueText>
-          <BlueText />
-          <BlueText>{loc.plausibledeniability.help2}</BlueText>
-          <BlueSpacing20 />
+        <MalinCard>
+          <MalinText>{loc.plausibledeniability.help}</MalinText>
+          <MalinText />
+          <MalinText>{loc.plausibledeniability.help2}</MalinText>
+          <MalinSpacing20 />
           <Button
             testID="CreateFakeStorageButton"
             title={loc.plausibledeniability.create_fake_storage}
             onPress={handleOnCreateFakeStorageButtonPressed}
             disabled={state.isLoading}
           />
-        </BlueCard>
+        </MalinCard>
       )}
       <PromptPasswordConfirmationModal
         ref={promptRef}

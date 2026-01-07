@@ -5,7 +5,7 @@ import { Icon } from '@rneui/themed';
 
 import { btcToSatoshi, fiatToBTC } from '../../malin_modules/currency';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueCard } from '../../BlueComponents';
+import { MalinCard } from '../../MalinComponents';
 import Lnurl from '../../class/lnurl';
 import AddressInput from '../../components/AddressInput';
 import presentAlert from '../../components/Alert';
@@ -25,7 +25,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { LightningCustodianWallet } from '../../class/wallets/lightning-custodian-wallet';
 import { DecodedInvoice, TWallet } from '../../class/wallets/types';
 import { useKeyboard } from '../../hooks/useKeyboard';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinLoading } from '../../components/MalinLoading';
 
 type RouteProps = RouteProp<LNDStackParamsList, 'ScanLNDInvoice'>;
 type NavigationProps = NativeStackNavigationProp<LNDStackParamsList, 'ScanLNDInvoice'>;
@@ -328,7 +328,7 @@ const ScanLNDInvoice = () => {
   if (wallet === undefined || !wallet) {
     return (
       <View style={[styles.loadingIndicator, stylesHook.root]}>
-        <BlueLoading />
+        <MalinLoading />
       </View>
     );
   }
@@ -355,7 +355,7 @@ const ScanLNDInvoice = () => {
             />
           </View>
 
-          <BlueCard>
+          <MalinCard>
             <AddressInput
               onChangeText={onChangeText}
               address={destination}
@@ -379,7 +379,7 @@ const ScanLNDInvoice = () => {
                 )}
               </View>
             )}
-            <BlueCard>
+            <MalinCard>
               {isLoading ? (
                 <View>
                   <ActivityIndicator />
@@ -389,8 +389,8 @@ const ScanLNDInvoice = () => {
                   <Button title={loc.lnd.payButton} onPress={pay} disabled={shouldDisablePayButton()} />
                 </View>
               )}
-            </BlueCard>
-          </BlueCard>
+            </MalinCard>
+          </MalinCard>
 
           {renderWalletSelectionButton()}
         </ScrollView>

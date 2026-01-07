@@ -398,7 +398,7 @@
     "header": "إرسال",
     "view": "عرض",
     "manage_keys": "إدارة المفاتيح",
-    "how_many_signatures_can_bluewallet_make": "كم عدد التوقيعات التي يمكن لـ MalinWallet ان تنشأها",
+    "how_many_signatures_can_malinwallet_make": "كم عدد التوقيعات التي يمكن لـ MalinWallet ان تنشأها",
     "signatures_required_to_spend": "التوقيعات المطلوبة {number}",
     "signatures_we_can_make": "يمكن أن تنشأ {number}",
     "scan_or_import_file": "المسح الضوئي أو استيراد ملف",

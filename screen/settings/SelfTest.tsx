@@ -5,14 +5,14 @@ import * as bitcoin from 'bitcoinjs-lib';
 import React, { Component } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
 // @ts-ignore theres no type declaration for this
-import BlueCrypto from 'react-native-blue-crypto';
+import MalinCrypto from 'react-native-malin-crypto';
 import wif from 'wif';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import * as encryption from '../../malin_modules/encryption';
 import * as fs from '../../malin_modules/fs';
 import ecc from '../../malin_modules/noble_ecc';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import {
   HDAezeedWallet,
   HDSegwitBech32Wallet,
@@ -27,8 +27,8 @@ import Button from '../../components/Button';
 import SaveFileButton from '../../components/SaveFileButton';
 import loc from '../../loc';
 import { CreateTransactionUtxo } from '../../class/wallets/types.ts';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading.tsx';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading.tsx';
 import { LightningArkWallet } from '../../class/wallets/lightning-ark-wallet.ts';
 
 const bip32 = BIP32Factory(ecc);
@@ -130,20 +130,20 @@ export default class SelfTest extends Component {
         typeof navigator !== 'undefined' &&
         navigator.product === 'ReactNative'
       ) {
-        await BlueElectrum.ping();
-        await BlueElectrum.waitTillConnected();
+        await MalinElectrum.ping();
+        await MalinElectrum.waitTillConnected();
         const addr4elect = '3GCvDBAktgQQtsbN6x5DYiQCMmgZ9Yk8BK';
         const electrumBalance =
-          await BlueElectrum.getBalanceByAddress(addr4elect);
+          await MalinElectrum.getBalanceByAddress(addr4elect);
         if (electrumBalance.confirmed !== 51432) {
-          throw new Error('BlueElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance))
+          throw new Error('MalinElectrum getBalanceByAddress failure, got ' + JSON.stringify(electrumBalance))
         }
 
         const electrumTxs =
-          await BlueElectrum.getTransactionsByAddress(addr4elect);
+          await MalinElectrum.getTransactionsByAddress(addr4elect);
         if (electrumTxs.length !== 1)
           {throw new Error(
-            "BlueElectrum getTransactionsByAddress failure, got " +
+            "MalinElectrum getTransactionsByAddress failure, got " +
               JSON.stringify(electrumTxs),
           );}
       } else {
@@ -368,12 +368,12 @@ export default class SelfTest extends Component {
         // skipping RN-specific test
       }
 
-      // BlueCrypto test
+      // MalinCrypto test
       if (
         typeof navigator !== 'undefined' &&
         navigator.product === 'ReactNative'
       ) {
-        const hex = await BlueCrypto.scrypt(
+        const hex = await MalinCrypto.scrypt(
           '717765727479',
           '4749345a22b23cf3',
           64,
@@ -385,7 +385,7 @@ export default class SelfTest extends Component {
           hex.toUpperCase() !==
           'F36AB2DC12377C788D61E6770126D8A01028C8F6D8FE01871CE0489A1F696A90'
         ) {
-          throw new Error('react-native-blue-crypto is not ok')
+          throw new Error('react-native-malin-crypto is not ok')
         }
       }
 
@@ -405,11 +405,11 @@ export default class SelfTest extends Component {
           'KxqRtpd9vFju297ACPKHrGkgXuberTveZPXbRDiQ3MXZycSQYtjc',
           'bip38 failed',
         );
-        // bip38 with BlueCrypto doesn't support progress callback
+        // bip38 with MalinCrypto doesn't support progress callback
         assertStrictEqual(
           callbackWasCalled,
           false,
-          "bip38 doesn't use BlueCrypto"
+          "bip38 doesn't use MalinCrypto"
         );
       }
 
@@ -471,41 +471,41 @@ export default class SelfTest extends Component {
         automaticallyAdjustContentInsets
         contentInsetAdjustmentBehavior='automatic'
       >
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
         {this.state.isLoading ? (
-  <BlueLoading testID="SelfTestLoading" />
+  <MalinLoading testID="SelfTestLoading" />
             ) : (
               (() => {
                 if (this.state.isOk) {
                   return (
                 <View style={styles.center}>
-                  <BlueText testID="SelfTestOk" h4>
+                  <MalinText testID="SelfTestOk" h4>
                     OK
-                  </BlueText>
-                  <BlueSpacing20 />
-                  <BlueText>{loc.settings.about_selftest_ok}</BlueText>
+                  </MalinText>
+                  <MalinSpacing20 />
+                  <MalinText>{loc.settings.about_selftest_ok}</MalinText>
                 </View>
                   );
                 } else {
                   return (
                 <View style={styles.center}>
-                  <BlueText h4 numberOfLines={0}>
+                  <MalinText h4 numberOfLines={0}>
                     {this.state.errorMessage}
-                  </BlueText>
+                  </MalinText>
                 </View>
                   );
                 }
               })()
             )}
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <SaveFileButton
           fileName='malinwallet-selftest.txt'
           fileContent={'Success on ' + new Date().toUTCString()}
         >
           <Button title="Test Save to Storage" />
         </SaveFileButton>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Button title="Test File Import" onPress={this.onPressImportDocument} />
       </ScrollView>
     );

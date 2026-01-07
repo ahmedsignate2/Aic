@@ -12,7 +12,7 @@ const WalletsAddMultisigHelp: React.FC = () => {
       backgroundColor: colors.elevated,
     },
     intro: {
-      backgroundColor: colors.newBlue,
+      backgroundColor: colors.newMalin,
       borderBottomColor: colors.inputBorderColor,
     },
     introTitle: {

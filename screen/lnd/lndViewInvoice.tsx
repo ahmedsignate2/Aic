@@ -4,7 +4,7 @@ import { BackHandler, Image, ScrollView, StyleSheet, Text, TouchableOpacity, Vie
 import { Icon } from '@rneui/themed';
 import Share from 'react-native-share';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueText, BlueTextCentered } from '../../BlueComponents';
+import { MalinText, MalinTextCentered } from '../../MalinComponents';
 import Button from '../../components/Button';
 import CopyTextToClipboard from '../../components/CopyTextToClipboard';
 import QRCodeComponent from '../../components/QRCodeComponent';
@@ -19,7 +19,7 @@ import BigNumber from 'bignumber.js';
 import { LightningTransaction } from '../../class/wallets/types';
 import dayjs from 'dayjs';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 import { LightningCustodianWallet } from '../../class';
 
 type LNDViewInvoiceRouteParams = {
@@ -242,7 +242,7 @@ const LNDViewInvoice = () => {
             <View style={[styles.expired, stylesHook.expired]}>
               <Icon name="times" size={50} type="font-awesome" color={colors.successCheck} />
             </View>
-            <BlueTextCentered>{loc.lndViewInvoice.wasnt_paid_and_expired}</BlueTextCentered>
+            <MalinTextCentered>{loc.lndViewInvoice.wasnt_paid_and_expired}</MalinTextCentered>
           </View>
         );
       }
@@ -254,14 +254,14 @@ const LNDViewInvoice = () => {
               <View style={styles.activeQrcode}>
                 <QRCodeComponent value={invoice.payment_request} size={qrCodeSize} />
               </View>
-              <BlueSpacing20 />
-              <BlueText>
+              <MalinSpacing20 />
+              <MalinText>
                 {loc.lndViewInvoice.please_pay} {invoice.amt} {loc.lndViewInvoice.sats}
-              </BlueText>
+              </MalinText>
               {'description' in invoice && (invoice.description?.length ?? 0) > 0 && (
-                <BlueText>
+                <MalinText>
                   {loc.lndViewInvoice.for} {invoice.description ?? ''}
-                </BlueText>
+                </MalinText>
               )}
               <CopyTextToClipboard truncated text={invoice.payment_request} />
               <Button onPress={handleOnSharePressed} title={loc.receive.details_share} />
@@ -283,7 +283,7 @@ const LNDViewInvoice = () => {
       // something is not right
       return (
         <View style={[styles.root, stylesHook.root]}>
-          <BlueTextCentered>Internal error: invoice is not provided</BlueTextCentered>
+          <MalinTextCentered>Internal error: invoice is not provided</MalinTextCentered>
         </View>
       );
     }

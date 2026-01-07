@@ -1,9 +1,9 @@
 import Bugsnag from '@bugsnag/react-native';
 import { getUniqueId } from 'react-native-device-info';
 
-import { BlueApp as BlueAppClass } from '../class';
+import { MalinApp as MalinAppClass } from '../class';
 
-const BlueApp = BlueAppClass.getInstance();
+const MalinApp = MalinAppClass.getInstance();
 
 /**
  * in case Bugsnag was started, but user decided to opt out while using the app, we have this
@@ -16,7 +16,7 @@ let userHasOptedOut: boolean = false;
   // Don't try to start Bugsnag again as it's already initialized in native code
   // Just configure the existing instance if tracking is allowed
   const uniqueID = await getUniqueId();
-  const doNotTrack = await BlueApp.isDoNotTrackEnabled();
+  const doNotTrack = await MalinApp.isDoNotTrackEnabled();
 
   if (doNotTrack) {
     userHasOptedOut = true;

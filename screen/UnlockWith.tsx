@@ -11,7 +11,7 @@ import {
   View,
 } from 'react-native';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../malin_modules/hapticFeedback';
-import { BlueTextCentered } from '../BlueComponents';
+import { MalinTextCentered } from '../MalinComponents';
 import Button from '../components/Button';
 import SafeArea from '../components/SafeArea';
 import { BiometricType, unlockWithBiometrics, useBiometrics } from '../hooks/useBiometrics';
@@ -238,7 +238,7 @@ const UnlockWith: React.FC = () => {
       case AuthType.Encrypted:
         return <Button onPress={onUnlockPressed} title={loc._.unlock} />;
       case AuthType.BiometricsUnavailable:
-        return <BlueTextCentered>{loc.settings.biometrics_no_longer_available}</BlueTextCentered>;
+        return <MalinTextCentered>{loc.settings.biometrics_no_longer_available}</MalinTextCentered>;
       default:
         return null;
     }

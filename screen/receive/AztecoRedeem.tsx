@@ -3,12 +3,12 @@ import { Icon } from '@rneui/themed';
 import React, { useEffect, useState } from 'react';
 import { I18nManager, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import Azteco from '../../class/azteco';
 import { TWallet } from '../../class/wallets/types';
 import presentAlert from '../../components/Alert';
-import { BlueLoading } from '../../components/BlueLoading';
-import { BlueSpacing } from '../../components/BlueSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
+import { MalinSpacing } from '../../components/MalinSpacing';
 import Button from '../../components/Button';
 import SafeArea from '../../components/SafeArea';
 import { useTheme } from '../../components/themes';
@@ -90,7 +90,7 @@ const AztecoRedeem = () => {
   if (isLoading || !wallet) {
     return (
       <View style={styles.loading}>
-        <BlueLoading />
+        <MalinLoading />
       </View>
     );
   }
@@ -99,9 +99,9 @@ const AztecoRedeem = () => {
     <SafeArea style={[styles.root, stylesHook.root]}>
       <View style={styles.root}>
         <Text style={stylesHook.text}>{loc.azteco.codeIs}</Text>
-        <BlueText testID="AztecoCode" style={[styles.code, stylesHook.text]}>
+        <MalinText testID="AztecoCode" style={[styles.code, stylesHook.text]}>
           {aztecoVoucher.c1}-{aztecoVoucher.c2}-{aztecoVoucher.c3}-{aztecoVoucher.c4}
-        </BlueText>
+        </MalinText>
 
         <View style={styles.selectWallet1}>
           <TouchableOpacity accessibilityRole="button" style={styles.selectTouch} onPress={handleSelectWallet}>
@@ -116,7 +116,7 @@ const AztecoRedeem = () => {
         </View>
 
         <Button onPress={handleRedeem} title={loc.azteco.redeemButton} />
-        <BlueSpacing />
+        <MalinSpacing />
       </View>
     </SafeArea>
   );

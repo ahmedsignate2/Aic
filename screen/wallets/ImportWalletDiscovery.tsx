@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { ActivityIndicator, FlatList, LayoutAnimation, Platform, StyleSheet, UIManager, View } from 'react-native';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueButtonLink, BlueFormLabel, BlueText } from '../../BlueComponents';
+import { MalinButtonLink, MalinFormLabel, MalinText } from '../../MalinComponents';
 import { HDSegwitBech32Wallet, WatchOnlyWallet } from '../../class';
 import startImport, { TImport } from '../../class/wallet-import';
 import presentAlert from '../../components/Alert';
@@ -19,7 +19,7 @@ import { THDWalletForWatchOnly, TWallet } from '../../class/wallets/types';
 import { useSettings } from '../../hooks/context/useSettings';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import { useScreenProtect } from '../../hooks/useScreenProtect';
-import { BlueSpacing10, BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
 
 type RouteProps = RouteProp<AddWalletStackParamList, 'ImportWalletDiscovery'>;
 type NavigationProp = NativeStackNavigationProp<AddWalletStackParamList, 'ImportWalletDiscovery'>;
@@ -180,12 +180,12 @@ const ImportWalletDiscovery: React.FC = () => {
           <>
             {isElectrumDisabled && (
               <>
-                <BlueFormLabel>{loc.wallets.import_discovery_offline}</BlueFormLabel>
-                <BlueSpacing20 />
+                <MalinFormLabel>{loc.wallets.import_discovery_offline}</MalinFormLabel>
+                <MalinSpacing20 />
               </>
             )}
-            <BlueFormLabel>{loc.wallets.import_discovery_subtitle}</BlueFormLabel>
-            <BlueSpacing10 />
+            <MalinFormLabel>{loc.wallets.import_discovery_subtitle}</MalinFormLabel>
+            <MalinSpacing10 />
           </>
         ) : null}
       </>
@@ -198,16 +198,16 @@ const ImportWalletDiscovery: React.FC = () => {
       <View style={styles.noWallets}>
         {loading ? (
           <>
-            <BlueSpacing40 />
+            <MalinSpacing40 />
             <ActivityIndicator testID="Loading" />
-            <BlueSpacing20 />
-            <BlueFormLabel>{progress}</BlueFormLabel>
-            <BlueSpacing40 />
+            <MalinSpacing20 />
+            <MalinFormLabel>{progress}</MalinFormLabel>
+            <MalinSpacing40 />
           </>
         ) : (
           <>
-            <BlueText style={styles.center}>{loc.wallets.import_discovery_no_wallets}</BlueText>
-            <BlueSpacing20 />
+            <MalinText style={styles.center}>{loc.wallets.import_discovery_no_wallets}</MalinText>
+            <MalinSpacing20 />
           </>
         )}
       </View>
@@ -229,13 +229,13 @@ const ImportWalletDiscovery: React.FC = () => {
       />
       <View style={[styles.center, stylesHook.center]}>
         {bip39 && (
-          <BlueButtonLink
+          <MalinButtonLink
             title={loc.wallets.import_discovery_derivation}
             testID="CustomDerivationPathButton"
             onPress={handleCustomDerivation}
           />
         )}
-        <BlueSpacing10 />
+        <MalinSpacing10 />
         <View style={styles.buttonContainer}>
           <Button disabled={wallets?.length === 0} title={loc.wallets.import_do_import} onPress={handleSave} />
         </View>

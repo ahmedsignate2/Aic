@@ -18,7 +18,7 @@ import {
 import { Badge, Icon } from '@rneui/themed';
 import { isDesktop } from '../../malin_modules/environment';
 import { encodeUR } from '../../malin_modules/ur';
-import { BlueCard, BlueFormMultiInput, BlueTextCentered } from '../../BlueComponents';
+import { MalinCard, MalinFormMultiInput, MalinTextCentered } from '../../MalinComponents';
 import { HDSegwitBech32Wallet, MultisigCosigner, MultisigHDWallet } from '../../class';
 import presentAlert from '../../components/Alert';
 import BottomModal, { BottomModalHandle } from '../../components/BottomModal';
@@ -45,8 +45,8 @@ import SafeArea from '../../components/SafeArea';
 import { TWallet } from '../../class/wallets/types';
 import { AddressInputScanButton } from '../../components/AddressInputScanButton';
 import { DetailViewStackParamList } from '../../navigation/DetailViewStackParamList';
-import { BlueSpacing10, BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinSpacing10, MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
 
 type RouteParams = RouteProp<DetailViewStackParamList, 'ViewEditMultisigCosigners'>;
 type NavigationProp = NativeStackNavigationProp<DetailViewStackParamList, 'ViewEditMultisigCosigners'>;
@@ -235,7 +235,7 @@ const ViewEditMultisigCosigners: React.FC = () => {
         {vaultKeyData.xpub.length > 1 && (
           <>
             <Text style={[styles.textDestination, stylesHook.textDestination]}>{loc._.wallet_key}</Text>
-            <BlueSpacing10 />
+            <MalinSpacing10 />
             <SquareEnumeratedWords
               contentAlign={SquareEnumeratedWordsContentAlign.left}
               entries={[vaultKeyData.xpub, vaultKeyData.fp, vaultKeyData.path]}
@@ -245,9 +245,9 @@ const ViewEditMultisigCosigners: React.FC = () => {
         )}
         {vaultKeyData.seed.length > 1 && (
           <>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <Text style={[styles.textDestination, stylesHook.textDestination]}>{loc._.seed}</Text>
-            <BlueSpacing10 />
+            <MalinSpacing10 />
             <SquareEnumeratedWords
               contentAlign={SquareEnumeratedWordsContentAlign.left}
               entries={vaultKeyData.seed.split(' ')}
@@ -565,7 +565,7 @@ const ViewEditMultisigCosigners: React.FC = () => {
 
             {!isLoading && (
               <>
-                <BlueSpacing40 />
+                <MalinSpacing40 />
                 <AddressInputScanButton
                   beforePress={async () => {
                     await provideMnemonicsModalRef.current?.dismiss();
@@ -574,17 +574,17 @@ const ViewEditMultisigCosigners: React.FC = () => {
                   type="link"
                   onChangeText={setImportText}
                 />
-                <BlueSpacing40 />
+                <MalinSpacing40 />
               </>
             )}
           </>
         }
       >
         <>
-          <BlueTextCentered>{loc.multisig.type_your_mnemonics}</BlueTextCentered>
-          <BlueSpacing20 />
+          <MalinTextCentered>{loc.multisig.type_your_mnemonics}</MalinTextCentered>
+          <MalinSpacing20 />
           <View style={styles.multiLineTextInput}>
-            <BlueFormMultiInput editable={!isLoading} value={importText} onChangeText={setImportText} />
+            <MalinFormMultiInput editable={!isLoading} value={importText} onChangeText={setImportText} />
           </View>
         </>
       </BottomModal>
@@ -605,7 +605,7 @@ const ViewEditMultisigCosigners: React.FC = () => {
             <Text style={[styles.headerText, stylesHook.textDestination]}>
               {loc.multisig.this_is_cosigners_xpub} {Platform.OS === 'ios' ? loc.multisig.this_is_cosigners_xpub_airdrop : ''}
             </Text>
-            <BlueSpacing20 />
+            <MalinSpacing20 />
             <QRCodeComponent value={exportStringURv2} size={260} isLogoRendered={false} />
           </View>
         </SafeArea>
@@ -616,7 +616,7 @@ const ViewEditMultisigCosigners: React.FC = () => {
   if (isLoading)
     return (
       <View style={[styles.root, stylesHook.root]}>
-        <BlueLoading />
+        <MalinLoading />
       </View>
     );
 
@@ -639,13 +639,13 @@ const ViewEditMultisigCosigners: React.FC = () => {
   const tipKeys = () => {
     return (
       <View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
         <Text style={[styles.tipKeys, stylesHook.tipKeys]}>
           {loc.formatString(loc.multisig.signatures_required_to_spend, { number: howMany })}
           {loc.formatString(loc.multisig.signatures_we_can_make, { number: andHere })}
         </Text>
-        <BlueSpacing10 />
-        <BlueSpacing20 />
+        <MalinSpacing10 />
+        <MalinSpacing20 />
       </View>
     );
   };
@@ -665,8 +665,8 @@ const ViewEditMultisigCosigners: React.FC = () => {
         keyExtractor={(_item, index) => `${index}`}
         contentContainerStyle={styles.contentContainerStyle}
       />
-      <BlueCard>{footer}</BlueCard>
-      <BlueSpacing20 />
+      <MalinCard>{footer}</MalinCard>
+      <MalinSpacing20 />
 
       {renderProvideMnemonicsModal()}
 

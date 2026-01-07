@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { Keyboard, Platform, StyleSheet, TouchableWithoutFeedback, View, TouchableOpacity, Image } from 'react-native';
-import { BlueFormLabel, BlueFormMultiInput } from '../../BlueComponents';
+import { MalinFormLabel, MalinFormMultiInput } from '../../MalinComponents';
 import Button from '../../components/Button';
 import {
   DoneAndDismissKeyboardInputAccessory,
@@ -20,7 +20,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { AddressInputScanButton } from '../../components/AddressInputScanButton';
 import { useScreenProtect } from '../../hooks/useScreenProtect';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 type RouteProps = RouteProp<AddWalletStackParamList, 'ImportWallet'>;
 type NavigationProps = NativeStackNavigationProp<AddWalletStackParamList, 'ImportWallet'>;
@@ -193,11 +193,11 @@ const ImportWallet = () => {
 
   const renderOptionsAndImportButton = (
     <>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <View style={styles.center}>
         <>
           <Button disabled={importText.trim().length === 0} title={loc.wallets.import_do_import} testID="DoImport" onPress={handleImport} />
-          <BlueSpacing20 />
+          <MalinSpacing20 />
           <AddressInputScanButton type="link" onChangeText={setImportText} testID="ScanImport" />
         </>
       </View>
@@ -206,12 +206,12 @@ const ImportWallet = () => {
 
   return (
     <SafeAreaScrollView contentContainerStyle={styles.root} keyboardShouldPersistTaps="always" automaticallyAdjustKeyboardInsets>
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <TouchableWithoutFeedback accessibilityRole="button" onPress={speedBackdoorTap} testID="SpeedBackdoor">
-        <BlueFormLabel>{loc.wallets.import_explanation}</BlueFormLabel>
+        <MalinFormLabel>{loc.wallets.import_explanation}</MalinFormLabel>
       </TouchableWithoutFeedback>
-      <BlueSpacing20 />
-      <BlueFormMultiInput
+      <MalinSpacing20 />
+      <MalinFormMultiInput
         value={importText}
         onBlur={onBlur}
         onChangeText={setImportText}

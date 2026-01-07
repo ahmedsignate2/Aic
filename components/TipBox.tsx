@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
 import { useTheme } from './themes';
-import { BlueText } from '../BlueComponents';
+import { MalinText } from '../MalinComponents';
 
 interface TipBoxProps {
   number?: string;
@@ -41,18 +41,18 @@ const TipBox: React.FC<TipBoxProps> = ({ number, title, description, additionalD
         <View style={stylesHook.tipHeader}>
           {number && (
             <View style={styles.vaultKeyCircle}>
-              <BlueText style={styles.vaultKeyText}>{number}</BlueText>
+              <MalinText style={styles.vaultKeyText}>{number}</MalinText>
             </View>
           )}
           {title && (
-            <BlueText bold style={stylesHook.tipHeaderText}>
+            <MalinText bold style={stylesHook.tipHeaderText}>
               {title}
-            </BlueText>
+            </MalinText>
           )}
         </View>
       )}
-      {description && <BlueText style={stylesHook.description}>{description}</BlueText>}
-      {additionalDescription && <BlueText>{additionalDescription}</BlueText>}
+      {description && <MalinText style={stylesHook.description}>{description}</MalinText>}
+      {additionalDescription && <MalinText>{additionalDescription}</MalinText>}
     </View>
   );
 };

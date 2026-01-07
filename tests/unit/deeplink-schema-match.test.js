@@ -3,7 +3,7 @@ import assert from 'assert';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
 import { HDSegwitBech32Wallet, LightningCustodianWallet } from '../../class';
 
-jest.mock('../../malin_modules/BlueElectrum', () => {
+jest.mock('../../malin_modules/MalinElectrum', () => {
   return {
     connectMain: jest.fn(),
   }

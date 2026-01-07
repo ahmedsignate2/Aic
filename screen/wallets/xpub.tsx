@@ -2,7 +2,7 @@ import { NavigationProp, RouteProp, useFocusEffect, useNavigation, useRoute } fr
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, InteractionManager, View } from 'react-native';
 import Share from 'react-native-share';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import Button from '../../components/Button';
 import CopyTextToClipboard from '../../components/CopyTextToClipboard';
 import HandOffComponent from '../../components/HandOffComponent';
@@ -14,7 +14,7 @@ import { styles, useDynamicStyles } from './xpub.styles';
 import { useStorage } from '../../hooks/context/useStorage';
 import { HandOffActivityType } from '../../components/types';
 import { useSettings } from '../../hooks/context/useSettings';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 import { HDTaprootWallet } from '../../class';
 import { WalletDescriptor } from '../../class/wallet-descriptor.ts';
 
@@ -113,9 +113,9 @@ const WalletXpub: React.FC = () => {
             {wallet && (
               <>
                 <View>
-                  <BlueText>{wallet.typeReadable}</BlueText>
+                  <MalinText>{wallet.typeReadable}</MalinText>
                 </View>
-                <BlueSpacing20 />
+                <MalinSpacing20 />
               </>
             )}
             <QRCodeComponent value={xPubText || xpub} size={qrCodeSize} />

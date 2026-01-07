@@ -24,7 +24,7 @@ import {
   satoshiToBTC,
   updateExchangeRate,
 } from '../malin_modules/currency';
-import { BlueText } from '../BlueComponents';
+import { MalinText } from '../MalinComponents';
 import confirm from '../helpers/confirm';
 import loc, { formatBalancePlain, formatBalanceWithoutSuffix, removeTrailingZeros } from '../loc';
 import { BitcoinUnit } from '../models/bitcoinUnits';
@@ -311,7 +311,7 @@ export const AmountInput: React.FC<AmountInputProps> = props => {
         <View style={styles.outdatedRateContainer}>
           <Badge status="warning" />
           <View style={styles.spacing8} />
-          <BlueText>{loc.formatString(loc.send.outdated_rate, { date: dayjs(outdatedRefreshRate.LastUpdated).format('l LT') })}</BlueText>
+          <MalinText>{loc.formatString(loc.send.outdated_rate, { date: dayjs(outdatedRefreshRate.LastUpdated).format('l LT') })}</MalinText>
           <View style={styles.spacing8} />
           <TouchableOpacity
             accessibilityRole="button"

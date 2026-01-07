@@ -19,7 +19,7 @@ export default class Azteco {
    */
   static async redeem(voucher: AztecoVoucher, address: string): Promise<boolean> {
     const baseURI = 'https://azte.co/';
-    const url = `${baseURI}blue_despatch.php?CODE_1=${voucher.c1}&CODE_2=${voucher.c2}&CODE_3=${voucher.c3}&CODE_4=${voucher.c4}&ADDRESS=${address}`;
+    const url = `${baseURI}malin_despatch.php?CODE_1=${voucher.c1}&CODE_2=${voucher.c2}&CODE_3=${voucher.c3}&CODE_4=${voucher.c4}&ADDRESS=${address}`;
 
     try {
       const response = await fetch(url, {

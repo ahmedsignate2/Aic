@@ -6,7 +6,7 @@ import { LayoutChangeEvent, ScrollView, StyleSheet, Pressable, View } from 'reac
 import { useScreenProtect } from '../../hooks/useScreenProtect';
 import { validateMnemonic } from '../../malin_modules/bip39';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
-import { BlueText } from '../../BlueComponents';
+import { MalinText } from '../../MalinComponents';
 import { LightningCustodianWallet, WatchOnlyWallet } from '../../class';
 import HandOffComponent from '../../components/HandOffComponent';
 import QRCodeComponent from '../../components/QRCodeComponent';
@@ -33,9 +33,9 @@ const CopyBox: React.FC<{ text: string; onPress: () => void }> = ({ text, onPres
   return (
     <Pressable onPress={onPress} style={({ pressed }) => [pressed && styles.pressed, styles.copyRoot, stylesHook.copyRoot]}>
       <View style={styles.copyLeft}>
-        <BlueText textBreakStrategy="balanced" style={styles.copyText}>
+        <MalinText textBreakStrategy="balanced" style={styles.copyText}>
           {text}
-        </BlueText>
+        </MalinText>
       </View>
       <View style={styles.copyRight}>
         <Icon name="copy" type="font-awesome-5" color={colors.foregroundColor} />
@@ -50,7 +50,7 @@ const DoNotDisclose: React.FC = () => {
   return (
     <View style={[styles.warningBox, { backgroundColor: colors.changeText }]}>
       <Icon type="font-awesome-5" name="exclamation-circle" color="white" />
-      <BlueText style={styles.warning}>{loc.wallets.warning_do_not_disclose}</BlueText>
+      <MalinText style={styles.warning}>{loc.wallets.warning_do_not_disclose}</MalinText>
     </View>
   );
 };
@@ -160,18 +160,18 @@ const WalletExport: React.FC = () => {
         <DoNotDisclose />
 
         <View>
-          <BlueText style={styles.manualText}>{loc.wallets.write_down_header}</BlueText>
-          <BlueText style={styles.writeText}>{loc.wallets.write_down}</BlueText>
+          <MalinText style={styles.manualText}>{loc.wallets.write_down_header}</MalinText>
+          <MalinText style={styles.writeText}>{loc.wallets.write_down}</MalinText>
         </View>
 
         {secrets.map((secret, index) => (
           <React.Fragment key={secret}>
-            <BlueText style={styles.scanText}>{loc.formatString(loc.wallets.share_number, { number: index + 1 })}</BlueText>
+            <MalinText style={styles.scanText}>{loc.formatString(loc.wallets.share_number, { number: index + 1 })}</MalinText>
             <SeedWords seed={secret} />
           </React.Fragment>
         ))}
 
-        <BlueText style={styles.typeText}>{loc.formatString(loc.wallets.wallet_type_this, { type: wallet.typeReadable })}</BlueText>
+        <MalinText style={styles.typeText}>{loc.formatString(loc.wallets.wallet_type_this, { type: wallet.typeReadable })}</MalinText>
       </Scroll>
     );
   }
@@ -189,7 +189,7 @@ const WalletExport: React.FC = () => {
     >
       {wallet.type !== WatchOnlyWallet.type && <DoNotDisclose />}
 
-      <BlueText style={styles.scanText}>{loc.wallets.scan_import}</BlueText>
+      <MalinText style={styles.scanText}>{loc.wallets.scan_import}</MalinText>
 
       <View style={styles.qrCodeContainer}>
         <QRCodeComponent isMenuAvailable={false} value={secret} size={qrCodeSize} logoSize={70} />
@@ -199,16 +199,16 @@ const WalletExport: React.FC = () => {
       {secretIsMnemonic ? (
         <>
           <View>
-            <BlueText style={styles.manualText}>{loc.wallets.write_down_header}</BlueText>
-            <BlueText style={styles.writeText}>{loc.wallets.write_down}</BlueText>
+            <MalinText style={styles.manualText}>{loc.wallets.write_down_header}</MalinText>
+            <MalinText style={styles.writeText}>{loc.wallets.write_down}</MalinText>
           </View>
           <SeedWords seed={secret} />
         </>
       ) : (
         <>
-          <BlueText style={styles.writeText}>
+          <MalinText style={styles.writeText}>
             {wallet.type === LightningCustodianWallet.type ? loc.wallets.copy_ln_url : loc.wallets.copy_ln_public}
-          </BlueText>
+          </MalinText>
           <CopyBox text={secret} onPress={handleCopy} />
         </>
       )}
@@ -217,7 +217,7 @@ const WalletExport: React.FC = () => {
         <HandOffComponent title={loc.wallets.xpub_title} type={HandOffActivityType.Xpub} userInfo={{ xpub: secret }} />
       )}
 
-      <BlueText style={styles.typeText}>{loc.formatString(loc.wallets.wallet_type_this, { type: wallet.typeReadable })}</BlueText>
+      <MalinText style={styles.typeText}>{loc.formatString(loc.wallets.wallet_type_this, { type: wallet.typeReadable })}</MalinText>
     </ScrollView>
   );
 };

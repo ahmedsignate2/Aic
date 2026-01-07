@@ -23,7 +23,7 @@ import { EthereumWallet } from './ethereum-wallet.ts';
 import { SolanaWallet } from './solana-wallet.ts';
 
 export type Utxo = {
-  // Returned by BlueElectrum
+  // Returned by MalinElectrum
   height: number;
   address: string;
   txid: string;

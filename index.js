@@ -22,7 +22,7 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
 
-const BlueAppComponent = () => {
+const MalinAppComponent = () => {
   useEffect(() => {
     restoreSavedPreferredFiatCurrencyAndExchangeFromStorage();
   }, []);
@@ -30,4 +30,4 @@ const BlueAppComponent = () => {
   return <App />;
 };
 
-AppRegistry.registerComponent('MalinWallet', () => BlueAppComponent);
+AppRegistry.registerComponent('MalinWallet', () => MalinAppComponent);

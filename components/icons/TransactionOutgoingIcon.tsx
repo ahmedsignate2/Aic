@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 const TransactionOutgoingIcon: React.FC = () => {
   const { colors } = useTheme();
 
-  const stylesBlueIconHooks = StyleSheet.create({
+  const stylesMalinIconHooks = StyleSheet.create({
     ballOutgoing: {
       backgroundColor: colors.ballOutgoing,
     },
@@ -29,7 +29,7 @@ const TransactionOutgoingIcon: React.FC = () => {
 
   return (
     <View style={styles.boxIncoming}>
-      <View style={[styles.ballOutgoing, stylesBlueIconHooks.ballOutgoing]}>
+      <View style={[styles.ballOutgoing, stylesMalinIconHooks.ballOutgoing]}>
         <Icon name="arrow-down" size={16} type="font-awesome" color={colors.outgoingForegroundColor} />
       </View>
     </View>

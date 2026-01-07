@@ -408,7 +408,7 @@
     "share": "Condividi",
     "view": "Visualizza",
     "manage_keys": "Gestisci chiavi",
-    "how_many_signatures_can_bluewallet_make": "quante firme possono essere create da MalinWallet",
+    "how_many_signatures_can_malinwallet_make": "quante firme possono essere create da MalinWallet",
     "signatures_required_to_spend": "Firme richieste {number}",
     "signatures_we_can_make": "può creare {number}",
     "scan_or_import_file": "Scansiona o importa un file",

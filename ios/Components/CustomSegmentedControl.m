@@ -1,9 +1,9 @@
 //
 //  RCT.h
-//  BlueWallet
+//  MalinWallet
 //
 //  Created by Marcos Rodriguez on 4/22/25.
-//  Copyright © 2025 BlueWallet. All rights reserved.
+//  Copyright © 2026 MalinWallet. All rights reserved.
 //
 
 

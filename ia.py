@@ -21,9 +21,9 @@ def traiter_fichier(chemin):
     console.rule(f"[bold gold1]ANALYSE DE {chemin}")
 
     # 1. IA BUILD (DeepSeek/Codestral)
-    with console.status("[bold blue]L'Ingénieur Build analyse les dépendances..."):
+    with console.status("[bold malin]L'Ingénieur Build analyse les dépendances..."):
         diag_build = ia_build.invoke(f"Analyse ce code. Liste les erreurs de build/imports en français. Donne ensuite le code corrigé sans bla-bla inutile.\n\nCODE:\n{code_initial}")
-    console.print(Panel(diag_build, title="[IA BUILD]", border_style="blue"))
+    console.print(Panel(diag_build, title="[IA BUILD]", border_style="malin"))
 
     # 2. IA SYNTAXE (CodeLlama 34B)
     with console.status("[bold magenta]L'Expert Syntaxe traque les fautes de frappe..."):

@@ -9,7 +9,7 @@ import coinSelect, {
 import coinSelectSplit from 'coinselect/split';
 import { ECPairAPI, ECPairFactory, Signer } from 'ecpair';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import ecc from '../../malin_modules/noble_ecc';
 import {
   hexToUint8Array,
@@ -121,7 +121,7 @@ export class LegacyWallet extends AbstractWallet {
     try {
       const address = this.getAddress();
       if (!address) throw new Error('LegacyWallet: Invalid address');
-      const balance = await BlueElectrum.getBalanceByAddress(address);
+      const balance = await MalinElectrum.getBalanceByAddress(address);
       this.balance = Number(balance.confirmed);
       this.unconfirmed_balance = Number(balance.unconfirmed);
       this._lastBalanceFetch = +new Date();
@@ -139,7 +139,7 @@ export class LegacyWallet extends AbstractWallet {
     try {
       const address = this.getAddress();
       if (!address) throw new Error('LegacyWallet: Invalid address');
-      const utxos = await BlueElectrum.multiGetUtxoByAddress([address]);
+      const utxos = await MalinElectrum.multiGetUtxoByAddress([address]);
       this._utxo = [];
       for (const arr of Object.values(utxos)) {
         this._utxo = this._utxo.concat(arr);
@@ -147,7 +147,7 @@ export class LegacyWallet extends AbstractWallet {
 
       // now we need to fetch txhash for each input as required by PSBT
       if (LegacyWallet.type !== this.type) return; // but only for LEGACY single-address wallets
-      const txhexes = await BlueElectrum.multiGetTransactionByTxid(
+      const txhexes = await MalinElectrum.multiGetTransactionByTxid(
         this._utxo.map((u) => u.txid),
         false,
       )
@@ -181,7 +181,7 @@ export class LegacyWallet extends AbstractWallet {
     let ret: Utxo[] = [];
     for (const u of this._utxo) {
       if (!u.confirmations && u.height)
-        {u.confirmations = BlueElectrum.estimateCurrentBlockheight() - u.height}
+        {u.confirmations = MalinElectrum.estimateCurrentBlockheight() - u.height}
       ret.push(u);
     }
 
@@ -231,7 +231,7 @@ export class LegacyWallet extends AbstractWallet {
             confirmations: tx.confirmations,
             wif: false,
             height:
-              BlueElectrum.estimateCurrentBlockheight() -
+              MalinElectrum.estimateCurrentBlockheight() -
               (tx.confirmations ?? 0),
           })
         }
@@ -276,7 +276,7 @@ export class LegacyWallet extends AbstractWallet {
 
     // first: batch fetch for all addresses histories
     const histories =
-      await BlueElectrum.multiGetHistoryByAddress(addresses2fetch);
+      await MalinElectrum.multiGetHistoryByAddress(addresses2fetch);
     const txs: Record<
       string,
       {
@@ -301,7 +301,7 @@ export class LegacyWallet extends AbstractWallet {
     // is safe because in that case our cache is filled
 
     // next, batch fetching each txid we got
-    const txdatas = await BlueElectrum.multiGetTransactionByTxid(
+    const txdatas = await MalinElectrum.multiGetTransactionByTxid(
       Object.keys(txs),
       true
     );
@@ -316,7 +316,7 @@ export class LegacyWallet extends AbstractWallet {
         // ^^^^ not all inputs have txid, some of them are Coinbase (newly-created coins)
       }
     }
-    const vintxdatas = await BlueElectrum.multiGetTransactionByTxid(
+    const vintxdatas = await MalinElectrum.multiGetTransactionByTxid(
       vinTxids,
       true
     );
@@ -411,7 +411,7 @@ export class LegacyWallet extends AbstractWallet {
    * @returns {Promise<boolean>}
    */
   async broadcastTx(txhex: string): Promise<boolean> {
-    const broadcast = await BlueElectrum.broadcastV2(txhex);
+    const broadcast = await MalinElectrum.broadcastV2(txhex);
     console.log({ broadcast });
     if (broadcast.indexOf('successfully') !== -1) return true;
     return broadcast.length === 64; // this means return string is txid (precise length), so it was broadcasted ok
@@ -748,7 +748,7 @@ export class LegacyWallet extends AbstractWallet {
   async wasEverUsed(): Promise<boolean> {
     const address = this.getAddress();
     if (!address) return Promise.resolve(false);
-    const txs = await BlueElectrum.getTransactionsByAddress(address);
+    const txs = await MalinElectrum.getTransactionsByAddress(address);
     return txs.length > 0;
   }
 }

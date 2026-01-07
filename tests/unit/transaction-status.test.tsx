@@ -77,14 +77,14 @@ jest.mock('../../components/themes', () => ({
   })
 }));
 
-jest.mock('../../BlueComponents', () => {
+jest.mock('../../MalinComponents', () => {
   const React = require('react');
   const { Text, View } = require('react-native');
   return {
-    BlueCard: ({ children }: { children: React.ReactNode }) => (
+    MalinCard: ({ children }: { children: React.ReactNode }) => (
       <View>{children}</View>
     ),
-    BlueText: ({ children }: { children: React.ReactNode }) => (
+    MalinText: ({ children }: { children: React.ReactNode }) => (
       <Text>{children}</Text>
     )
   }
@@ -93,12 +93,12 @@ jest.mock('../../BlueComponents', () => {
 jest.mock('../../components/Button', () => 'Button');
 jest.mock('../../components/HandOffComponent', () => 'HandOffComponent');
 jest.mock('../../components/HeaderRightButton', () => 'HeaderRightButton');
-jest.mock('../../components/BlueSpacing', () => ({
-  BlueSpacing10: 'BlueSpacing10',
-  BlueSpacing20: 'BlueSpacing20',
+jest.mock('../../components/MalinSpacing', () => ({
+  MalinSpacing10: 'MalinSpacing10',
+  MalinSpacing20: 'MalinSpacing20',
 }));
-jest.mock('../../components/BlueLoading', () => ({
-  BlueLoading: 'BlueLoading',
+jest.mock('../../components/MalinLoading', () => ({
+  MalinLoading: 'MalinLoading',
 }));
 jest.mock(
   '../../components/SafeArea',
@@ -128,7 +128,7 @@ jest.mock('../../malin_modules/hapticFeedback', () => ({
   HapticFeedbackTypes: {},
 }));
 
-jest.mock('../../malin_modules/BlueElectrum', () => ({
+jest.mock('../../malin_modules/MalinElectrum', () => ({
   multiGetTransactionByTxid: jest.fn(),
   getMempoolTransactionsByAddress: jest.fn(),
   estimateFees: jest.fn(),

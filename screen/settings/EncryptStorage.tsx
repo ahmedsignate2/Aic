@@ -14,7 +14,7 @@ import presentAlert from '../../components/Alert';
 import { Header } from '../../components/Header';
 import { StackActions } from '@react-navigation/native';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
-import { BlueSpacing20 } from '../../components/BlueSpacing';
+import { MalinSpacing20 } from '../../components/MalinSpacing';
 
 enum ActionType {
   SetLoading = 'SET_LOADING',
@@ -170,7 +170,7 @@ const EncryptStorage = () => {
           />
         </>
       )}
-      <BlueSpacing20 />
+      <MalinSpacing20 />
       <Header leftText={loc.settings.encrypt_tstorage} />
       <ListItem
         testID="EncyptedAndPasswordProtected"

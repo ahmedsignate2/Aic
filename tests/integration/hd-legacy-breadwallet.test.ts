@@ -1,7 +1,7 @@
 import assert from 'assert';
 import * as bitcoin from 'bitcoinjs-lib';
 
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { HDLegacyBreadwalletWallet } from '../../class';
 import { AbstractHDElectrumWallet } from '../../class/wallets/abstract-hd-electrum-wallet';
 
@@ -10,14 +10,14 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 afterAll(async () => {
   // after all tests we close socket so the test suite can actually terminate
-  BlueElectrum.forceDisconnect();
+  MalinElectrum.forceDisconnect();
   await sleep(20);
 });
 
 beforeAll(async () => {
   // awaiting for Electrum to be connected. For RN Electrum would naturally connect
   // while app starts up, but for tests we need to wait for it
-  await BlueElectrum.connectMain();
+  await MalinElectrum.connectMain();
 });
 
 it('Legacy HD Breadwallet can fetch utxo, balance, and create transaction', async () => {

@@ -3,11 +3,11 @@ import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { BackHandler, InteractionManager, LayoutAnimation, Platform, StyleSheet, Text, TextInput, View } from 'react-native';
 import Share from 'react-native-share';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import { fiatToBTC, satoshiToBTC } from '../../malin_modules/currency';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
 import { majorTomToGroundControl, tryToObtainPermissions } from '../../malin_modules/notifications';
-import { BlueButtonLink, BlueCard, BlueText } from '../../BlueComponents';
+import { MalinButtonLink, MalinCard, MalinText } from '../../MalinComponents';
 import DeeplinkSchemaMatch from '../../class/deeplink-schema-match';
 import presentAlert from '../../components/Alert';
 import * as AmountInput from '../../components/AmountInput';
@@ -30,8 +30,8 @@ import { BitcoinUnit, Chain } from '../../models/bitcoinUnits';
 import { ReceiveDetailsStackParamList } from '../../navigation/ReceiveDetailsStackParamList';
 import { CommonToolTipActions } from '../../typings/CommonToolTipActions';
 import { SuccessView } from '../send/success';
-import { BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading';
+import { MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView';
 
 const segmentControlValues = [loc.wallets.details_address, loc.bip47.payment_code];
@@ -245,7 +245,7 @@ const ReceiveDetails = () => {
         if (!addressToUse) return;
 
         console.debug('checking address', addressToUse, 'for balance...');
-        const balance = await BlueElectrum.getBalanceByAddress(addressToUse);
+        const balance = await MalinElectrum.getBalanceByAddress(addressToUse);
         console.debug('...got', balance);
 
         if (balance.unconfirmed > 0) {
@@ -256,13 +256,13 @@ const ReceiveDetails = () => {
             triggerHapticFeedback(HapticFeedbackTypes.ImpactHeavy);
           }
 
-          const txs = await BlueElectrum.getMempoolTransactionsByAddress(addressToUse);
+          const txs = await MalinElectrum.getMempoolTransactionsByAddress(addressToUse);
           const tx = txs.pop();
           if (tx) {
-            const rez = await BlueElectrum.multiGetTransactionByTxid([tx.tx_hash], true, 10);
+            const rez = await MalinElectrum.multiGetTransactionByTxid([tx.tx_hash], true, 10);
             if (rez[tx.tx_hash] && rez[tx.tx_hash].vsize) {
               const satPerVbyte = Math.round(tx.fee / rez[tx.tx_hash].vsize);
-              const fees = await BlueElectrum.estimateFees();
+              const fees = await MalinElectrum.estimateFees();
               if (satPerVbyte >= fees.fast) {
                 setEta(loc.formatString(loc.transactions.eta_10m));
               } else if (satPerVbyte >= fees.medium) {
@@ -329,14 +329,14 @@ const ReceiveDetails = () => {
     return (
       <View style={styles.scrollBody}>
         {isCustom && (
-          <BlueText style={[styles.label, stylesHook.label]} numberOfLines={1}>
+          <MalinText style={[styles.label, stylesHook.label]} numberOfLines={1}>
             {customLabel}
-          </BlueText>
+          </MalinText>
         )}
         <SuccessView />
-        <BlueText style={[styles.label, stylesHook.label]} numberOfLines={1}>
+        <MalinText style={[styles.label, stylesHook.label]} numberOfLines={1}>
           {displayBalance}
-        </BlueText>
+        </MalinText>
       </View>
     );
   };
@@ -345,18 +345,18 @@ const ReceiveDetails = () => {
     return (
       <View style={styles.scrollBody}>
         {isCustom && (
-          <BlueText style={[styles.label, stylesHook.label]} numberOfLines={1}>
+          <MalinText style={[styles.label, stylesHook.label]} numberOfLines={1}>
             {customLabel}
-          </BlueText>
+          </MalinText>
         )}
         <TransactionPendingIconBig />
-        <BlueSpacing40 />
-        <BlueText style={[styles.label, stylesHook.label]} numberOfLines={1}>
+        <MalinSpacing40 />
+        <MalinText style={[styles.label, stylesHook.label]} numberOfLines={1}>
           {displayBalance}
-        </BlueText>
-        <BlueText style={[styles.label, stylesHook.label]} numberOfLines={1}>
+        </MalinText>
+        <MalinText style={[styles.label, stylesHook.label]} numberOfLines={1}>
           {eta}
-        </BlueText>
+        </MalinText>
       </View>
     );
   };
@@ -387,14 +387,14 @@ const ReceiveDetails = () => {
               {isCustom && (
                 <>
                   {getDisplayAmount() && (
-                    <BlueText testID="BitcoinAmountText" style={[styles.amount, stylesHook.amount]} numberOfLines={1}>
+                    <MalinText testID="BitcoinAmountText" style={[styles.amount, stylesHook.amount]} numberOfLines={1}>
                       {getDisplayAmount()}
-                    </BlueText>
+                    </MalinText>
                   )}
                   {customLabel?.length > 0 && (
-                    <BlueText testID="CustomAmountDescriptionText" style={[styles.label, stylesHook.label]} numberOfLines={1}>
+                    <MalinText testID="CustomAmountDescriptionText" style={[styles.label, stylesHook.label]} numberOfLines={1}>
                       {customLabel}
-                    </BlueText>
+                    </MalinText>
                   )}
                 </>
               )}
@@ -567,14 +567,14 @@ const ReceiveDetails = () => {
 
         {!showAddress && !showPendingBalance && !showConfirmedBalance && (
           <View style={styles.loadingContainer}>
-            <BlueLoading />
+            <MalinLoading />
           </View>
         )}
 
         <View style={styles.share}>
-          <BlueCard>
+          <MalinCard>
             {showAddress && currentTab === loc.wallets.details_address && (
-              <BlueButtonLink
+              <MalinButtonLink
                 style={styles.link}
                 testID="SetCustomAmountButton"
                 title={loc.receive.details_setAmount}
@@ -586,7 +586,7 @@ const ReceiveDetails = () => {
               title={loc.receive.details_share}
               disabled={!bip21encoded && !(currentTab === segmentControlValues[1] && isBIP47Enabled)}
             />
-          </BlueCard>
+          </MalinCard>
         </View>
       </SafeAreaScrollView>
 
@@ -629,9 +629,9 @@ const ReceiveDetails = () => {
             testID="CustomAmountDescription"
           />
         </View>
-        <BlueSpacing20 />
+        <MalinSpacing20 />
 
-        <BlueSpacing20 />
+        <MalinSpacing20 />
       </BottomModal>
     </View>
   );

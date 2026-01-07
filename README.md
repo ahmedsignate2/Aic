@@ -15,7 +15,7 @@ Built with React Native, it combines the best features of top-tier wallets into 
 
 ## Inspiration
 
-MalinWallet is inspired by the best in the industry, including BlueWallet, AlphaWallet, and Mycelium. We aim to bring together their strongest features to create the ultimate wallet experience.
+MalinWallet is the next generation of unifed wallets, AlphaWallet, and Mycelium. We aim to bring together their strongest features to create the ultimate wallet experience.
 
 ## BUILD & RUN IT
 

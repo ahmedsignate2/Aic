@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import { Platform, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import Base43 from '../../malin_modules/base43';
 import * as fs from '../../malin_modules/fs';
-import { BlueURDecoder, decodeUR, extractSingleWorkload } from '../../malin_modules/ur';
-import { BlueText } from '../../BlueComponents';
+import { MalinURDecoder, decodeUR, extractSingleWorkload } from '../../malin_modules/ur';
+import { MalinText } from '../../MalinComponents';
 import { openPrivacyDesktopSettings } from '../../class/camera';
 import Button from '../../components/Button';
 import { useTheme } from '../../components/themes';
@@ -16,11 +16,11 @@ import { useExtendedNavigation } from '../../hooks/useExtendedNavigation';
 import CameraScreen from '../../components/CameraScreen';
 import SafeArea from '../../components/SafeArea';
 import { SendDetailsStackParamList } from '../../navigation/SendDetailsStackParamList.ts';
-import { BlueSpacing40 } from '../../components/BlueSpacing';
-import { BlueLoading } from '../../components/BlueLoading.tsx';
+import { MalinSpacing40 } from '../../components/MalinSpacing';
+import { MalinLoading } from '../../components/MalinLoading.tsx';
 import { hexToUint8Array, uint8ArrayToBase64, uint8ArrayToHex, uint8ArrayToString } from '../../malin_modules/uint8array-extras/index.js';
 
-let decoder: BlueURDecoder | undefined;
+let decoder: MalinURDecoder | undefined;
 
 type RouteProps = RouteProp<SendDetailsStackParamList, 'ScanQRCode'>;
 
@@ -97,7 +97,7 @@ const ScanQRCode = () => {
   };
 
   const _onReadUniformResourceV2 = (part: string) => {
-    if (!decoder) decoder = new BlueURDecoder();
+    if (!decoder) decoder = new MalinURDecoder();
     try {
       decoder.receivePart(part);
       if (decoder.isComplete()) {
@@ -268,19 +268,19 @@ const ScanQRCode = () => {
   };
 
   const render = isLoading ? (
-    <BlueLoading />
+    <MalinLoading />
   ) : (
     <View>
       {cameraStatusGranted === false ? (
         <View style={[styles.openSettingsContainer, stylesHook.openSettingsContainer]}>
-          <BlueText>{loc.send.permission_camera_message}</BlueText>
-          <BlueSpacing40 />
+          <MalinText>{loc.send.permission_camera_message}</MalinText>
+          <MalinSpacing40 />
           <Button title={loc.send.open_settings} onPress={openPrivacyDesktopSettings} />
-          <BlueSpacing40 />
+          <MalinSpacing40 />
           {showFileImportButton && <Button title={loc.wallets.import_file} onPress={showFilePicker} />}
-          <BlueSpacing40 />
+          <MalinSpacing40 />
           <Button title={loc.wallets.list_long_choose} onPress={onShowImagePickerButtonPress} />
-          <BlueSpacing40 />
+          <MalinSpacing40 />
           <Button title={loc._.cancel} onPress={dismiss} />
         </View>
       ) : isFocused && cameraStatusGranted ? (
@@ -295,15 +295,15 @@ const ScanQRCode = () => {
       ) : null}
       {urTotal > 0 && (
         <View style={[styles.progressWrapper, stylesHook.progressWrapper]} testID="UrProgressBar">
-          <BlueText>{loc.wallets.please_continue_scanning}</BlueText>
-          <BlueText>
+          <MalinText>{loc.wallets.please_continue_scanning}</MalinText>
+          <MalinText>
             {urHave} / {urTotal}
-          </BlueText>
+          </MalinText>
         </View>
       )}
       {backdoorVisible && (
         <View style={styles.backdoorInputWrapper}>
-          <BlueText>Provide QR code contents manually:</BlueText>
+          <MalinText>Provide QR code contents manually:</MalinText>
           <TextInput
             testID="scanQrBackdoorInput"
             multiline

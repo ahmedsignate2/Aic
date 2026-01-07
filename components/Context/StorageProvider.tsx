@@ -1,17 +1,17 @@
 import React, { createContext, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { InteractionManager, LayoutAnimation } from 'react-native';
-import { BlueApp as BlueAppClass, LegacyWallet, TCounterpartyMetadata, TTXMetadata, WatchOnlyWallet } from '../../class';
+import { MalinApp as MalinAppClass, LegacyWallet, TCounterpartyMetadata, TTXMetadata, WatchOnlyWallet } from '../../class';
 import type { TWallet } from '../../class/wallets/types';
 import presentAlert from '../../components/Alert';
 import loc, { formatBalanceWithoutSuffix } from '../../loc';
-import * as BlueElectrum from '../../malin_modules/BlueElectrum';
+import * as MalinElectrum from '../../malin_modules/MalinElectrum';
 import triggerHapticFeedback, { HapticFeedbackTypes } from '../../malin_modules/hapticFeedback';
 import { startAndDecrypt } from '../../malin_modules/start-and-decrypt';
 import { isNotificationsEnabled, majorTomToGroundControl, unsubscribe } from '../../malin_modules/notifications';
 import { BitcoinUnit } from '../../models/bitcoinUnits';
 import { navigationRef } from '../../NavigationService';
 
-const BlueApp = BlueAppClass.getInstance();
+const MalinApp = MalinAppClass.getInstance();
 
 // hashmap of timestamps we _started_ refetching some wallet
 const _lastTimeTriedToRefetchWallet: { [walletID: string]: number } = {};
@@ -35,20 +35,20 @@ interface StorageContextType {
   resetWallets: () => void;
   walletTransactionUpdateStatus: WalletTransactionsStatus | string;
   setWalletTransactionUpdateStatus: (status: WalletTransactionsStatus | string) => void;
-  getTransactions: typeof BlueApp.getTransactions;
-  fetchWalletBalances: typeof BlueApp.fetchWalletBalances;
-  fetchWalletTransactions: typeof BlueApp.fetchWalletTransactions;
-  getBalance: typeof BlueApp.getBalance;
-  isStorageEncrypted: typeof BlueApp.storageIsEncrypted;
+  getTransactions: typeof MalinApp.getTransactions;
+  fetchWalletBalances: typeof MalinApp.fetchWalletBalances;
+  fetchWalletTransactions: typeof MalinApp.fetchWalletTransactions;
+  getBalance: typeof MalinApp.getBalance;
+  isStorageEncrypted: typeof MalinApp.storageIsEncrypted;
   startAndDecrypt: typeof startAndDecrypt;
-  encryptStorage: typeof BlueApp.encryptStorage;
-  sleep: typeof BlueApp.sleep;
-  createFakeStorage: typeof BlueApp.createFakeStorage;
-  decryptStorage: typeof BlueApp.decryptStorage;
-  isPasswordInUse: typeof BlueApp.isPasswordInUse;
-  cachedPassword: typeof BlueApp.cachedPassword;
-  getItem: typeof BlueApp.getItem;
-  setItem: typeof BlueApp.setItem;
+  encryptStorage: typeof MalinApp.encryptStorage;
+  sleep: typeof MalinApp.sleep;
+  createFakeStorage: typeof MalinApp.createFakeStorage;
+  decryptStorage: typeof MalinApp.decryptStorage;
+  isPasswordInUse: typeof MalinApp.isPasswordInUse;
+  cachedPassword: typeof MalinApp.cachedPassword;
+  getItem: typeof MalinApp.getItem;
+  setItem: typeof MalinApp.setItem;
   handleWalletDeletion: (walletID: string, forceDelete?: boolean) => Promise<boolean>;
   confirmWalletDeletion: (wallet: any, onConfirmed: () => void) => void;
 }
@@ -62,8 +62,8 @@ export enum WalletTransactionsStatus {
 export const StorageContext = createContext<StorageContextType>(undefined);
 
 export const StorageProvider = ({ children }: { children: React.ReactNode }) => {
-  const txMetadata = useRef<TTXMetadata>(BlueApp.tx_metadata);
-  const counterpartyMetadata = useRef<TCounterpartyMetadata>(BlueApp.counterparty_metadata || {}); // init
+  const txMetadata = useRef<TTXMetadata>(MalinApp.tx_metadata);
+  const counterpartyMetadata = useRef<TCounterpartyMetadata>(MalinApp.counterparty_metadata || {}); // init
 
   const [wallets, setWallets] = useState<TWallet[]>([]);
   const [walletTransactionUpdateStatus, setWalletTransactionUpdateStatus] = useState<WalletTransactionsStatus | string>(
@@ -149,15 +149,15 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
 
   const saveToDisk = useCallback(
     async (force: boolean = false) => {
-      if (!force && BlueApp.getWallets().length === 0) {
+      if (!force && MalinApp.getWallets().length === 0) {
         console.debug('Not saving empty wallets array');
         return;
       }
       await InteractionManager.runAfterInteractions(async () => {
-        BlueApp.tx_metadata = txMetadata.current;
-        BlueApp.counterparty_metadata = counterpartyMetadata.current;
-        await BlueApp.saveToDisk();
-        const w: TWallet[] = [...BlueApp.getWallets()];
+        MalinApp.tx_metadata = txMetadata.current;
+        MalinApp.counterparty_metadata = counterpartyMetadata.current;
+        await MalinApp.saveToDisk();
+        const w: TWallet[] = [...MalinApp.getWallets()];
         setWallets(w);
       });
     },
@@ -166,13 +166,13 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
   );
 
   const addWallet = useCallback((wallet: TWallet) => {
-    BlueApp.wallets.push(wallet);
-    setWallets([...BlueApp.getWallets()]);
+    MalinApp.wallets.push(wallet);
+    setWallets([...MalinApp.getWallets()]);
   }, []);
 
   const deleteWallet = useCallback((wallet: TWallet) => {
-    BlueApp.deleteWallet(wallet);
-    setWallets([...BlueApp.getWallets()]);
+    MalinApp.deleteWallet(wallet);
+    setWallets([...MalinApp.getWallets()]);
   }, []);
 
   const handleWalletDeletion = useCallback(
@@ -290,12 +290,12 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
   );
 
   const resetWallets = useCallback(() => {
-    setWallets(BlueApp.getWallets());
+    setWallets(MalinApp.getWallets());
   }, []);
 
   const setWalletsWithNewOrder = useCallback(
     (wlts: TWallet[]) => {
-      BlueApp.wallets = wlts;
+      MalinApp.wallets = wlts;
       saveToDisk();
     },
     [saveToDisk],
@@ -304,9 +304,9 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
   // Initialize wallets
   useEffect(() => {
     if (walletsInitialized) {
-      txMetadata.current = BlueApp.tx_metadata;
-      counterpartyMetadata.current = BlueApp.counterparty_metadata;
-      setWallets(BlueApp.getWallets());
+      txMetadata.current = MalinApp.tx_metadata;
+      counterpartyMetadata.current = MalinApp.counterparty_metadata;
+      setWallets(MalinApp.getWallets());
     }
   }, [walletsInitialized]);
 
@@ -340,22 +340,22 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
           setWalletTransactionUpdateStatus(WalletTransactionsStatus.ALL);
         }
         console.debug('[refreshAllWalletTransactions] Waiting for connectivity...');
-        await BlueElectrum.waitTillConnected();
-        if (!(await BlueElectrum.ping())) {
+        await MalinElectrum.waitTillConnected();
+        if (!(await MalinElectrum.ping())) {
           // above `waitTillConnected` is not reliable, as app might have returned from long sleep, so it thinks its
           // connected but actually socket is closed. thus, we ping, and if it fails - we wait again (reconnection code
           // should pick up)
           console.log('[refreshAllWalletTransactions] ping failed, waiting for connection...');
-          await BlueElectrum.waitTillConnected();
+          await MalinElectrum.waitTillConnected();
         }
 
         console.debug('[refreshAllWalletTransactions] Connected to Electrum');
 
         // Restore fetch payment codes timing measurement
-        if (typeof BlueApp.fetchSenderPaymentCodes === 'function') {
+        if (typeof MalinApp.fetchSenderPaymentCodes === 'function') {
           const codesStart = Date.now();
           console.debug('[refreshAllWalletTransactions] Fetching sender payment codes');
-          await BlueApp.fetchSenderPaymentCodes(lastSnappedTo);
+          await MalinApp.fetchSenderPaymentCodes(lastSnappedTo);
           const codesEnd = Date.now();
           console.debug('[refreshAllWalletTransactions] fetch payment codes took', (codesEnd - codesStart) / 1000, 'sec');
         } else {
@@ -366,12 +366,12 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
         await Promise.race([
           (async () => {
             const balanceStart = Date.now();
-            await BlueApp.fetchWalletBalances(lastSnappedTo);
+            await MalinApp.fetchWalletBalances(lastSnappedTo);
             const balanceEnd = Date.now();
             console.debug('[refreshAllWalletTransactions] fetch balance took', (balanceEnd - balanceStart) / 1000, 'sec');
 
             const txStart = Date.now();
-            await BlueApp.fetchWalletTransactions(lastSnappedTo);
+            await MalinApp.fetchWalletTransactions(lastSnappedTo);
             const txEnd = Date.now();
             console.debug('[refreshAllWalletTransactions] fetch tx took', (txEnd - txStart) / 1000, 'sec');
 
@@ -406,16 +406,16 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
           }
           _lastTimeTriedToRefetchWallet[walletID] = Date.now();
 
-          await BlueElectrum.waitTillConnected();
+          await MalinElectrum.waitTillConnected();
           setWalletTransactionUpdateStatus(walletID);
 
           const balanceStart = Date.now();
-          await BlueApp.fetchWalletBalances(index);
+          await MalinApp.fetchWalletBalances(index);
           const balanceEnd = Date.now();
           console.debug('[fetchAndSaveWalletTransactions] fetch balance took', (balanceEnd - balanceStart) / 1000, 'sec');
 
           const txStart = Date.now();
-          await BlueApp.fetchWalletTransactions(index);
+          await MalinApp.fetchWalletTransactions(index);
           const txEnd = Date.now();
           console.debug('[fetchAndSaveWalletTransactions] fetch tx took', (txEnd - txStart) / 1000, 'sec');
         } catch (err) {
@@ -497,31 +497,31 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
       txMetadata: txMetadata.current,
       counterpartyMetadata: counterpartyMetadata.current,
       saveToDisk,
-      getTransactions: BlueApp.getTransactions,
+      getTransactions: MalinApp.getTransactions,
       selectedWalletID,
       addWallet,
       deleteWallet,
       currentSharedCosigner,
       setSharedCosigner: setCurrentSharedCosigner,
       addAndSaveWallet,
-      setItem: BlueApp.setItem,
-      getItem: BlueApp.getItem,
-      fetchWalletBalances: BlueApp.fetchWalletBalances,
-      fetchWalletTransactions: BlueApp.fetchWalletTransactions,
+      setItem: MalinApp.setItem,
+      getItem: MalinApp.getItem,
+      fetchWalletBalances: MalinApp.fetchWalletBalances,
+      fetchWalletTransactions: MalinApp.fetchWalletTransactions,
       fetchAndSaveWalletTransactions,
-      isStorageEncrypted: BlueApp.storageIsEncrypted,
-      encryptStorage: BlueApp.encryptStorage,
+      isStorageEncrypted: MalinApp.storageIsEncrypted,
+      encryptStorage: MalinApp.encryptStorage,
       startAndDecrypt,
-      cachedPassword: BlueApp.cachedPassword,
-      getBalance: BlueApp.getBalance,
+      cachedPassword: MalinApp.cachedPassword,
+      getBalance: MalinApp.getBalance,
       walletsInitialized,
       setWalletsInitialized,
       refreshAllWalletTransactions,
-      sleep: BlueApp.sleep,
-      createFakeStorage: BlueApp.createFakeStorage,
+      sleep: MalinApp.sleep,
+      createFakeStorage: MalinApp.createFakeStorage,
       resetWallets,
-      decryptStorage: BlueApp.decryptStorage,
-      isPasswordInUse: BlueApp.isPasswordInUse,
+      decryptStorage: MalinApp.decryptStorage,
+      isPasswordInUse: MalinApp.isPasswordInUse,
       walletTransactionUpdateStatus,
       setWalletTransactionUpdateStatus,
       handleWalletDeletion,

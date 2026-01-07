@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Keyboard, StyleSheet, TextInput, View, ScrollView, Pressable, Text } from 'react-native';
-import { BlueButtonLink, BlueCard, BlueText } from '../../BlueComponents';
+import { MalinButtonLink, MalinCard, MalinText } from '../../MalinComponents';
 import Button from '../../components/Button';
 import { useTheme } from '../../components/themes';
 import loc from '../../loc';
@@ -14,7 +14,7 @@ import presentAlert from '../../components/Alert';
 import { scanQrHelper } from '../../helpers/scan-qr.ts';
 import { useExtendedNavigation } from '../../hooks/useExtendedNavigation.ts';
 import SafeAreaScrollView from '../../components/SafeAreaScrollView.tsx';
-import { BlueSpacing10, BlueSpacing20, BlueSpacing40 } from '../../components/BlueSpacing';
+import { MalinSpacing10, MalinSpacing20, MalinSpacing40 } from '../../components/MalinSpacing';
 
 const IsItMyAddress: React.FC = () => {
   const { navigate } = useExtendedNavigation();
@@ -142,7 +142,7 @@ const IsItMyAddress: React.FC = () => {
       automaticallyAdjustKeyboardInsets
       contentInsetAdjustmentBehavior="automatic"
     >
-      <BlueCard style={styles.mainCard}>
+      <MalinCard style={styles.mainCard}>
         <View style={[styles.input, stylesHooks.input]}>
           <TextInput
             style={styles.textInput}
@@ -161,36 +161,36 @@ const IsItMyAddress: React.FC = () => {
           )}
         </View>
 
-        <BlueSpacing10 />
-        <BlueButtonLink title={loc.wallets.import_scan_qr} onPress={importScan} />
-        <BlueSpacing20 />
+        <MalinSpacing10 />
+        <MalinButtonLink title={loc.wallets.import_scan_qr} onPress={importScan} />
+        <MalinSpacing20 />
         {resultCleanAddress && (
           <>
             <Button title={loc.is_it_my_address.view_qrcode} onPress={viewQRCode} />
-            <BlueSpacing20 />
+            <MalinSpacing20 />
           </>
         )}
         <Button disabled={isCheckAddressDisabled} title={loc.is_it_my_address.check_address} onPress={checkAddress} testID="CheckAddress" />
-        <BlueSpacing40 />
+        <MalinSpacing40 />
 
         {matchingWallets !== undefined && matchingWallets.length > 0 && (
           <>
             <Divider />
-            <BlueSpacing40 />
+            <MalinSpacing40 />
           </>
         )}
         {matchingWallets !== undefined &&
           matchingWallets.length > 0 &&
           matchingWallets.map((wallet, index) => (
             <View key={wallet.getID()} ref={index === 0 ? firstWalletRef : undefined} style={styles.walletContainer}>
-              <BlueText selectable style={styles.resultText}>
+              <MalinText selectable style={styles.resultText}>
                 {resultCleanAddress &&
                   renderFormattedText(loc.is_it_my_address.owns, {
                     label: wallet.getLabel(),
                     address: resultCleanAddress,
                   })}
-              </BlueText>
-              <BlueSpacing10 />
+              </MalinText>
+              <MalinSpacing10 />
               <WalletCarouselItem
                 item={wallet}
                 onPress={item => {
@@ -200,10 +200,10 @@ const IsItMyAddress: React.FC = () => {
                   });
                 }}
               />
-              <BlueSpacing20 />
+              <MalinSpacing20 />
             </View>
           ))}
-      </BlueCard>
+      </MalinCard>
     </SafeAreaScrollView>
   );
 };
