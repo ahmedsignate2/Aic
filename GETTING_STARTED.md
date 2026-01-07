@@ -462,6 +462,6 @@ rm -rf /tmp/metro-cache      # Supprimer cache Metro
 
 ---
 
-**Last Updated:** 2025-12-09
+**Last Updated:** 2026-01-05
 **Status:** Active
 **Maintainer:** MalinWallet Development Team
