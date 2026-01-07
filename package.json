@@ -1,16 +1,16 @@
 {
   "name": "malinwallet",
   "version": "7.2.3",
-  "description": "MalinWallet - A secure multi-chain crypto wallet",
-  "license": "MIT",
+  "description": "MalinWallet - A secure multi-chain crypto wallet with AI-enhanced security",
+  "license": "Proprietary",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/amsss900-group/amsss900-project.git"
+    "url": "https://github.com/amsss400/MW.git"
   },
   "bugs": {
-    "url": "https://gitlab.com/amsss900-group/amsss900-project/-/issues"
+    "url": "https://github.com/amsss400/MW/issues"
   },
-  "homepage": "https://gitlab.com/amsss900-group/amsss900-project",
+  "homepage": "https://w-malin.tech",
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
@@ -187,3 +187,4 @@
     "wif": "2.0.6"
   }
 }
+
