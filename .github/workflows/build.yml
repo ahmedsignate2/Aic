@@ -28,10 +28,19 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Patch react-native-scrypt (Compatibility)
+      - name: Patch Dependencies (Fix Gradle & Kotlin Errors)
         run: |
+          # 1. Patch react-native-scrypt (Gradle 8 compatibility)
           sed -i 's/compile /implementation /g' node_modules/react-native-scrypt/android/build.gradle || true
           sed -i 's/compile(/implementation(/g' node_modules/react-native-scrypt/android/build.gradle || true
+
+          # 2. Patch react-native-menu (Fix 'val cannot be reassigned')
+          # Remplace 'val NAME' par 'var NAME' dans tous les fichiers Kotlin de la lib
+          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/val NAME/var NAME/g' {} + || true
+
+          # 3. Patch react-native-true-sheet (Fix 'val cannot be reassigned')
+          # Remplace 'val NAME' par 'var NAME' dans tous les fichiers Kotlin de la lib
+          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/val NAME/var NAME/g' {} + || true
 
       - name: Create .env file from GitHub Secrets
         run: |
