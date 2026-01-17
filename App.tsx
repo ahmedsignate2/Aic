@@ -1,5 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import React from 'react';
 import { useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -7,7 +7,6 @@ import { SizeClassProvider } from './components/Context/SizeClassProvider';
 import { SettingsProvider } from './components/Context/SettingsProvider';
 import MasterView from './navigation/MasterView';
 import { navigationRef } from './NavigationService';
-import { useDevTools } from '@react-navigation/devtools';
 import { StorageProvider } from './components/Context/StorageProvider';
 
 const App = () => {
@@ -15,8 +14,10 @@ const App = () => {
 
   // Intégration de Dark Gold Theme
   const theme = {
+    ...DefaultTheme,
     dark: true,
     colors: {
+      ...DefaultTheme.colors,
       background: '#212121',  // Noir mat
       text: '#FCD600',        // Or foncé
       primary: '#FCD600',    // Or
@@ -25,8 +26,6 @@ const App = () => {
       notification: '#FCD600',
     }
   };
-
-  useDevTools(navigationRef);
 
   return (
     <SizeClassProvider>

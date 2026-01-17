@@ -5,8 +5,7 @@ import * as bip39 from 'bip39';
 import * as bitcoin from 'bitcoinjs-lib';
 import React, { Component } from 'react';
 import { Linking, ScrollView, StyleSheet, View } from 'react-native';
-// @ts-ignore theres no type declaration for this
-import MalinCrypto from 'react-native-malin-crypto';
+import scrypt from 'react-native-scrypt';
 import wif from 'wif';
 
 import * as MalinElectrum from '../../malin_modules/MalinElectrum';
@@ -369,24 +368,25 @@ export default class SelfTest extends Component {
         // skipping RN-specific test
       }
 
-      // MalinCrypto test
+      // Scrypt test
       if (
         typeof navigator !== 'undefined' &&
         navigator.product === 'ReactNative'
       ) {
-        const hex = await MalinCrypto.scrypt(
+        const hex = await scrypt(
           '717765727479',
           '4749345a22b23cf3',
           64,
           8,
           8,
-          32
+          32,
+          'hex'
         ); // using non-default parameters to speed it up (not-bip38 compliant)
         if (
           hex.toUpperCase() !==
           'F36AB2DC12377C788D61E6770126D8A01028C8F6D8FE01871CE0489A1F696A90'
         ) {
-          throw new Error('react-native-malin-crypto is not ok')
+          throw new Error('react-native-scrypt is not ok')
         }
       }
 
@@ -406,11 +406,11 @@ export default class SelfTest extends Component {
           'KxqRtpd9vFju297ACPKHrGkgXuberTveZPXbRDiQ3MXZycSQYtjc',
           'bip38 failed',
         );
-        // bip38 with MalinCrypto doesn't support progress callback
+        // bip38 with scrypt doesn't support progress callback
         assertStrictEqual(
           callbackWasCalled,
           false,
-          "bip38 doesn't use MalinCrypto"
+          "bip38 doesn't use scrypt directly"
         );
       }
 

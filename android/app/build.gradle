@@ -23,8 +23,8 @@ react {
     extraPackagerArgs = []
 
     /* Hermes Commands */
-    hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
-    hermesFlags = ["-O", "-output-source-map"]
+    // hermesCommand = "$rootDir/my-custom-hermesc/bin/hermesc"
+    // hermesFlags = ["-O", "-output-source-map"]
 
     /* Autolinking */
     autolinkLibrariesWithApp()
@@ -61,6 +61,8 @@ android {
         
         // Enable multidex
         multiDexEnabled true
+
+        missingDimensionStrategy 'react-native-capture-protection', 'base'
     }
 
     signingConfigs {

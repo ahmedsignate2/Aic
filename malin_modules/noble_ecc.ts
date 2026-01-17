@@ -13,6 +13,17 @@ import { hmac } from '@noble/hashes/hmac';
 import { sha256 } from '@noble/hashes/sha2';
 import { TinySecp256k1Interface } from 'ecpair';
 
+// Type helper to merge interfaces properly
+type MergedInterface = TinySecp256k1Interface & TinySecp256k1InterfaceBIP32 & {
+  pointMultiply(p: Uint8Array, tweak: Uint8Array, compressed?: boolean): Uint8Array | null;
+  pointAdd(pA: Uint8Array, pB: Uint8Array, compressed?: boolean): Uint8Array | null;
+  isXOnlyPoint(p: Uint8Array): boolean;
+  xOnlyPointAddTweak(p: Uint8Array, tweak: Uint8Array): XOnlyPointAddTweakResult | null;
+  privateNegate(d: Uint8Array): Uint8Array;
+  signDER(h: Uint8Array, d: Uint8Array, e?: Uint8Array): Uint8Array;
+  xOnlyPointFromPoint(p: Uint8Array): Uint8Array;
+};
+
 export interface TinySecp256k1InterfaceExtended {
   pointMultiply(p: Uint8Array, tweak: Uint8Array, compressed?: boolean): Uint8Array | null;
 
@@ -78,7 +89,7 @@ function isPoint(p: Uint8Array, xOnly: boolean): boolean {
   }
 }
 
-const ecc: TinySecp256k1InterfaceExtended & TinySecp256k1Interface & TinySecp256k1InterfaceBIP32 = {
+const ecc: MergedInterface = {
   isPoint: (p: Uint8Array): boolean => isPoint(p, false),
   isPrivate: (d: Uint8Array): boolean => {
     /* if (
@@ -156,6 +167,10 @@ const ecc: TinySecp256k1InterfaceExtended & TinySecp256k1Interface & TinySecp256
 
   verifySchnorr: (h: Uint8Array, Q: Uint8Array, signature: Uint8Array): boolean => {
     return necc.schnorr.verifySync(signature, h, Q);
+  },
+
+  xOnlyPointFromPoint: (p: Uint8Array): Uint8Array => {
+    return necc.Point.fromHex(p).toRawX();
   },
 };
 
