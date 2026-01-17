@@ -34,13 +34,17 @@ jobs:
           sed -i 's/compile /implementation /g' node_modules/react-native-scrypt/android/build.gradle || true
           sed -i 's/compile(/implementation(/g' node_modules/react-native-scrypt/android/build.gradle || true
 
-          # 2. Patch react-native-menu (Fix 'val cannot be reassigned')
-          # Remplace 'val NAME' par 'var NAME' dans tous les fichiers Kotlin de la lib
-          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/val NAME/var NAME/g' {} + || true
+          # 2. Patch react-native-menu (Fix 'val' reassignment)
+          # Etape A : On passe tout en 'var' pour autoriser la modification
+          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/val /var /g' {} + || true
+          # Etape B : On corrige l'erreur "const var" créée par l'étape A (car const exige val)
+          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/const var /const val /g' {} + || true
 
-          # 3. Patch react-native-true-sheet (Fix 'val cannot be reassigned')
-          # Remplace 'val NAME' par 'var NAME' dans tous les fichiers Kotlin de la lib
-          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/val NAME/var NAME/g' {} + || true
+          # 3. Patch react-native-true-sheet (Fix 'val' reassignment & const error)
+          # Etape A : Tout en 'var'
+          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/val /var /g' {} + || true
+          # Etape B : Correction des 'const var'
+          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/const var /const val /g' {} + || true
 
       - name: Create .env file from GitHub Secrets
         run: |
