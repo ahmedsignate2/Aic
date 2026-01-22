@@ -1881,7 +1881,7 @@ export class AbstractHDElectrumWallet extends AbstractHDWallet {
       return this._addresses_by_payment_code_send[paymentCode][index];
     }
 
-    const hdNode = this.getBIP47FromSeed().getReceiveWallet(BIP47Factory(ecc).fromPaymentCode(paymentCode).getPaymentCodeNode(), index);
+    const hdNode = (this.getBIP47FromSeed() as any).getReceiveWallet(BIP47Factory(ecc).fromPaymentCode(paymentCode).getPaymentCodeNode(), index);
     const address = this._hdNodeToAddress(hdNode);
     this._addresses_by_payment_code_send[paymentCode][index] = address;
     return address;

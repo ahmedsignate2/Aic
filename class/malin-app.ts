@@ -23,7 +23,7 @@ import { MultisigHDWallet } from './wallets/multisig-hd-wallet';
 import { SegwitBech32Wallet } from './wallets/segwit-bech32-wallet';
 import { SegwitP2SHWallet } from './wallets/segwit-p2sh-wallet';
 import { SLIP39LegacyP2PKHWallet, SLIP39SegwitBech32Wallet, SLIP39SegwitP2SHWallet } from './wallets/slip39-wallets';
-import { ExtendedTransaction, Transaction, TWallet } from './wallets/types';
+import { ExtendedTransaction, Transaction, TWallet, EthereumTransaction, SolanaTransaction } from './wallets/types';
 import { WatchOnlyWallet } from './wallets/watch-only-wallet';
 import { getLNDHub } from '../helpers/lndHub';
 import { LightningArkWallet } from './wallets/lightning-ark-wallet.ts';
@@ -839,11 +839,11 @@ export class MalinApp {
     includeWalletsWithHideTransactionsEnabled: boolean = false,
   ): ExtendedTransaction[] => {
     if (index || index === 0) {
-      let txs: Transaction[] = [];
+      let txs: (Transaction | EthereumTransaction | SolanaTransaction)[] = [];
       let c = 0;
       for (const wallet of this.wallets) {
         if (c++ === index) {
-          txs = txs.concat(wallet.getTransactions());
+          txs = txs.concat(wallet.getTransactions() as any);
 
           const txsRet: ExtendedTransaction[] = [];
           const walletID = wallet.getID();
@@ -862,7 +862,7 @@ export class MalinApp {
 
     const txs: ExtendedTransaction[] = [];
     for (const wallet of this.wallets.filter(w => includeWalletsWithHideTransactionsEnabled || !w.getHideTransactionsInWalletsList())) {
-      const walletTransactions: Transaction[] = wallet.getTransactions();
+      const walletTransactions: (Transaction | EthereumTransaction | SolanaTransaction)[] = wallet.getTransactions();
       const walletID = wallet.getID();
       const walletPreferredBalanceUnit = wallet.getPreferredBalanceUnit();
       for (const t of walletTransactions) {
@@ -876,7 +876,9 @@ export class MalinApp {
 
     return txs
       .sort((a, b) => {
-        return b.timestamp - a.timestamp;
+        const aTime = (a as any).timestamp || (a as any).blockTime || 0;
+        const bTime = (b as any).timestamp || (b as any).blockTime || 0;
+        return bTime - aTime;
       })
       .slice(0, limit);
   };

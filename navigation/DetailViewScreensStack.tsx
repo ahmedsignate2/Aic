@@ -57,6 +57,27 @@ import ManageWallets from '../screen/wallets/ManageWallets';
 import ReceiveDetails from '../screen/receive/ReceiveDetails';
 import Browser from '../screen/Browser';
 import Swap from '../screen/Swap';
+import WCPair from '../screen/walletconnect/WCPair';
+import WCSessionRequest from '../screen/walletconnect/WCSessionRequest';
+import WCSignRequest from '../screen/walletconnect/WCSignRequest';
+import WCSessions from '../screen/walletconnect/WCSessions';
+import NFTGallery from '../screen/nft/NFTGallery';
+import NFTDetail from '../screen/nft/NFTDetail';
+import NFTSend from '../screen/nft/NFTSend';
+import TokenList from '../screen/tokens/TokenList';
+import TokenDetail from '../screen/tokens/TokenDetail';
+import AddToken from '../screen/tokens/AddToken';
+import BridgeScreen from '../screen/bridge/BridgeScreen';
+import { SwapAggregator } from '../screen/defi/SwapAggregator';
+import { PortfolioAnalytics } from '../screen/defi/PortfolioAnalytics';
+import { Staking } from '../screen/defi/Staking';
+import TokenApprovals from '../screen/security/TokenApprovals';
+import AddressWhitelist from '../screen/security/AddressWhitelist';
+import SpendingLimits from '../screen/security/SpendingLimits';
+import OnboardingWelcome from '../screen/onboarding/OnboardingWelcome';
+import SocialRecoverySetup from '../screen/socialrecovery/SocialRecoverySetup';
+import CloudBackupSettings from '../screen/backup/CloudBackupSettings';
+import NFCPayment from '../screen/nfc/NFCPayment';
 
 const DetailViewStackScreensStack = () => {
   const theme = useTheme();
@@ -336,6 +357,111 @@ const DetailViewStackScreensStack = () => {
         name="Swap"
         component={Swap}
         options={navigationStyle({ title: 'Swap' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="WCPair"
+        component={WCPair}
+        options={navigationStyle({ title: 'Connect DApp' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="WCSessionRequest"
+        component={WCSessionRequest}
+        options={navigationStyle({ title: 'Connection Request' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="WCSignRequest"
+        component={WCSignRequest}
+        options={navigationStyle({ title: 'Sign Request' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="WCSessions"
+        component={WCSessions}
+        options={navigationStyle({ title: 'WalletConnect' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="NFTGallery"
+        component={NFTGallery}
+        options={navigationStyle({ title: 'NFT Gallery' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="NFTDetail"
+        component={NFTDetail}
+        options={navigationStyle({ title: 'NFT Details' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="NFTSend"
+        component={NFTSend}
+        options={navigationStyle({ title: 'Send NFT' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="TokenList"
+        component={TokenList}
+        options={navigationStyle({ title: 'Tokens' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="TokenDetail"
+        component={TokenDetail}
+        options={navigationStyle({ title: 'Token Details' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="AddToken"
+        component={AddToken}
+        options={navigationStyle({ title: 'Add Token' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="BridgeScreen"
+        component={BridgeScreen}
+        options={navigationStyle({ title: 'Bridge' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="SwapAggregator"
+        component={SwapAggregator}
+        options={navigationStyle({ title: 'Swap Aggregator' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="PortfolioAnalytics"
+        component={PortfolioAnalytics}
+        options={navigationStyle({ title: 'Portfolio Analytics' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="Staking"
+        component={Staking}
+        options={navigationStyle({ title: 'Staking' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="TokenApprovals"
+        component={TokenApprovals}
+        options={navigationStyle({ title: 'Token Approvals' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="AddressWhitelist"
+        component={AddressWhitelist}
+        options={navigationStyle({ title: 'Trusted Addresses' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="SpendingLimits"
+        component={SpendingLimits}
+        options={navigationStyle({ title: 'Spending Limits' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="OnboardingWelcome"
+        component={OnboardingWelcome}
+        options={navigationStyle({ title: 'Welcome', headerShown: false })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="SocialRecoverySetup"
+        component={SocialRecoverySetup}
+        options={navigationStyle({ title: 'Social Recovery' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="CloudBackupSettings"
+        component={CloudBackupSettings}
+        options={navigationStyle({ title: 'Cloud Backup' })(theme)}
+      />
+      <DetailViewStack.Screen
+        name="NFCPayment"
+        component={NFCPayment}
+        options={navigationStyle({ title: 'NFC Payment' })(theme)}
       />
     </DetailViewStack.Navigator>
   );

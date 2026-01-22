@@ -51,6 +51,10 @@ import { useSettings } from '../../hooks/context/useSettings';
 import useMenuElements from '../../hooks/useMenuElements';
 import SafeAreaSectionList from '../../components/SafeAreaSectionList';
 import { scanQrHelper } from '../../helpers/scan-qr';
+import PortfolioHeader from '../../components/ux/PortfolioHeader';
+import QuickActions from '../../components/ux/QuickActions';
+import AssetBreakdown from '../../components/ux/AssetBreakdown';
+import { PortfolioHomepageService } from '../../class/services/ux/portfolio-homepage-service';
 
 const WalletsListSections = {
   CAROUSEL: 'CAROUSEL',
@@ -131,12 +135,10 @@ type NavigationProps = NativeStackNavigationProp<
 type RouteProps = RouteProp<DetailViewStackParamList, 'WalletsList'>;
 
 const WalletsList: React.FC = () => {
-  const [state, dispatch] = useReducer<
-    React.Reducer<WalletListState, WalletListAction>
-  >(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
   const { isLoading } = state;
   const { sizeClass, isLarge } = useSizeClass();
-  const walletsCarousel = useRef<any>();
+  const walletsCarousel = useRef<any>(null);
   const currentWalletIndex = useRef<number>(0);
   const { registerTransactionsHandler, unregisterTransactionsHandler } =
     useMenuElements();
@@ -150,7 +152,9 @@ const WalletsList: React.FC = () => {
   const route = useRoute<RouteProps>();
   const dataSource = getTransactions(undefined, 10);
   const walletsCount = useRef<number>(wallets.length);
-  const walletActionButtonsRef = useRef<any>();
+  const walletActionButtonsRef = useRef<any>(null);
+  const [portfolioData, setPortfolioData] = React.useState<any>(null);
+  const [isLoadingPortfolio, setIsLoadingPortfolio] = React.useState(false);
 
   const stylesHook = StyleSheet.create({
     walletsListWrapper: {
@@ -204,6 +208,27 @@ const WalletsList: React.FC = () => {
     initialLoad();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Load portfolio data
+  useEffect(() => {
+    const loadPortfolio = async () => {
+      if (wallets.length === 0) {
+        setPortfolioData(null);
+        return;
+      }
+      setIsLoadingPortfolio(true);
+      try {
+        const portfolioService = PortfolioHomepageService.getInstance();
+        const data = await portfolioService.getPortfolioSummary(wallets);
+        setPortfolioData(data);
+      } catch (error) {
+        console.error('Error loading portfolio:', error);
+      } finally {
+        setIsLoadingPortfolio(false);
+      }
+    };
+    loadPortfolio();
+  }, [wallets]);
 
   const onRefresh = useCallback(() => {
     console.debug('WalletsList onRefresh');
@@ -286,6 +311,10 @@ const WalletsList: React.FC = () => {
 
   const navigateToSwap = useCallback(() => {
     navigation.navigate('Swap');
+  }, [navigation]);
+
+  const navigateToWalletConnect = useCallback(() => {
+    navigation.navigate('WCPair');
   }, [navigation]);
 
   const handleClick = useCallback(
@@ -404,10 +433,30 @@ const WalletsList: React.FC = () => {
           return renderListHeaderComponent();
         case WalletsListSections.CAROUSEL: {
           return isTotalBalanceEnabled ? (
-  <View style={stylesHook.walletsListWrapper}>
+            <View style={stylesHook.walletsListWrapper}>
+              {/* Portfolio Header */}
+              {portfolioData && (
+                <>
+                  <PortfolioHeader
+                    summary={portfolioData}
+                    loading={isLoadingPortfolio}
+                    onRefresh={() => {}}
+                  />
+                  <QuickActions
+                    onSend={() => onScanButtonPressed()}
+                    onReceive={() => {}}
+                    onSwap={() => navigateToSwap()}
+                    onBuy={() => openBuyCrypto()}
+                  />
+                  <AssetBreakdown
+                    breakdown={portfolioData.breakdown}
+                    loading={isLoadingPortfolio}
+                  />
+                </>
+              )}
               <TotalWalletsBalance />
             </View>
-              ) : null;
+          ) : null;
         }
         default:
           return null;
@@ -493,6 +542,20 @@ const WalletsList: React.FC = () => {
             }
             text="Swap"
             testID="SwapButton"
+          />
+          <FButton
+            onPress={navigateToWalletConnect}
+            onLongPress={navigateToWalletConnect}
+            icon={
+              <View>
+                <Image
+                  resizeMode='stretch'
+                  source={require('../../img/close.png')}
+                />
+              </View>
+            }
+            text="WC"
+            testID="WalletConnectButton"
           />
           <FButton
             onPress={onScanButtonPressed}

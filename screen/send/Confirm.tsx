@@ -248,7 +248,7 @@ const Confirm: React.FC = () => {
     await MalinElectrum.ping();
     await MalinElectrum.waitTillConnected();
 
-    const result = await wallet.broadcastTx(transaction);
+    const result = await (wallet as any).broadcastTx(transaction);
     if (!result) {
       throw new Error(loc.errors.broadcast);
     }

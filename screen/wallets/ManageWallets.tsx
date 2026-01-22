@@ -228,7 +228,7 @@ const ManageWallets: React.FC = () => {
 
         state.walletsCopy.forEach(wallet => {
           try {
-            const transactions = wallet.getTransactions();
+            const transactions = (wallet as any).getTransactions();
             if (transactions && transactions.length) {
               const walletID = wallet.getID();
               transactions.forEach((tx: Transaction) => {
@@ -255,7 +255,7 @@ const ManageWallets: React.FC = () => {
               }
 
               try {
-                const tx = wallet.getTransactions().find((t: Transaction) => t.hash === txid || t.txid === txid);
+                const tx = (wallet as any).getTransactions().find((t: Transaction) => t.hash === txid || t.txid === txid);
                 if (tx) {
                   const group = walletsWithMatches.get(walletID)!;
                   const txExists = group.transactions.some(item => item.data.hash === txid || item.data.txid === txid);
@@ -293,7 +293,7 @@ const ManageWallets: React.FC = () => {
           if (walletsWithMatches.has(walletID)) return;
 
           try {
-            const transactions = wallet.getTransactions();
+            const transactions = (wallet as any).getTransactions();
             if (transactions && transactions.length) {
               const txToProcess = Math.min(transactions.length, 100);
 

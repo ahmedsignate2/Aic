@@ -48,7 +48,8 @@ export class EthereumWallet extends AbstractWallet {
     if (this._transactions.length === 0) {
       return 0;
     }
-    return this._transactions[0].timestamp;
+    const timestamp = this._transactions[0]?.timestamp;
+    return timestamp ? timestamp.toString() : 0;
   }
 
   async generate(): Promise<void> {
@@ -84,8 +85,8 @@ export class EthereumWallet extends AbstractWallet {
 
     try {
       const provider = new ethers.EtherscanProvider('mainnet', 'freekey');
-      const history = await provider.getHistory(this._address);
-      this._transactions = history.map(tx => ({
+      const history = await (provider as any).getHistory(this._address);
+      this._transactions = history.map((tx: any) => ({
         hash: tx.hash,
         from: tx.from,
         to: tx.to ?? '',

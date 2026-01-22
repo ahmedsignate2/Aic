@@ -28,7 +28,7 @@ interface AddressItemProps {
   allowSignVerifyMessage: boolean;
   onPress?: () => void; // example: ManageWallets uses this
   searchQuery?: string;
-  renderHighlightedText?: (text: string, query: string) => JSX.Element;
+  renderHighlightedText?: (text: string, query: string) => React.ReactElement;
 }
 
 type NavigationProps = NativeStackNavigationProp<DetailViewStackParamList>;
@@ -122,7 +122,7 @@ const AddressItem = ({
     }
 
     try {
-      const wif = wallet._getWIFbyAddress(item.address);
+      const wif = (wallet as any)._getWIFbyAddress?.(item.address);
       if (!wif) {
         presentAlert({ message: 'Internal error: cant get WIF from the wallet' });
         return;

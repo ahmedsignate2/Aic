@@ -64,11 +64,11 @@ const QRCodeComponent: React.FC<QRCodeComponentProps> = ({
   ecl = 'H',
   onError = () => {},
 }) => {
-  const qrCode = useRef<any>();
+  const qrCode = useRef<any>(null);
   const { colors, dark } = useTheme();
 
   const handleShareQRCode = () => {
-    qrCode.current.toDataURL((data: string) => {
+    qrCode.current?.toDataURL((data: string) => {
       data = data.replace(/(\r\n|\n|\r)/gm, '');
       const shareImageBase64 = {
         url: `data:image/png;base64,${data}`,

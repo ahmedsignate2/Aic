@@ -32,6 +32,8 @@ import {
   EthereumWallet,
   SolanaWallet
 } from '../../class';
+import { ZkSyncWallet } from '../../class/wallets/zksync-wallet';
+import { CosmosWallet } from '../../class/wallets/cosmos-wallet';
 import presentAlert from '../../components/Alert';
 import Button from '../../components/Button';
 import { useTheme } from '../../components/themes';
@@ -64,6 +66,8 @@ enum ButtonSelected {
   ARK = 'ARK',
   ETHEREUM = 'ETHEREUM',
   SOLANA = 'SOLANA',
+  ZKSYNC = 'ZKSYNC',
+  COSMOS = 'COSMOS',
 }
 
 interface State {
@@ -407,6 +411,22 @@ const WalletsAdd: React.FC = () => {
       await saveToDisk();
       triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
       goBack();
+    } else if (selectedWalletType === ButtonSelected.ZKSYNC) {
+      const w = new ZkSyncWallet();
+      w.setLabel(label || 'zkSync Era');
+      await w.generate();
+      addWallet(w);
+      await saveToDisk();
+      triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
+      goBack();
+    } else if (selectedWalletType === ButtonSelected.COSMOS) {
+      const w = new CosmosWallet();
+      w.setLabel(label || 'Cosmos Hub');
+      await w.generate();
+      addWallet(w);
+      await saveToDisk();
+      triggerHapticFeedback(HapticFeedbackTypes.NotificationSuccess);
+      goBack();
     } else if (selectedWalletType === ButtonSelected.ONCHAIN) {
       let w: HDSegwitBech32Wallet | HDLegacyP2PKHWallet | HDTaprootWallet;
 
@@ -557,6 +577,18 @@ const WalletsAdd: React.FC = () => {
     setSelectedWalletType(ButtonSelected.SOLANA);
   }
 
+  const handleOnZkSyncButtonPressed = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    Keyboard.dismiss();
+    setSelectedWalletType(ButtonSelected.ZKSYNC);
+  }
+
+  const handleOnCosmosButtonPressed = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    Keyboard.dismiss();
+    setSelectedWalletType(ButtonSelected.COSMOS);
+  }
+
   const onLearnMorePressed = () => {
     Linking.openURL('https://malinwallet.io/lightning/');
   };
@@ -625,6 +657,20 @@ const WalletsAdd: React.FC = () => {
           testID="ActivateSolanaButton"
           active={selectedWalletType === ButtonSelected.SOLANA}
           onPress={handleOnSolanaButtonPressed}
+          size={styles.button}
+        />
+        <WalletButton
+          buttonType="zkSync"
+          testID="ActivateZkSyncButton"
+          active={selectedWalletType === ButtonSelected.ZKSYNC}
+          onPress={handleOnZkSyncButtonPressed}
+          size={styles.button}
+        />
+        <WalletButton
+          buttonType="Cosmos"
+          testID="ActivateCosmosButton"
+          active={selectedWalletType === ButtonSelected.COSMOS}
+          onPress={handleOnCosmosButtonPressed}
           size={styles.button}
         />
         {backdoorPressed >= 20 ? (

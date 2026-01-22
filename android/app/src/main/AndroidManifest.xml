@@ -165,6 +165,7 @@
                 <data android:scheme="malinwallet" />
                 <data android:scheme="lapp" />
                 <data android:scheme="malin" />
+                <data android:scheme="wc" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
             </intent-filter>

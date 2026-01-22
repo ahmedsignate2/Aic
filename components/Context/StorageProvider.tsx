@@ -11,6 +11,7 @@ import { startAndDecrypt } from '../../malin_modules/start-and-decrypt';
 import { isNotificationsEnabled, majorTomToGroundControl, unsubscribe } from '../../malin_modules/notifications';
 import { BitcoinUnit } from '../../models/bitcoinUnits';
 import { navigationRef } from '../../NavigationService';
+import WalletConnectService from '../../class/services/walletconnect-service';
 
 const MalinApp = MalinAppClass.getInstance();
 
@@ -490,6 +491,13 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
       // Handle error silently if needed
     }
   }
+
+  // Initialize WalletConnect on mount
+  useEffect(() => {
+    WalletConnectService.initialize()
+      .then(() => console.log('WalletConnect initialized in StorageProvider'))
+      .catch((error) => console.error('Failed to initialize WalletConnect:', error));
+  }, []);
 
   const value: StorageContextType = useMemo(
     () => ({

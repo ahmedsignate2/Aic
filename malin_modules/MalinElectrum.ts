@@ -1141,8 +1141,8 @@ export async function multiGetTransactionByTxid<T extends boolean> (
     if (typeof tx === "string") continue
     for (const vout of tx?.vout ?? []) {
       // @ts-ignore: address is not in type definition
-      if (vout?.scriptPubKey?.address) {
-        vout.scriptPubKey.addresses = [vout.scriptPubKey.address]
+      if ((vout?.scriptPubKey as any)?.address) {
+        vout.scriptPubKey.addresses = [(vout.scriptPubKey as any).address]
       }
     }
   }

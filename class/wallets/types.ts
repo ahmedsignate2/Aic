@@ -22,6 +22,8 @@ import { HDTaprootWallet } from './hd-taproot-wallet.ts';
 import { LightningArkWallet } from './lightning-ark-wallet.ts';
 import { EthereumWallet } from './ethereum-wallet.ts';
 import { SolanaWallet } from './solana-wallet.ts';
+import { ZkSyncWallet } from './zksync-wallet.ts';
+import { CosmosWallet } from './cosmos-wallet.ts';
 
 export type Utxo = {
   // Returned by MalinElectrum
@@ -170,7 +172,7 @@ export type Transaction = {
  * in some cases we add additional data to each tx object so the code that works with that transaction can find the
  * wallet that owns it etc
  */
-export type ExtendedTransaction = Transaction & {
+export type ExtendedTransaction = (Transaction | EthereumTransaction | SolanaTransaction | LightningTransaction) & {
   walletID: string;
   walletPreferredBalanceUnit: BitcoinUnit;
 };
@@ -196,6 +198,8 @@ export type TWallet =
   | TaprootWallet
   | WatchOnlyWallet
   | EthereumWallet
-  | SolanaWallet;
+  | SolanaWallet
+  | ZkSyncWallet
+  | CosmosWallet;
 
 export type THDWalletForWatchOnly = HDSegwitBech32Wallet | HDSegwitP2SHWallet | HDLegacyP2PKHWallet | HDTaprootWallet;

@@ -48,7 +48,7 @@ interface TransactionListItemProps {
   item: Transaction | LightningTransaction | EthereumTransaction | SolanaTransaction;
   searchQuery?: string;
   style?: ViewStyle;
-  renderHighlightedText?: (text: string, query: string) => JSX.Element;
+  renderHighlightedText?: (text: string, query: string) => React.ReactElement;
   onPress?: () => void;
 }
 
@@ -72,7 +72,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     const [subtitleNumberOfLines, setSubtitleNumberOfLines] = useState(1);
     const { colors } = useTheme();
     const { navigate } = useExtendedNavigation<NavigationProps>();
-    const menuRef = useRef<ToolTipMenuProps>();
+    const menuRef = useRef<ToolTipMenuProps | undefined>(undefined);
     const { txMetadata, counterpartyMetadata, wallets } = useStorage();
     const { language, selectedBlockExplorer } = useSettings();
     const wallet = wallets.find(w => w.getID() === walletID);
@@ -91,7 +91,8 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
 
     const normalizedTx = useMemo(() => {
       if (isEthereumTransaction(item) && wallet) {
-        const direction = item.from.toLowerCase() === wallet.getAddress().toLowerCase() ? 'sent' : 'received';
+        const walletAddress = wallet.getAddress();
+        const direction = item.from.toLowerCase() === (typeof walletAddress === 'string' ? walletAddress.toLowerCase() : '') ? 'sent' : 'received';
         const value = parseFloat(formatBalanceWithoutSuffix(item.value, BitcoinUnit.ETH).toString());
         return {
           hash: item.hash,
@@ -226,7 +227,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     const determineTransactionTypeAndAvatar = () => {
       if (!normalizedTx) return { label: '', icon: null };
       if (isLightningTransaction(item)) {
-        if (item.category === 'receive' && item.confirmations! < 3) {
+        if (item.category === 'receive' && (item as any).confirmations < 3) {
             return {
             label: loc.transactions.pending_transaction,
             icon: <TransactionPendingIcon />,
@@ -354,7 +355,7 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
 
     const handleOnDetailsPress = useCallback(() => {
       if (walletID && normalizedTx && normalizedTx.hash) {
-        navigate('TransactionDetails', { tx: item, hash: normalizedTx.hash, walletID });
+        navigate('TransactionDetails', { tx: item as any, hash: normalizedTx.hash, walletID });
       } else if (isLightningTransaction(item)) {
         const lightningWallet = wallets.find(w => w.getID() === item.walletID);
         if (lightningWallet) {
@@ -506,9 +507,13 @@ export const TransactionListItem: React.FC<TransactionListItemProps> = memo(
     );
   },
   (prevProps, nextProps) => {
+    const prevHash = (prevProps.item as any).hash || (prevProps.item as any).signature || (prevProps.item as any).payment_hash;
+    const nextHash = (nextProps.item as any).hash || (nextProps.item as any).signature || (nextProps.item as any).payment_hash;
+    const prevTimestamp = (prevProps.item as any).timestamp || (prevProps.item as any).blockTime || 0;
+    const nextTimestamp = (nextProps.item as any).timestamp || (nextProps.item as any).blockTime || 0;
     return (
-      prevProps.item.hash === nextProps.item.hash &&
-      prevProps.item.timestamp === nextProps.item.timestamp &&
+      prevHash === nextHash &&
+      prevTimestamp === nextTimestamp &&
       prevProps.itemPriceUnit === nextProps.itemPriceUnit &&
       prevProps.walletID === nextProps.walletID &&
       prevProps.searchQuery === nextProps.searchQuery

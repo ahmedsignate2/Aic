@@ -79,7 +79,7 @@ const SendDetails = () => {
   const { wallets, sleep, txMetadata, saveToDisk } = useStorage();
   const navigation = useExtendedNavigation<NavigationProps>();
   const { direction } = useLocale();
-  const selectedDataProcessor = useRef<ToolTipAction | undefined>();
+  const selectedDataProcessor = useRef<ToolTipAction | undefined>(undefined);
   const setParams = navigation.setParams;
   const route = useRoute<RouteProps>();
   const feeUnit = route.params?.feeUnit ?? BitcoinUnit.BTC;
@@ -285,7 +285,7 @@ const SendDetails = () => {
         // we need to re-calculate fees
         setDumb(v => !v);
       })
-      .catch(e => console.log('fetchUtxo error', e));
+      .catch((e: any) => console.log('fetchUtxo error', e));
   }, [wallet]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // recalc fees in effect so we don't block render
@@ -294,7 +294,7 @@ const SendDetails = () => {
     const fees = networkTransactionFees;
     const requestedSatPerByte = Number(feeRate);
     const m = new Measure('getUtxo');
-    const lutxo = utxos || wallet.getUtxo();
+    const lutxo = utxos || ('getUtxo' in wallet ? wallet.getUtxo() : []);
     m.end();
     let frozen = 0;
     if (!utxos) {

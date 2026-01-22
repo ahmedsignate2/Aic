@@ -23,6 +23,8 @@ import {
   SegwitBech32Wallet,
   SegwitP2SHWallet,
   WatchOnlyWallet,
+  EthereumWallet,
+  SolanaWallet,
 } from '../../class';
 import { AbstractHDElectrumWallet } from '../../class/wallets/abstract-hd-electrum-wallet';
 import { LightningCustodianWallet } from '../../class/wallets/lightning-custodian-wallet';
@@ -345,6 +347,57 @@ const WalletDetails: React.FC = () => {
 
   const navigateToContacts = () => navigate('PaymentCodeList', { walletID });
 
+  const navigateToNFTGallery = () => {
+    // Determine chain from wallet type
+    let chain: 'ethereum' | 'solana' | 'polygon' | 'bsc' | 'arbitrum' | 'optimism' = 'ethereum';
+    let address = '';
+
+    try {
+      if (wallet.type === EthereumWallet.type) {
+        chain = 'ethereum';
+        address = wallet.getAddress ? wallet.getAddress() : '';
+      } else if (wallet.type === SolanaWallet.type) {
+        chain = 'solana';
+        address = wallet.getAddress ? wallet.getAddress() : '';
+      }
+
+      if (address) {
+        navigate('NFTGallery', {
+          walletID,
+          address,
+          chain,
+        });
+      }
+    } catch (error) {
+      console.error('Error navigating to NFT Gallery:', error);
+    }
+  };
+
+  const navigateToTokenList = () => {
+    try {
+      let chainId: any;
+      let address = '';
+
+      if (wallet.type === EthereumWallet.type) {
+        chainId = 1; // Ethereum
+        address = wallet.getAddress ? wallet.getAddress() : '';
+      } else if (wallet.type === SolanaWallet.type) {
+        chainId = 'solana';
+        address = wallet.getAddress ? wallet.getAddress() : '';
+      }
+
+      if (address) {
+        navigate('TokenList', {
+          walletID,
+          address,
+          initialChainId: chainId,
+        });
+      }
+    } catch (error) {
+      console.error('Error navigating to Token List:', error);
+    }
+  };
+
   const exportInternals = async () => {
     if (backdoorPressed < 10) return setBackdoorPressed(backdoorPressed + 1);
     setBackdoorPressed(0);
@@ -640,6 +693,59 @@ const WalletDetails: React.FC = () => {
             </MalinCard>
             {(wallet instanceof AbstractHDElectrumWallet || (wallet.type === WatchOnlyWallet.type && wallet.isHd && wallet.isHd())) && (
               <ListItem onPress={navigateToAddresses} title={loc.wallets.details_show_addresses} chevron />
+            )}
+            {(wallet.type === EthereumWallet.type || wallet.type === SolanaWallet.type) && (
+              <>
+                <ListItem onPress={navigateToTokenList} title="Tokens" chevron />
+                <ListItem onPress={navigateToNFTGallery} title="NFT Gallery" chevron />
+                <ListItem 
+                  onPress={() => navigation.navigate('PortfolioAnalytics', { 
+                    wallet, 
+                    chainId: wallet.type === EthereumWallet.type ? 1 : 101 
+                  })} 
+                  title="📊 DeFi Hub" 
+                  chevron 
+                />
+                <ListItem 
+                  onPress={() => navigation.navigate('SwapAggregator', { 
+                    wallet, 
+                    chainId: wallet.type === EthereumWallet.type ? 1 : 101 
+                  })} 
+                  title="🔄 Swap" 
+                  chevron 
+                />
+                <ListItem 
+                  onPress={() => navigation.navigate('Staking', { 
+                    wallet, 
+                    asset: wallet.type === EthereumWallet.type ? 'ETH' : 'SOL' 
+                  })} 
+                  title="🥩 Stake" 
+                  chevron 
+                />
+                <ListItem 
+                  onPress={() => navigation.navigate('TokenApprovals', { 
+                    walletAddress: wallet.getAddress(),
+                    chainId: wallet.type === EthereumWallet.type ? 1 : 101,
+                    privateKey: wallet.getSecret()
+                  })} 
+                  title="🔓 Token Approvals" 
+                  chevron 
+                />
+                <ListItem 
+                  onPress={() => navigation.navigate('AddressWhitelist', { 
+                    walletId: wallet.getID()
+                  })} 
+                  title="✅ Trusted Addresses" 
+                  chevron 
+                />
+                <ListItem 
+                  onPress={() => navigation.navigate('SpendingLimits', { 
+                    walletId: wallet.getID()
+                  })} 
+                  title="💸 Spending Limits" 
+                  chevron 
+                />
+              </>
             )}
             {isContactsVisible ? <ListItem onPress={navigateToContacts} title={loc.bip47.contacts} chevron /> : null}
             <MalinCard style={styles.address}>

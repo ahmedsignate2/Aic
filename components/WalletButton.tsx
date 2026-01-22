@@ -49,6 +49,30 @@ const buttonDetails: Record<string, ButtonDetails> = {
     explain: loc.wallets.add_lightning_explain + '\nPowered by Arkade',
     borderColorActive: 'lnborderColor',
   },
+  Ethereum: {
+    image: require('../img/addWallet/ethereum.png'),
+    title: 'Ethereum',
+    explain: 'EVM-compatible wallet for ETH and ERC-20 tokens',
+    borderColorActive: 'newMalin',
+  },
+  Solana: {
+    image: require('../img/addWallet/solana.png'),
+    title: 'Solana',
+    explain: 'Fast and low-cost SOL and SPL tokens',
+    borderColorActive: 'newMalin',
+  },
+  zkSync: {
+    image: require('../img/addWallet/zksync.png'),
+    title: 'zkSync Era',
+    explain: 'Layer 2 with low fees, EVM-compatible',
+    borderColorActive: 'newMalin',
+  },
+  Cosmos: {
+    image: require('../img/addWallet/cosmos.png'),
+    title: 'Cosmos Hub',
+    explain: 'ATOM staking and IBC transfers',
+    borderColorActive: 'newMalin',
+  },
 };
 
 const WalletButton: React.FC<WalletButtonProps> = ({ buttonType, testID, onPress, size, active }) => {

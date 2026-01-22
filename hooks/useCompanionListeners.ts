@@ -48,7 +48,7 @@ const useCompanionListeners = (skipIfNotInitialized = true) => {
     walletsInitialized,
   } = useStorage();
   const appState = useRef<AppStateStatus>(AppState.currentState);
-  const clipboardContent = useRef<undefined | string>();
+  const clipboardContent = useRef<undefined | string>(undefined);
   const navigation = useExtendedNavigation();
 
   // We need to call hooks unconditionally before any conditional logic
@@ -290,7 +290,7 @@ const useCompanionListeners = (skipIfNotInitialized = true) => {
         if (!clipboard) return;
         const isAddressFromStoredWallet = wallets.some(wallet => {
           if (wallet.chain === Chain.ONCHAIN) {
-            return wallet.isAddressValid && wallet.isAddressValid(clipboard) && wallet.weOwnAddress(clipboard);
+            return (wallet as any).isAddressValid?.(clipboard) && wallet.weOwnAddress(clipboard);
           } else {
             return (wallet as LightningCustodianWallet).isInvoiceGeneratedByWallet(clipboard) || wallet.weOwnAddress(clipboard);
           }

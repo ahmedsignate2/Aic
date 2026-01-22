@@ -284,13 +284,13 @@ const CoinControl: React.FC = () => {
   const [sortType, setSortType] = useState<ESortTypes>(ESortTypes.height);
   const wallet = useMemo(() => wallets.find(w => w.getID() === walletID) as TWallet, [walletID, wallets]);
   const [frozen, setFrozen] = useState<string[]>(
-    wallet
-      .getUtxo(true)
-      .filter(out => wallet.getUTXOMetadata(out.txid, out.vout).frozen)
-      .map(({ txid, vout }) => `${txid}:${vout}`),
+    (wallet as any)
+      .getUtxo?.(true)
+      ?.filter((out: any) => wallet.getUTXOMetadata(out.txid, out.vout).frozen)
+      .map(({ txid, vout }: any) => `${txid}:${vout}`) || [],
   );
   const utxos: Utxo[] = useMemo(() => {
-    const res = wallet.getUtxo(true).sort((a, b) => {
+    const res = (wallet as any).getUtxo?.(true)?.sort((a: any, b: any) => {
       switch (sortType) {
         case ESortTypes.height:
           return a.height - b.height || a.txid.localeCompare(b.txid) || a.vout - b.vout;
@@ -334,11 +334,11 @@ const CoinControl: React.FC = () => {
   useEffect(() => {
     (async () => {
       try {
-        await Promise.race([wallet.fetchUtxo(), sleep(10000)]);
+        await Promise.race([(wallet as any).fetchUtxo?.(), sleep(10000)]);
       } catch (e) {
-        console.log('coincontrol wallet.fetchUtxo() failed'); // either sleep expired or fetchUtxo threw an exception
+        console.log('coincontrol (wallet as any).fetchUtxo?.() failed'); // either sleep expired or fetchUtxo threw an exception
       }
-      const freshUtxo = wallet.getUtxo(true);
+      const freshUtxo = 'getUtxo' in wallet ? wallet.getUtxo(true) : [];
       setFrozen(freshUtxo.filter(out => wallet.getUTXOMetadata(out.txid, out.vout).frozen).map(({ txid, vout }) => `${txid}:${vout}`));
       setLoading(false);
     })();
@@ -400,7 +400,7 @@ const CoinControl: React.FC = () => {
 
   const renderItem = (p: { item: Utxo }) => {
     const { memo } = wallet.getUTXOMetadata(p.item.txid, p.item.vout);
-    const change = wallet.addressIsChange(p.item.address);
+    const change = 'addressIsChange' in wallet ? wallet.addressIsChange(p.item.address) : false;
     const oFrozen = frozen.includes(`${p.item.txid}:${p.item.vout}`);
     return (
       <OutputList
@@ -518,7 +518,6 @@ const CoinControl: React.FC = () => {
           setOutput(undefined);
         }}
         backgroundColor={colors.elevated}
-        contentContainerStyle={styles.modalMinHeight}
         footer={
           <View style={mStyles.buttonContainer}>
             {!isVisible && (

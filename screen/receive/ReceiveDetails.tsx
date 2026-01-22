@@ -593,7 +593,6 @@ const ReceiveDetails = () => {
 
       <BottomModal
         ref={bottomModalRef}
-        contentContainerStyle={styles.modalContainerJustify}
         backgroundColor={colors.modal}
         footer={
           <View style={styles.modalButtonContainer}>

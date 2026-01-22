@@ -140,7 +140,7 @@ interface WalletCarouselItemProps {
   horizontal?: boolean;
   isPlaceHolder?: boolean;
   searchQuery?: string;
-  renderHighlightedText?: (text: string, query: string) => JSX.Element;
+  renderHighlightedText?: (text: string, query: string) => React.ReactElement;
   animationsEnabled?: boolean;
   onPressIn?: () => void;
   onPressOut?: () => void;
@@ -322,7 +322,7 @@ export const WalletCarouselItem: React.FC<WalletCarouselItemProps> = React.memo(
       latestTransactionText = loc.transactions.updating;
     } else if (item.getBalance() !== 0 && item.getLatestTransactionTime() === 0) {
       latestTransactionText = loc.wallets.pull_to_refresh;
-    } else if (item.getTransactions().find((tx: Transaction) => tx.confirmations === 0)) {
+    } else if (item.getTransactions().find((tx: any) => tx.confirmations === 0)) {
       latestTransactionText = loc.transactions.pending;
     } else {
       latestTransactionText = transactionTimeToReadable(item.getLatestTransactionTime());
@@ -418,7 +418,7 @@ interface WalletsCarouselProps extends Partial<FlatListProps<any>> {
   data: TWallet[];
   scrollEnabled?: boolean;
   searchQuery?: string;
-  renderHighlightedText?: (text: string, query: string) => JSX.Element;
+  renderHighlightedText?: (text: string, query: string) => React.ReactElement;
   animateChanges?: boolean;
 }
 
@@ -468,7 +468,7 @@ const WalletsCarousel = forwardRef<FlatListRefType, WalletsCarouselProps>((props
   const isInitialMount = useRef(true);
 
   const flatListRef = useRef<FlatList<any>>(null);
-  const walletRefs = useRef<Record<string, React.RefObject<View>>>({});
+  const walletRefs = useRef<Record<string, React.RefObject<View | null>>>({});
 
   const { sizeClass } = useSizeClass();
 
@@ -531,7 +531,7 @@ const WalletsCarousel = forwardRef<FlatListRefType, WalletsCarouselProps>((props
   useEffect(() => {
     data.forEach(wallet => {
       if (!walletRefs.current[wallet.getID()]) {
-        walletRefs.current[wallet.getID()] = createRef<View>();
+        walletRefs.current[wallet.getID()] = createRef<View | null>();
       }
     });
   }, [data]);

@@ -49,7 +49,8 @@ export class SolanaWallet extends AbstractWallet {
     if (this._transactions.length === 0) {
       return 0;
     }
-    return this._transactions[0].blockTime;
+    const blockTime = this._transactions[0]?.blockTime;
+    return blockTime ? blockTime.toString() : 0;
   }
 
   async generate(): Promise<void> {
@@ -91,17 +92,21 @@ export class SolanaWallet extends AbstractWallet {
       this._transactions = transactions
         .map((tx, i) => {
           if (!tx) return null;
-          return {
+          const txData = {
             signature: signatures[i].signature,
             slot: tx.slot,
             blockTime: tx.blockTime ?? 0,
             memo: tx.transaction.message.instructions.find(
-              (ix: any) => ix.programId.toBase58() === 'MemoSq4gqABAXKb96qnH8TysNcVnuizgaCkW19D2Hy'
+              (ix: any) => {
+                const programId = (ix as any).programId?.toBase58?.();
+                return programId === 'MemoSq4gqABAXKb96qnH8TysNcVnuizgaCkW19D2Hy';
+              }
             )?.data,
             fee: tx.meta?.fee ?? 0,
             preBalances: tx.meta?.preBalances ?? [],
             postBalances: tx.meta?.postBalances ?? [],
           };
+          return txData as SolanaTransaction;
         })
         .filter((tx): tx is SolanaTransaction => tx !== null);
     } catch (e) {

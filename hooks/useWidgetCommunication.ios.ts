@@ -74,11 +74,11 @@ export const calculateBalanceAndTransactionTime = async (
       if (wallet.hideBalance) return { balance: 0, latestTransactionTime: 0 };
 
       const balance = await wallet.getBalance();
-      const transactions: Transaction[] = await wallet.getTransactions();
-      const confirmedTransactions = transactions.filter(t => t.confirmations > 0);
+      const transactions: any[] = await wallet.getTransactions();
+      const confirmedTransactions = transactions.filter((t: any) => (t.confirmations ?? 0) > 0);
       const latestTransactionTime =
         confirmedTransactions.length > 0
-          ? secondsToMilliseconds(Math.max(...confirmedTransactions.map(t => t.timestamp || t.time || 0)))
+          ? secondsToMilliseconds(Math.max(...confirmedTransactions.map((t: any) => t.timestamp || t.time || t.blockTime || 0)))
           : WidgetCommunicationKeys.LatestTransactionIsUnconfirmed;
 
       return { balance, latestTransactionTime };

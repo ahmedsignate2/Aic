@@ -112,12 +112,12 @@ export function useWatchConnectivity() {
           const transactions: Partial<Transaction>[] = wallet
             .getTransactions()
             .slice(0, 10)
-            .map((transaction: Transaction & LightningTransaction) => ({
+            .map((transaction: any) => ({
               type: determineTransactionType(transaction),
               amount: transaction.value ?? 0,
               memo:
-                'hash' in (transaction as Transaction)
-                  ? txMetadata[(transaction as Transaction).hash]?.memo || transaction.memo || ''
+                'hash' in transaction
+                  ? txMetadata[transaction.hash]?.memo || transaction.memo || ''
                   : transaction.memo || '',
               time: transaction.timestamp ?? transaction.time,
             }));

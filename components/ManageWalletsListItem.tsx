@@ -40,7 +40,7 @@ interface ManageWalletsListItemProps {
   state: { wallets: TWallet[]; searchQuery: string; isSearchFocused?: boolean };
   navigateToWallet: (wallet: TWallet) => void;
   navigateToAddress?: (address: string, walletID: string) => void;
-  renderHighlightedText: (text: string, query: string) => JSX.Element;
+  renderHighlightedText: (text: string, query: string) => React.ReactElement;
   handleDeleteWallet: (wallet: TWallet) => void;
   handleToggleHideBalance: (wallet: TWallet) => void;
   isActive?: boolean;
@@ -206,7 +206,6 @@ const ManageWalletsListItem: React.FC<ManageWalletsListItemProps> = ({
           leftContent={swipeDisabled ? null : leftContent}
           rightContent={swipeDisabled ? null : rightContent}
           onPressOut={onPressOut}
-          minSlideWidth={swipeDisabled ? 0 : 80}
           onPressIn={onPressIn}
           style={swipeDisabled ? styles.transparentBackground : {}}
           onSwipeBegin={direction => {
@@ -241,7 +240,11 @@ const ManageWalletsListItem: React.FC<ManageWalletsListItemProps> = ({
     );
   } else if (item.type === ItemType.TransactionSection && item.data) {
     try {
-      const w = state.wallets.find(wallet => wallet.getTransactions()?.some((tx: Transaction) => tx.hash === item.data.hash));
+      const w = state.wallets.find(wallet => wallet.getTransactions()?.some((tx: any) => {
+        const txHash = tx.hash || tx.signature || (tx as any).payment_hash;
+        const dataHash = item.data.hash || item.data.signature;
+        return txHash === dataHash;
+      }));
 
       const walletID = w ? w.getID() : '';
 
@@ -323,7 +326,7 @@ interface WalletGroupProps {
   state: { wallets: TWallet[]; searchQuery: string };
   navigateToWallet: (wallet: TWallet) => void;
   navigateToAddress?: (address: string, walletID: string) => void;
-  renderHighlightedText: (text: string, query: string) => JSX.Element;
+  renderHighlightedText: (text: string, query: string) => React.ReactElement;
   isSearching: boolean;
 }
 
