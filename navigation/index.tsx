@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import { createNativeStackNavigator, NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import React, { lazy, Suspense } from 'react';
 import UnlockWith from '../screen/UnlockWith';

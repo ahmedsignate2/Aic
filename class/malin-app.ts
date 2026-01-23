@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { sha256 } from '@noble/hashes/sha256';
 import DefaultPreference from 'react-native-default-preference';

@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

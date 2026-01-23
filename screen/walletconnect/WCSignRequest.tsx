@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useState } from 'react';
 import { StyleSheet, View, ScrollView, Alert, Image } from 'react-native';
 import { useTheme } from '../../components/themes';

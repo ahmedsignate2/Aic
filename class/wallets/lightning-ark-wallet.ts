@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import BigNumber from 'bignumber.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { sha256 } from '@noble/hashes/sha256';

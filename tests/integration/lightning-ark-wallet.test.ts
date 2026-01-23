@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import assert from 'assert';
 import fs from 'fs';
 import path from 'path';

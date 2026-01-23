@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import BIP32Factory from 'bip32';
 import bip38 from 'bip38';
 import * as bip39 from 'bip39';

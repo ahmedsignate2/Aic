@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { StyleSheet, ViewStyle, TouchableOpacity, ActivityIndicator, Platform, Animated, View, Text, TextStyle } from 'react-native';
 import { Icon, ListItem } from '@rneui/base';

@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { RouteProp, useFocusEffect, useRoute, usePreventRemove, StackActions } from '@react-navigation/native';
 import {

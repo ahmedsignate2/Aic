@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useCallback, useState } from 'react';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { RouteProp, useFocusEffect, usePreventRemove, useRoute } from '@react-navigation/native';

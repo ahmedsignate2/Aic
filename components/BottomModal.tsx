@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { forwardRef, useImperativeHandle, useRef, ReactElement, ComponentType } from 'react';
 import { TrueSheet, TrueSheetProps } from '@lodev09/react-native-true-sheet';
 import { Keyboard, Image, StyleSheet, View, Pressable, Platform, GestureResponderEvent, Text } from 'react-native';

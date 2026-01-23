@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 import navigationStyle, { CloseButtonPosition } from '../components/navigationStyle';

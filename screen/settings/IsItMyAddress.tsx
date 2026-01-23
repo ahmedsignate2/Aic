@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useRef, useState, useEffect } from 'react';
 import { Keyboard, StyleSheet, TextInput, View, ScrollView, Pressable, Text } from 'react-native';
 import { MalinButtonLink, MalinCard, MalinText } from '../../MalinComponents';

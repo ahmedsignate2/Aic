@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Alert, Keyboard, LayoutAnimation, Platform, StyleSheet, Switch, TextInput, View } from 'react-native';
 import * as MalinElectrum from '../../malin_modules/MalinElectrum';

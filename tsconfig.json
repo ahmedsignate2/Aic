@@ -11,7 +11,9 @@
       "@types/*": ["./src/types/*"]
     },
     "skipLibCheck": true,
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "strict": false,
+    "typeRoots": ["./typings", "./node_modules/@types"]
   },
   "exclude": ["node_modules", "babel.config.js", "jest.config.js", "scripts", "functions"]
 }

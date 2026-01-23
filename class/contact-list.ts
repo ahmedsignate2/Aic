@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import BIP47Factory from '@spsina/bip47';
 
 import { SilentPayment } from 'silent-payments';

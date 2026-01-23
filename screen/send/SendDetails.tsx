@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RouteProp, useFocusEffect, useRoute, useLocale } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';

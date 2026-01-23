@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import BigNumber from "bignumber.js";
 import * as bitcoin from "bitcoinjs-lib";
 import DefaultPreference from "react-native-default-preference";

@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 

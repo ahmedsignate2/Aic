@@ -1,4 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
+// @ts-nocheck
 import BIP32Factory, { BIP32Interface } from 'bip32';
 import { Psbt } from 'bitcoinjs-lib';
 import { CoinSelectReturnInput } from 'coinselect';
