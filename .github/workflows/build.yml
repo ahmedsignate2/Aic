@@ -28,23 +28,38 @@ jobs:
       - name: Install Dependencies
         run: npm install --legacy-peer-deps
 
+      - name: Create expo/fetch mock
+        run: |
+          mkdir -p mocks
+          cat > mocks/expo-fetch.js << 'EOF'
+          // Mock for expo/fetch to allow builds without expo
+          // The @arkade-os/sdk will fall back to standard fetch at runtime
+          module.exports = {
+            fetch: global.fetch || fetch
+          };
+          EOF
+
       - name: Patch Dependencies (Fix Gradle & Kotlin Errors)
         run: |
-          # 1. Patch react-native-scrypt (Gradle 8 compatibility)
-          sed -i 's/compile /implementation /g' node_modules/react-native-scrypt/android/build.gradle || true
-          sed -i 's/compile(/implementation(/g' node_modules/react-native-scrypt/android/build.gradle || true
+          # 1. Patch react-native-scrypt (Gradle 8 compatibility - compile → implementation)
+          sed -i "s/compile 'com.facebook.react:react-native:+'/implementation 'com.facebook.react:react-native:+'/" node_modules/react-native-scrypt/android/build.gradle || true
 
-          # 2. Patch react-native-menu (Fix 'val' reassignment)
-          # Etape A : On passe tout en 'var' pour autoriser la modification
-          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/val /var /g' {} + || true
-          # Etape B : On corrige l'erreur "const var" créée par l'étape A (car const exige val)
-          find node_modules/@react-native-menu/menu/android/src/main/java -name "*.kt" -exec sed -i 's/const var /const val /g' {} + || true
+          # 2. Patch react-native-true-sheet (Fix 'val' reassignment - use setter methods)
+          sed -i 's/view\.pointerEvents = PointerEvents\.parsePointerEvents(pointerEventsStr)/view.setPointerEvents(PointerEvents.parsePointerEvents(pointerEventsStr))/' node_modules/@lodev09/react-native-true-sheet/android/src/main/java/com/lodev09/truesheet/*ViewManager.kt || true
 
-          # 3. Patch react-native-true-sheet (Fix 'val' reassignment & const error)
-          # Etape A : Tout en 'var'
-          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/val /var /g' {} + || true
-          # Etape B : Correction des 'const var'
-          find node_modules/@lodev09/react-native-true-sheet/android/src/main/java -name "*.kt" -exec sed -i 's/const var /const val /g' {} + || true
+          # 3. Patch react-native-menu MenuView.kt (Fix hitSlopRect setter)
+          sed -i 's/super\.hitSlopRect = value/super.setHitSlopRect(value)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt || true
+          sed -i 's/mHitSlopRect = value/field = value/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt || true
+
+          # 4. Patch react-native-menu MenuViewManagerBase.kt (Fix hitSlopRect and overflow setters)
+          sed -i 's/view\.hitSlopRect = null/view.setHitSlopRect(null)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
+          sed -i 's/view\.hitSlopRect = (/view.setHitSlopRect(/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
+          sed -i 's/view\.overflow = overflow/view.setOverflow(overflow)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
+
+      - name: Fix AndroidManifest conflicts
+        run: |
+          # Add tools:replace for firebase_messaging_auto_init_enabled
+          sed -i '/<meta-data.*firebase_messaging_auto_init_enabled/,/\/>/ s/android:value="false" \/>/android:value="false"\n            tools:replace="android:value" \/>/' android/app/src/main/AndroidManifest.xml || true
 
       - name: Create .env file from GitHub Secrets
         run: |

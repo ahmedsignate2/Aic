@@ -4,3 +4,4 @@ android/.gradle/
 .env
 *.keystore
 *.jks
+android/local.properties
