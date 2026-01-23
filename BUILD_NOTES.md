@@ -86,3 +86,69 @@ The workflow automatically:
 - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
 - NEXT_PUBLIC_FIREBASE_APP_ID
 - NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+
+## Docker Build on ARM64 Linux
+
+### Prerequisites
+- Docker installed (script will attempt to install if missing)
+- At least 20GB free disk space
+- Internet connection
+
+### Quick Start
+```bash
+# Run the automated build script
+./docker-build.sh
+```
+
+### Manual Docker Build
+```bash
+# Build the image (takes 10-20 minutes)
+docker build --platform linux/amd64 -t android-builder:latest .
+
+# Extract the APK
+CONTAINER_ID=$(docker create android-builder:latest)
+mkdir -p build-output
+docker cp $CONTAINER_ID:/app/android/app/build/outputs/apk/release/app-release.apk ./build-output/
+docker rm $CONTAINER_ID
+```
+
+### How It Works
+1. Docker uses QEMU to emulate x86-64 on ARM64
+2. Builds in Ubuntu 22.04 x86-64 container
+3. Installs Android SDK, Node.js, and all dependencies
+4. Applies all necessary patches
+5. Builds the APK with Hermes disabled
+6. Outputs APK to `build-output/` directory
+
+### Troubleshooting
+
+#### Docker not installed
+```bash
+sudo apt-get update
+sudo apt-get install -y docker.io
+sudo systemctl start docker
+sudo usermod -aG docker $USER
+# Log out and back in
+```
+
+#### Permission denied
+```bash
+# Either add user to docker group (recommended)
+sudo usermod -aG docker $USER
+# Then log out and back in
+
+# Or use sudo
+sudo docker build --platform linux/amd64 -t android-builder:latest .
+```
+
+#### Build fails with "out of memory"
+```bash
+# Increase Docker memory limit or free up system RAM
+docker system prune -a
+```
+
+## Notes
+- Docker build is slower than native x86-64 (due to emulation) but works reliably
+- First build takes 15-20 minutes (subsequent builds use cache)
+- GitHub Actions is faster for CI/CD workflows
+- APK will be in `build-output/app-release.apk`
