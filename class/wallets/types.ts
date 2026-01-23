@@ -177,6 +177,25 @@ export type ExtendedTransaction = (Transaction | EthereumTransaction | SolanaTra
   walletPreferredBalanceUnit: BitcoinUnit;
 };
 
+/**
+ * Type guards for transaction types
+ */
+export function isTransaction(tx: ExtendedTransaction | any): tx is Transaction {
+  return 'txid' in tx && 'hash' in tx && 'inputs' in tx && 'outputs' in tx;
+}
+
+export function isEthereumTransaction(tx: ExtendedTransaction | any): tx is EthereumTransaction {
+  return 'hash' in tx && 'from' in tx && 'to' in tx && 'gasPrice' in tx;
+}
+
+export function isSolanaTransaction(tx: ExtendedTransaction | any): tx is SolanaTransaction {
+  return 'signature' in tx && 'slot' in tx && 'blockTime' in tx;
+}
+
+export function isLightningTransaction(tx: ExtendedTransaction | any): tx is LightningTransaction {
+  return 'timestamp' in tx && !('txid' in tx) && !('signature' in tx) && !('hash' in tx);
+}
+
 export type TWallet =
   | HDAezeedWallet
   | HDLegacyBreadwalletWallet

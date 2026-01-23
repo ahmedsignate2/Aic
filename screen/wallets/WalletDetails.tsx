@@ -699,7 +699,7 @@ const WalletDetails: React.FC = () => {
                 <ListItem onPress={navigateToTokenList} title="Tokens" chevron />
                 <ListItem onPress={navigateToNFTGallery} title="NFT Gallery" chevron />
                 <ListItem 
-                  onPress={() => navigation.navigate('PortfolioAnalytics', { 
+                  onPress={() => navigate('PortfolioAnalytics', { 
                     wallet, 
                     chainId: wallet.type === EthereumWallet.type ? 1 : 101 
                   })} 
@@ -707,7 +707,7 @@ const WalletDetails: React.FC = () => {
                   chevron 
                 />
                 <ListItem 
-                  onPress={() => navigation.navigate('SwapAggregator', { 
+                  onPress={() => navigate('SwapAggregator', { 
                     wallet, 
                     chainId: wallet.type === EthereumWallet.type ? 1 : 101 
                   })} 
@@ -715,7 +715,7 @@ const WalletDetails: React.FC = () => {
                   chevron 
                 />
                 <ListItem 
-                  onPress={() => navigation.navigate('Staking', { 
+                  onPress={() => navigate('Staking', { 
                     wallet, 
                     asset: wallet.type === EthereumWallet.type ? 'ETH' : 'SOL' 
                   })} 
@@ -723,7 +723,7 @@ const WalletDetails: React.FC = () => {
                   chevron 
                 />
                 <ListItem 
-                  onPress={() => navigation.navigate('TokenApprovals', { 
+                  onPress={() => navigate('TokenApprovals', { 
                     walletAddress: wallet.getAddress(),
                     chainId: wallet.type === EthereumWallet.type ? 1 : 101,
                     privateKey: wallet.getSecret()
@@ -732,14 +732,14 @@ const WalletDetails: React.FC = () => {
                   chevron 
                 />
                 <ListItem 
-                  onPress={() => navigation.navigate('AddressWhitelist', { 
+                  onPress={() => navigate('AddressWhitelist', { 
                     walletId: wallet.getID()
                   })} 
                   title="✅ Trusted Addresses" 
                   chevron 
                 />
                 <ListItem 
-                  onPress={() => navigation.navigate('SpendingLimits', { 
+                  onPress={() => navigate('SpendingLimits', { 
                     walletId: wallet.getID()
                   })} 
                   title="💸 Spending Limits" 
