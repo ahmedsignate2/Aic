@@ -1,5 +1,5 @@
 // Copyright (C) 2026 MalinWallet Infrastructure - All Rights Reserved
-import './gesture-handler';
+import 'react-native-gesture-handler';
 import 'react-native-get-random-values';
 import 'react-native-url-polyfill/auto';
 import 'text-encoding';
