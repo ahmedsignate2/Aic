@@ -61,6 +61,16 @@ jobs:
           # Add tools:replace for firebase_messaging_auto_init_enabled
           sed -i '/<meta-data.*firebase_messaging_auto_init_enabled/,/\/>/ s/android:value="false" \/>/android:value="false"\n            tools:replace="android:value" \/>/' android/app/src/main/AndroidManifest.xml || true
 
+      - name: Setup Release Keystore
+        run: |
+          # Decode keystore from base64 secret and save it
+          echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
+          # Set keystore environment variables
+          echo "KEYSTORE_FILE_HEX=true" >> $GITHUB_ENV
+          echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
+          echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
+          echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
+
       - name: Create .env file from GitHub Secrets
         run: |
           echo "ETHEREUM_RPC_URL=${{ secrets.ETHEREUM_RPC_URL }}" >> .env
