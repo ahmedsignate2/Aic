@@ -10,6 +10,7 @@ import { navigationRef } from './NavigationService';
 import { StorageProvider } from './components/Context/StorageProvider';
 import { DeepLinkHandler } from './utils/deeplink-handler';
 import { NotificationService } from './class/services/ux/notification-service';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const App = () => {
   const colorScheme = useColorScheme();
@@ -32,37 +33,52 @@ const App = () => {
   // Initialize deep link handling
   useEffect(() => {
     if (navigationRef.current) {
-      const cleanup = DeepLinkHandler.initialize(navigationRef.current);
-      return cleanup;
+      try {
+        const cleanup = DeepLinkHandler.initialize(navigationRef.current);
+        return cleanup;
+      } catch (error) {
+        console.error('Failed to initialize DeepLinkHandler:', error);
+      }
     }
   }, []);
 
   // Initialize notification service
   useEffect(() => {
+    let isMounted = true;
     const initNotifications = async () => {
       try {
         const notificationService = NotificationService.getInstance();
         await notificationService.initialize();
-        console.log('Notification service initialized');
+        if (isMounted) {
+          console.log('Notification service initialized');
+        }
       } catch (error) {
-        console.error('Failed to initialize notifications:', error);
+        if (isMounted) {
+          console.error('Failed to initialize notifications:', error);
+        }
       }
     };
     initNotifications();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
-    <SizeClassProvider>
-      <NavigationContainer ref={navigationRef} theme={theme}>
-        <SafeAreaProvider style={{ backgroundColor: theme.colors.background }}>
-          <StorageProvider>
-            <SettingsProvider>
-              <MasterView />
-            </SettingsProvider>
-          </StorageProvider>
-        </SafeAreaProvider>
-      </NavigationContainer>
-    </SizeClassProvider>
+    <ErrorBoundary>
+      <SizeClassProvider>
+        <NavigationContainer ref={navigationRef} theme={theme}>
+          <SafeAreaProvider style={{ backgroundColor: theme.colors.background }}>
+            <StorageProvider>
+              <SettingsProvider>
+                <MasterView />
+              </SettingsProvider>
+            </StorageProvider>
+          </SafeAreaProvider>
+        </NavigationContainer>
+      </SizeClassProvider>
+    </ErrorBoundary>
   );
 };
 

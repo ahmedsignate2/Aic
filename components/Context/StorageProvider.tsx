@@ -60,8 +60,8 @@ export enum WalletTransactionsStatus {
   ALL = 'ALL',
 }
 
-// @ts-ignore default value does not match the type
-export const StorageContext = createContext<StorageContextType>(undefined);
+// Default safe value to prevent undefined context errors
+export const StorageContext = createContext<StorageContextType | null>(null);
 
 export const StorageProvider = ({ children }: { children: React.ReactNode }) => {
   const txMetadata = useRef<TTXMetadata>(MalinApp.tx_metadata);

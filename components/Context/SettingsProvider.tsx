@@ -151,6 +151,8 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = React.m
   const { walletsInitialized } = useStorage();
 
   useEffect(() => {
+    let isMounted = true;
+    
     const loadSettings = async () => {
       try {
         await DefaultPreference.setName(GROUP_IO_MALINWALLET);
@@ -160,69 +162,96 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = React.m
 
       const promises: Promise<void>[] = [
         MalinElectrum.isDisabled().then(disabled => {
-          setIsElectrumDisabled(disabled);
+          if (isMounted) setIsElectrumDisabled(disabled);
         }),
         getIsHandOffUseEnabled().then(handOff => {
-          setIsHandOffUseEnabledState(handOff);
+          if (isMounted) setIsHandOffUseEnabledState(handOff);
         }),
         AsyncStorage.getItem(STORAGE_KEY).then(lang => {
-          setLanguage(lang ?? 'en');
+          if (isMounted) setLanguage(lang ?? 'en');
         }),
         isBalanceDisplayAllowed().then(balanceDisplayAllowed => {
-          setIsWidgetBalanceDisplayAllowed(balanceDisplayAllowed);
+          if (isMounted) setIsWidgetBalanceDisplayAllowed(balanceDisplayAllowed);
         }),
         isURv1Enabled().then(urv1Enabled => {
-          setIsLegacyURv1Enabled(urv1Enabled);
+          if (isMounted) setIsLegacyURv1Enabled(urv1Enabled);
         }),
         isReadClipboardAllowed().then(clipboardEnabled => {
-          setIsClipboardGetContentEnabled(clipboardEnabled);
+          if (isMounted) setIsClipboardGetContentEnabled(clipboardEnabled);
         }),
         getIsDeviceQuickActionsEnabled().then(quickActionsEnabled => {
-          setIsQuickActionsEnabled(quickActionsEnabled);
+          if (isMounted) setIsQuickActionsEnabled(quickActionsEnabled);
         }),
         getDoNotTrackStorage().then(doNotTrack => {
-          setIsDoNotTrackEnabled(doNotTrack);
+          if (isMounted) setIsDoNotTrackEnabled(doNotTrack);
         }),
         getIsTotalBalanceViewEnabled().then(totalBalanceEnabled => {
-          setIsTotalBalanceEnabled(totalBalanceEnabled);
+          if (isMounted) setIsTotalBalanceEnabled(totalBalanceEnabled);
         }),
         getTotalBalancePreferredUnit().then(preferredUnit => {
-          setTotalBalancePreferredUnit(preferredUnit);
+          if (isMounted) setTotalBalancePreferredUnit(preferredUnit);
         }),
         getBlockExplorerUrl().then(url => {
-          const predefinedExplorer = Object.values(BLOCK_EXPLORERS).find(explorer => normalizeUrl(explorer.url) === normalizeUrl(url));
-          setSelectedBlockExplorer(predefinedExplorer ?? ({ key: 'custom', name: 'Custom', url } as BlockExplorer));
+          if (isMounted) {
+            const predefinedExplorer = Object.values(BLOCK_EXPLORERS).find(explorer => normalizeUrl(explorer.url) === normalizeUrl(url));
+            setSelectedBlockExplorer(predefinedExplorer ?? ({ key: 'custom', name: 'Custom', url } as BlockExplorer));
+          }
         }),
       ];
 
       const results = await Promise.allSettled(promises);
 
-      results.forEach((result, index) => {
-        if (result.status === 'rejected') {
-          console.error(`Error loading setting ${index}:`, result.reason);
-        }
-      });
+      if (isMounted) {
+        results.forEach((result, index) => {
+          if (result.status === 'rejected') {
+            console.error(`Error loading setting ${index}:`, result.reason);
+          }
+        });
+      }
     };
 
     loadSettings();
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
+    
     initCurrencyDaemon()
       .then(getPreferredCurrency)
       .then(currency => {
-        console.debug('SettingsContext currency:', currency);
-        setPreferredFiatCurrencyState(currency as TFiatUnit);
+        if (isMounted) {
+          console.debug('SettingsContext currency:', currency);
+          setPreferredFiatCurrencyState(currency as TFiatUnit);
+        }
       })
       .catch(e => {
-        console.error('Error initializing currency daemon or getting preferred currency:', e);
+        if (isMounted) {
+          console.error('Error initializing currency daemon or getting preferred currency:', e);
+        }
       });
+    
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
     if (walletsInitialized) {
-      isElectrumDisabled ? MalinElectrum.forceDisconnect() : MalinElectrum.connectMain();
+      if (isElectrumDisabled) {
+        MalinElectrum.forceDisconnect();
+      } else {
+        MalinElectrum.connectMain();
+      }
     }
+    
+    // Cleanup: disconnect on unmount
+    return () => {
+      MalinElectrum.forceDisconnect();
+    };
   }, [isElectrumDisabled, walletsInitialized]);
 
   const setPreferredFiatCurrencyStorage = useCallback(async (currency: TFiatUnit): Promise<void> => {
