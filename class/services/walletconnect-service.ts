@@ -35,6 +35,22 @@ export class WalletConnectService {
     if (this.initialized) return;
 
     try {
+      // Clear any potentially corrupted WalletConnect data
+      try {
+        const keys = await AsyncStorage.getAllKeys();
+        const wcKeys = keys.filter(key => 
+          key.startsWith('wc@') || 
+          key.includes('walletconnect') || 
+          key.includes('@walletconnect')
+        );
+        if (wcKeys.length > 0) {
+          console.log('Clearing potentially corrupted WalletConnect keys:', wcKeys.length);
+          await AsyncStorage.multiRemove(wcKeys);
+        }
+      } catch (clearError) {
+        console.warn('Failed to clear WalletConnect storage:', clearError);
+      }
+
       const core = new Core({
         projectId: WALLETCONNECT_PROJECT_ID,
       });
@@ -54,7 +70,8 @@ export class WalletConnectService {
       console.log('WalletConnect initialized');
     } catch (error) {
       console.error('Failed to initialize WalletConnect:', error);
-      throw error;
+      // Don't throw - allow app to continue without WalletConnect
+      this.initialized = false;
     }
   }
 

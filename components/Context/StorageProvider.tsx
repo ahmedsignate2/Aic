@@ -494,9 +494,22 @@ export const StorageProvider = ({ children }: { children: React.ReactNode }) => 
 
   // Initialize WalletConnect on mount
   useEffect(() => {
-    WalletConnectService.initialize()
-      .then(() => console.log('WalletConnect initialized in StorageProvider'))
-      .catch((error) => console.error('Failed to initialize WalletConnect:', error));
+    const initWalletConnect = async () => {
+      try {
+        await WalletConnectService.initialize();
+        console.log('WalletConnect initialized in StorageProvider');
+      } catch (error) {
+        console.error('Failed to initialize WalletConnect:', error);
+        // App continues without WalletConnect
+      }
+    };
+    
+    // Add a small delay to allow other critical components to load first
+    const timer = setTimeout(() => {
+      initWalletConnect();
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   const value: StorageContextType = useMemo(
