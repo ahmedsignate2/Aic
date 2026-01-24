@@ -33,28 +33,30 @@ jobs:
           mkdir -p mocks
           cat > mocks/expo-fetch.js << 'EOF'
           // Mock for expo/fetch to allow builds without expo
-          // The @arkade-os/sdk will fall back to standard fetch at runtime
           module.exports = {
             fetch: global.fetch || fetch
           };
           EOF
 
-      - name: Patch Dependencies (Fix Gradle & Kotlin Errors)
+      - name: Patch Dependencies & Package Identity
         run: |
-          # 1. Patch react-native-scrypt (Gradle 8 compatibility - compile → implementation)
+          # 1. Patch react-native-scrypt (Gradle 8 compatibility)
           sed -i "s/compile 'com.facebook.react:react-native:+'/implementation 'com.facebook.react:react-native:+'/" node_modules/react-native-scrypt/android/build.gradle || true
 
-          # 2. Patch react-native-true-sheet (Fix 'val' reassignment - use setter methods)
+          # 2. Patch react-native-true-sheet (Fix setter methods)
           sed -i 's/view\.pointerEvents = PointerEvents\.parsePointerEvents(pointerEventsStr)/view.setPointerEvents(PointerEvents.parsePointerEvents(pointerEventsStr))/' node_modules/@lodev09/react-native-true-sheet/android/src/main/java/com/lodev09/truesheet/*ViewManager.kt || true
 
-          # 3. Patch react-native-menu MenuView.kt (Fix hitSlopRect setter)
+          # 3. Patch react-native-menu (Fix hitSlopRect & overflow)
           sed -i 's/super\.hitSlopRect = value/super.setHitSlopRect(value)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt || true
-          sed -i 's/mHitSlopRect = value/field = value/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt || true
-
-          # 4. Patch react-native-menu MenuViewManagerBase.kt (Fix hitSlopRect and overflow setters)
-          sed -i 's/view\.hitSlopRect = null/view.setHitSlopRect(null)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
-          sed -i 's/view\.hitSlopRect = (/view.setHitSlopRect(/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
           sed -i 's/view\.overflow = overflow/view.setOverflow(overflow)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
+
+          # 4. FIX IDENTITY: Force package name in AndroidManifest.xml
+          # On s'assure que la balise <manifest> a bien le package MalinWallet
+          sed -i 's/<manifest xmlns:android/<manifest package="com.malinwallet.app" xmlns:android/' android/app/src/main/AndroidManifest.xml
+
+          # 5. FIX NAMESPACE: Remove any leftover BlueWallet references in Java/Kotlin
+          find android/app/src/main/java -name "*.kt" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
+          find android/app/src/main/java -name "*.java" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
 
       - name: Fix AndroidManifest conflicts
         run: |
@@ -63,9 +65,7 @@ jobs:
 
       - name: Setup Release Keystore
         run: |
-          # Decode keystore from base64 secret and save it
           echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > android/app/release.keystore
-          # Set keystore environment variables
           echo "KEYSTORE_FILE_HEX=true" >> $GITHUB_ENV
           echo "KEYSTORE_PASSWORD=${{ secrets.KEYSTORE_PASSWORD }}" >> $GITHUB_ENV
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
@@ -98,7 +98,6 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          rm -f local.properties
           ./gradlew clean
           ./gradlew assembleRelease --no-daemon
 
