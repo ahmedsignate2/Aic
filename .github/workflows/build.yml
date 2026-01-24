@@ -32,35 +32,31 @@ jobs:
         run: |
           mkdir -p mocks
           cat > mocks/expo-fetch.js << 'EOF'
-          // Mock for expo/fetch to allow builds without expo
-          module.exports = {
-            fetch: global.fetch || fetch
-          };
+          module.exports = { fetch: global.fetch || fetch };
           EOF
 
-      - name: Patch Dependencies & Package Identity
+      - name: Patch Dependencies & Identity
         run: |
-          # 1. Patch react-native-scrypt (Gradle 8 compatibility)
+          # 1. Patch react-native-scrypt
           sed -i "s/compile 'com.facebook.react:react-native:+'/implementation 'com.facebook.react:react-native:+'/" node_modules/react-native-scrypt/android/build.gradle || true
 
-          # 2. Patch react-native-true-sheet (Fix setter methods)
+          # 2. Patch react-native-true-sheet
           sed -i 's/view\.pointerEvents = PointerEvents\.parsePointerEvents(pointerEventsStr)/view.setPointerEvents(PointerEvents.parsePointerEvents(pointerEventsStr))/' node_modules/@lodev09/react-native-true-sheet/android/src/main/java/com/lodev09/truesheet/*ViewManager.kt || true
 
-          # 3. Patch react-native-menu (Fix hitSlopRect & overflow)
+          # 3. Patch react-native-menu
           sed -i 's/super\.hitSlopRect = value/super.setHitSlopRect(value)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt || true
           sed -i 's/view\.overflow = overflow/view.setOverflow(overflow)/' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
 
-          # 4. FIX IDENTITY: Force package name in AndroidManifest.xml
-          # On s'assure que la balise <manifest> a bien le package MalinWallet
+          # 4. FIX IDENTITY: On force le package MalinWallet uniquement dans TON code source
+          # Ça évite de corrompre les librairies tierces
           sed -i 's/<manifest xmlns:android/<manifest package="com.malinwallet.app" xmlns:android/' android/app/src/main/AndroidManifest.xml
-
-          # 5. FIX NAMESPACE: Remove any leftover BlueWallet references in Java/Kotlin
-          find android/app/src/main/java -name "*.kt" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
-          find android/app/src/main/java -name "*.java" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
+          
+          # On renomme le package uniquement dans TES dossiers java/com/malinwallet
+          find android/app/src/main/java/com/malinwallet -name "*.kt" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
+          find android/app/src/main/java/com/malinwallet -name "*.java" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
 
       - name: Fix AndroidManifest conflicts
         run: |
-          # Add tools:replace for firebase_messaging_auto_init_enabled
           sed -i '/<meta-data.*firebase_messaging_auto_init_enabled/,/\/>/ s/android:value="false" \/>/android:value="false"\n            tools:replace="android:value" \/>/' android/app/src/main/AndroidManifest.xml || true
 
       - name: Setup Release Keystore
@@ -71,7 +67,7 @@ jobs:
           echo "KEY_ALIAS=${{ secrets.KEY_ALIAS }}" >> $GITHUB_ENV
           echo "KEY_PASSWORD=${{ secrets.KEY_PASSWORD }}" >> $GITHUB_ENV
 
-      - name: Create .env file from GitHub Secrets
+      - name: Create .env file
         run: |
           echo "ETHEREUM_RPC_URL=${{ secrets.ETHEREUM_RPC_URL }}" >> .env
           echo "SOLANA_RPC_URL=${{ secrets.SOLANA_RPC_URL }}" >> .env
