@@ -1,0 +1,45 @@
+diff --git a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
+index 0000000..1111111 100644
+--- a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
++++ b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
+@@ -25,9 +25,8 @@ class MenuView(private val mContext: ReactContext) : ReactViewGroup(mContext) {
+   private var mGestureDetector: GestureDetector
+   private var mHitSlopRect: Rect? = null
+     set(value) {
+-      super.hitSlopRect = value
+-      mHitSlopRect = value
+-      updateTouchDelegate()
++      field = value
++      updateTouchDelegate()
+     }
+ 
+   init {
+diff --git a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+index 2222222..3333333 100644
+--- a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
++++ b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+@@ -122,11 +122,11 @@ abstract class MenuViewManagerBase<T : View, C : MenuViewManagerBase.Implementa
+   @ReactProp(name = "hitSlop")
+   fun setHitSlop(view: ReactViewGroup, @Nullable hitSlop: ReadableMap?) {
+     if (hitSlop == null) {
+-      // We should keep using setters as `Val cannot be reassigned`
+-      view.hitSlopRect = null
++      // Use setter method instead of direct assignment
++      view.setHitSlopRect(null)
+     } else {
+-      view.hitSlopRect = (
+-              Rect(
++      view.setHitSlopRect(
++              Rect(
+                       if (hitSlop.hasKey("left"))
+                               PixelUtil.toPixelFromDIP(hitSlop.getDouble("left")).toInt()
+                       else 0,
+@@ -206,7 +206,7 @@ abstract class MenuViewManagerBase<T : View, C : MenuViewManagerBase.Implementa
+ 
+   @ReactProp(name = ViewProps.OVERFLOW)
+   fun setOverflow(view: ReactViewGroup, overflow: String?) {
+-    view.overflow = overflow
++    view.setOverflow(overflow)
+   }
+ 
+   @ReactProp(name = "backfaceVisibility")
