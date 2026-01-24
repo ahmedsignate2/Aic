@@ -43,12 +43,7 @@ jobs:
           # 2. Patch react-native-true-sheet (Fix setter)
           sed -i 's/view\.pointerEvents = PointerEvents\.parsePointerEvents(pointerEventsStr)/view.setPointerEvents(PointerEvents.parsePointerEvents(pointerEventsStr))/' node_modules/@lodev09/react-native-true-sheet/android/src/main/java/com/lodev09/truesheet/*ViewManager.kt || true
 
-          # 3. FIX react-native-menu (ON SUPPRIME LES LIGNES QUI FONT CRASHER)
-          # Au lieu de tenter de corriger, on commente les lignes problématiques pour laisser passer le build
-          sed -i 's/view\.hitSlopRect =/\/\/ view.hitSlopRect =/g' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
-          sed -i 's/view\.overflow =/\/\/ view.overflow =/g' node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt || true
-
-          # 4. FIX IDENTITY: Force le package MalinWallet
+          # 3. FIX IDENTITY: Force le package MalinWallet
           sed -i 's/<manifest xmlns:android/<manifest package="com.malinwallet.app" xmlns:android/' android/app/src/main/AndroidManifest.xml
           
           # Renommage ciblé

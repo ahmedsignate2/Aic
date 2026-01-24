@@ -1,0 +1,26 @@
+diff --git a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
+index 0000000..0000000 100644
+--- a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
++++ b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuView.kt
+@@ -25,7 +25,7 @@ class MenuView(private val reactContext: ReactApplicationContext) : FrameLayout
+   private var popup: PopupMenu? = null
+   private var listener: OnMenuActionListener? = null
+   
+-  val menuItems: MutableList<MenuItem> = mutableListOf()
++  var menuItems: MutableList<MenuItem> = mutableListOf()
+   
+   interface OnMenuActionListener {
+     fun onMenuAction(action: String, index: Int)
+diff --git a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+index 0000000..0000000 100644
+--- a/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
++++ b/node_modules/@react-native-menu/menu/android/src/main/java/com/reactnativemenu/MenuViewManagerBase.kt
+@@ -140,7 +140,7 @@ abstract class MenuViewManagerBase<T : View, C : MenuViewManagerBase.Implementa
+     view.setMenuItems(value)
+   }
+ 
+-  @ReactProp(name = "")
++  @ReactProp(name = "menuTitle")
+   open fun setMenuTitle(view: T, value: String?) {
+     implementation.setMenuTitle(view, value)
+   }
