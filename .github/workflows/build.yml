@@ -43,8 +43,8 @@ jobs:
           # 2. Patch react-native-true-sheet (Fix setter)
           sed -i 's/view\.pointerEvents = PointerEvents\.parsePointerEvents(pointerEventsStr)/view.setPointerEvents(PointerEvents.parsePointerEvents(pointerEventsStr))/' node_modules/@lodev09/react-native-true-sheet/android/src/main/java/com/lodev09/truesheet/*ViewManager.kt || true
 
-          # 3. FIX IDENTITY: Force le package MalinWallet
-          sed -i 's/<manifest xmlns:android/<manifest package="com.malinwallet.app" xmlns:android/' android/app/src/main/AndroidManifest.xml
+          # 3. FIX IDENTITY: Verify package is set correctly (it's already in AndroidManifest.xml)
+          # No need to modify AndroidManifest.xml - package is already set to "com.malinwallet.app"
           
           # Renommage ciblé
           find android/app/src/main/java/com/malinwallet -name "*.kt" -exec sed -i 's/package io.bluewallet.bluewallet/package com.malinwallet.app/g' {} +
